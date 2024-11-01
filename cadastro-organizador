@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+    <link rel="stylesheet" href="css_pim_oficial.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo Organizador!</h1>
+        <p class="subtitle">Crie sua conta, é gratuita e fácil. Se você já tem uma conta, <strong>clique aqui</strong>.</p>
+        <form>
+            <div class="column">
+                <div class="form-group">
+                    <label for="nome">Nome do Responsável</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Número de Telefone</label>
+                    <input type="tel" id="telefone" name="telefone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Endereço de Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+            </div>
+            <div class="column">
+                <div class="form-group">
+                    <label for="cnpj">CNPJ da Empresa</label>
+                    <input type="text" id="cnpj" name="cnpj" required>
+                </div>
+                <div class="form-group">
+                    <label for="endereco">Endereço da Empresa</label>
+                    <input type="text" id="endereco" name="endereco" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="submit">Cadastre-se</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
