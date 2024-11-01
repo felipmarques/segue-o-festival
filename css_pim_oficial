@@ -1,0 +1,85 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to right, #A0DEFF, #08C2FF);
+}
+.container {
+    width: 50%;
+    padding: 20px;
+    background-color: #00AEEF;
+    border-radius: 15px;
+    border: 2px solid #FFF100;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+h1 {
+    text-align: left;
+    color: #FFF;
+    margin: 0;
+}
+.subtitle {
+    text-align: left;
+    color: #FFF;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+}
+.column {
+    flex: 1;
+    min-width: 150px;
+    max-width: 48%;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+label {
+    margin-bottom: 5px;
+    color: #FFF; /* Cor dos labels alterada para branco */
+}
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="password"] {
+    padding: 8px;
+    border: 2px solid #FFF100;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    background-color: #fff;
+    color: #333;
+    width: 100%;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+button {
+    padding: 8px 16px;
+    background-color: #08C2FF;
+    color: #fff;
+    border: 2px solid #FFF100;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+button:hover {
+    background-color: #06A1D4;
+}
