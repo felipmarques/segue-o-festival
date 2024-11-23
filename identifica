@@ -1,0 +1,18 @@
+!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleção de Perfil</title>
+    <link rel="stylesheet" href="organizador_styles.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Você é:</h1> 
+        <div class="button-container">
+            <button onclick="location.href='index.html'" class="button-promotor">Promotor</button>
+            <button onclick="location.href='cadastro_participante.html'" class="button-promotor">Participante</button>
+        </div>
+    </div>
+</body>
+</html>
