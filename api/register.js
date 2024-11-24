@@ -8,6 +8,7 @@ const pool = new Pool({
 });
 
 module.exports = async (req, res) => {
+  console.log('Requisição recebida:', req.body);
   if (req.method === 'POST') {
     const { cpf, nome, data_nascimento, email_usuario, senha_usuario, telefone } = req.body;
 
@@ -17,13 +18,15 @@ module.exports = async (req, res) => {
         VALUES ($1, $2, $3, $4, $5, $6)
       `;
       const values = [cpf, nome, data_nascimento, email_usuario, senha_usuario, telefone];
+      console.log('Valores para inserção:', values);
       await pool.query(query, values);
       res.status(200).send('Usuário registrado com sucesso!');
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao executar query:', err);
       res.status(500).send('Erro ao registrar usuário.');
     }
   } else {
     res.status(405).send('Método não permitido');
   }
 };
+
