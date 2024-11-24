@@ -17,19 +17,33 @@
         </div>
         <div class="right">
             <h1>Crie uma nova conta</h1>
-            <div class="input-container">
-                <span class="icon">👤</span>
-                <input type="text" placeholder="Nome de Usuário" required>
-            </div>
-            <div class="input-container">
-                <span class="icon">📧</span>
-                <input type="email" placeholder="E-mail" required>
-            </div>
-            <div class="input-container">
-                <span class="icon">🔒</span>
-                <input type="password" placeholder="Senha" required>
-            </div>
-            <button class="register-button">Cadastrar</button>
+            <form action="/api/register" method="post">
+                <div class="input-container">
+                    <span class="icon">👤</span>
+                    <input type="text" name="nome" placeholder="Nome de Usuário" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📧</span>
+                    <input type="email" name="email_usuario" placeholder="E-mail" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">🔒</span>
+                    <input type="password" name="senha_usuario" placeholder="Senha" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📞</span>
+                    <input type="text" name="telefone" placeholder="Telefone" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📅</span>
+                    <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📄</span>
+                    <input type="text" name="cpf" placeholder="CPF" required>
+                </div>
+                <button class="register-button" type="submit">Cadastrar</button>
+            </form>
         </div>
     </div>
 </body>
