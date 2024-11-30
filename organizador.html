@@ -5,38 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="organizador_styles.css"> 
+    <style>
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .icon {
+            margin-right: 5px;
+        }
+        .info-icon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .info-text {
+            color: #555;
+            font-size: 0.85em;
+            display: none;
+            margin-left: 5px;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
+        .info-icon:hover + .info-text,
+        .info-icon.clicked + .info-text {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Bem-vindo Organizador!</h1>
         <p class="subtitle">Crie sua conta, é gratuita e fácil. Se você já tem uma conta, <strong><a href="index.html">clique aqui</a></strong>.</p>
-        <form>
+        <form id="registrationForm">
             <div class="column">
                 <div class="form-group">
                     <label for="nome">Nome do Responsável</label>
-                    <input type="text" id="nome" name="nome" required>
+                    <div class="input-container">
+                        <input type="text" id="nome" name="nome" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: João Silva</span>
+                    </div>
+                    <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="form-group">
                     <label for="telefone">Número de Telefone</label>
-                    <input type="tel" id="telefone" name="telefone" required>
+                    <div class="input-container">
+                        <input type="tel" id="telefone" name="telefone" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 11987654321</span>
+                    </div>
+                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
                 <div class="form-group">
                     <label for="email">Endereço de Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <div class="input-container">
+                        <input type="email" id="email" name="email" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: joaosilva@email.com</span>
+                    </div>
+                    <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
             </div>
             <div class="column">
                 <div class="form-group">
                     <label for="cnpj">CNPJ da Empresa</label>
-                    <input type="text" id="cnpj" name="cnpj" required>
+                    <div class="input-container">
+                        <input type="text" id="cnpj" name="cnpj" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 12345678000195</span>
+                    </div>
+                    <span class="error" id="cnpjError">Por favor, insira um CNPJ válido.</span>
                 </div>
                 <div class="form-group">
                     <label for="endereco">Endereço da Empresa</label>
-                    <input type="text" id="endereco" name="endereco" required>
+                    <div class="input-container">
+                        <input type="text" id="endereco" name="endereco" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: Rua das Flores, 123</span>
+                    </div>
+                    <span class="error" id="enderecoError">Por favor, insira um endereço válido.</span>
                 </div>
                 <div class="form-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" required>
+                    <div class="input-container">
+                        <input type="password" id="senha" name="senha" required>
+                        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                    </div>
+                    <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
                 </div>
             </div>
             <div class="button-container">
@@ -44,5 +104,89 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("senha");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+
+        function toggleInfo(element) {
+            var infoText = element.nextElementSibling;
+            if (infoText.style.display === "block") {
+                infoText.style.display = "none";
+                element.classList.remove('clicked');
+            } else {
+                infoText.style.display = "block";
+                element.classList.add('clicked');
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            var isValid = true;
+
+            var nome = document.querySelector('input[name="nome"]').value;
+            if (nome.length < 3) {
+                isValid = false;
+                document.getElementById('nomeError').style.display = 'block';
+            } else {
+                document.getElementById('nomeError').style.display = 'none';
+            }
+
+            var telefone = document.querySelector('input[name="telefone"]').value;
+            var telefonePattern = /^[0-9]{10,11}$/;
+            if (!telefonePattern.test(telefone)) {
+                isValid = false;
+                document.getElementById('telefoneError').style.display = 'block';
+            } else {
+                document.getElementById('telefoneError').style.display = 'none';
+            }
+
+            var email = document.querySelector('input[name="email"]').value;
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                document.getElementById('emailError').style.display = 'block';
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+
+            var cnpj = document.querySelector('input[name="cnpj"]').value;
+            var cnpjPattern = /^[0-9]{14}$/;
+            if (!cnpjPattern.test(cnpj)) {
+                isValid = false;
+                document.getElementById('cnpjError').style.display = 'block';
+            } else {
+                document.getElementById('cnpjError').style.display = 'none';
+            }
+
+            var endereco = document.querySelector('input[name="endereco"]').value;
+            if (endereco.length < 3) {
+                isValid = false;
+                document.getElementById('enderecoError').style.display = 'block';
+            } else {
+                document.getElementById('enderecoError').style.display = 'none';
+            }
+
+            var senha = document.querySelector('input[name="senha"]').value;
+            var senhaPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!senhaPattern.test(senha)) {
+                isValid = false;
+                document.getElementById('senhaError').style.display = 'block';
+            } else {
+                document.getElementById('senhaError').style.display = 'none';
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
+
