@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login e Registro</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .input-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -17,8 +29,8 @@
             </div>
             <div class="input-container">
                 <span class="icon">🔒</span>
-                <input type="password" placeholder="Senha">
-                <span class="toggle-password">👁️</span>
+                <input type="password" id="password" placeholder="Senha">
+                <span class="toggle-password" onclick="togglePassword()">👁️</span>
             </div>
             <div class="forgot-password">
                 <a href="#">Esqueceu a senha?</a>
@@ -31,5 +43,17 @@
             <a href="identifica.html" class="register-link">Novo por aqui? Cadastre-se!</a>
         </div>
     </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+    </script>
 </body>
 </html>
