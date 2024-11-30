@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela de Login e Registro</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -17,34 +24,112 @@
         </div>
         <div class="right">
             <h1>Crie uma nova conta</h1>
-            <form action="/api/register" method="post">
+            <form id="registrationForm" action="/api/register" method="post">
                 <div class="input-container">
                     <span class="icon">👤</span>
                     <input type="text" name="nome" placeholder="Nome de Usuário" required>
+                    <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📧</span>
                     <input type="email" name="email_usuario" placeholder="E-mail" required>
+                    <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">🔒</span>
-                    <input type="password" name="senha_usuario" placeholder="Senha" required>
+                    <input type="password" name="senha_usuario" placeholder="Senha" required id="password">
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                    <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📞</span>
                     <input type="text" name="telefone" placeholder="Telefone" required>
+                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📅</span>
                     <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
+                    <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📄</span>
                     <input type="text" name="cpf" placeholder="CPF" required>
+                    <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
                 <button class="register-button" type="submit">Cadastrar</button>
             </form>
         </div>
     </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            var isValid = true;
+
+            var nome = document.querySelector('input[name="nome"]').value;
+            if (nome.length < 3) {
+                isValid = false;
+                document.getElementById('nomeError').style.display = 'block';
+            } else {
+                document.getElementById('nomeError').style.display = 'none';
+            }
+
+            var email = document.querySelector('input[name="email_usuario"]').value;
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                document.getElementById('emailError').style.display = 'block';
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+
+            var senha = document.querySelector('input[name="senha_usuario"]').value;
+            if (senha.length < 8) {
+                isValid = false;
+                document.getElementById('senhaError').style.display = 'block';
+            } else {
+                document.getElementById('senhaError').style.display = 'none';
+            }
+
+            var telefone = document.querySelector('input[name="telefone"]').value;
+            var telefonePattern = /^[0-9]{10,11}$/;
+            if (!telefonePattern.test(telefone)) {
+                isValid = false;
+                document.getElementById('telefoneError').style.display = 'block';
+            } else {
+                document.getElementById('telefoneError').style.display = 'none';
+            }
+
+            var cpf = document.querySelector('input[name="cpf"]').value;
+            var cpfPattern = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+            if (!cpfPattern.test(cpf)) {
+                isValid = false;
+                document.getElementById('cpfError').style.display = 'block';
+            } else {
+                document.getElementById('cpfError').style.display = 'none';
+            }
+
+            var dataNascimento = document.querySelector('input[name="data_nascimento"]').value;
+            if (dataNascimento === '') {
+                isValid = false;
+                document.getElementById('dataNascimentoError').style.display = 'block';
+            } else {
+                document.getElementById('dataNascimentoError').style.display = 'none';
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
