@@ -14,6 +14,13 @@
         .info-text {
             color: #555;
             font-size: 0.85em;
+            display: none;
+        }
+        .info-icon {
+            cursor: pointer;
+        }
+        .info-icon:hover + .info-text {
+            display: block;
         }
     </style>
 </head>
@@ -32,12 +39,14 @@
                 <div class="input-container">
                     <span class="icon">👤</span>
                     <input type="text" name="nome" placeholder="Nome de Usuário" required>
+                    <span class="info-icon">ℹ️</span>
                     <span class="info-text">Exemplo: João Silva</span>
                     <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📧</span>
                     <input type="email" name="email_usuario" placeholder="E-mail" required>
+                    <span class="info-icon">ℹ️</span>
                     <span class="info-text">Exemplo: joaosilva@email.com</span>
                     <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
@@ -45,24 +54,28 @@
                     <span class="icon">🔒</span>
                     <input type="password" name="senha_usuario" placeholder="Senha" required id="password">
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                    <span class="info-icon">ℹ️</span>
                     <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
                     <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📞</span>
                     <input type="text" name="telefone" placeholder="Telefone" required>
+                    <span class="info-icon">ℹ️</span>
                     <span class="info-text">Exemplo: 11987654321</span>
                     <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📅</span>
                     <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
+                    <span class="info-icon">ℹ️</span>
                     <span class="info-text">Formato: dd/mm/aaaa</span>
                     <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📄</span>
                     <input type="text" name="cpf" placeholder="CPF" required>
+                    <span class="info-icon">ℹ️</span>
                     <span class="info-text">Formato: 123.456.789-00</span>
                     <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
@@ -144,3 +157,4 @@
     </script>
 </body>
 </html>
+
