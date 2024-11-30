@@ -9,12 +9,19 @@
         .info-icon {
             cursor: pointer;
             margin-left: 5px;
+            position: relative;
+            z-index: 2; /* Garantir que está acima de outros elementos */
         }
         .info-text {
             display: none;
             font-size: 12px;
-            color: #FFF; /* Alterei a cor do texto para branco */
+            color: #FFF;
             margin-top: 5px;
+            position: absolute;
+            z-index: 1; /* Certificar-se de que está visível */
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 5px;
+            border-radius: 5px;
         }
         .input-container {
             position: relative;
@@ -25,6 +32,7 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
+            z-index: 2; /* Garantir que está acima de outros elementos */
         }
     </style>
 </head>
@@ -153,14 +161,4 @@
         // Exibe/esconde a senha
         function togglePassword() {
             const senhaField = document.getElementById('senha');
-            senhaField.type = senhaField.type === 'password' ? 'text' : 'password';
-        }
-        
-        // Exibe/esconde informações de ajuda
-        function toggleInfo(icon) {
-            const infoText = icon.nextElementSibling;
-            infoText.style.display = infoText.style.display === 'block' ? 'none' : 'block';
-        }
-    </script>
-</body>
-</html>
+            senhaField.type
