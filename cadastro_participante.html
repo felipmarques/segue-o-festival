@@ -6,21 +6,31 @@
     <title>Tela de Login e Registro</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .icon {
+            margin-right: 5px;
+        }
+        .info-icon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .info-text {
+            display: none;
+            color: #555;
+            font-size: 0.85em;
+            margin-left: 5px;
+        }
+        .info-icon:hover + .info-text {
+            display: block;
+        }
         .error {
             color: red;
             font-size: 0.9em;
             display: none;
-        }
-        .info-text {
-            color: #555;
-            font-size: 0.85em;
-            display: none;
-        }
-        .info-icon {
-            cursor: pointer;
-        }
-        .info-icon:hover + .info-text {
-            display: block;
         }
     </style>
 </head>
