@@ -6,10 +6,30 @@
     <title>Tela de Login e Registro</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .error {
-            color: red;
-            font-size: 0.9em;
+        .input-container {
+            position: relative;
+        }
+        .info-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .info-icon:hover .info-text {
+            display: block;
+        }
+        .info-text {
             display: none;
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 1;
         }
     </style>
 </head>
@@ -27,33 +47,51 @@
             <form id="registrationForm" action="/api/register" method="post">
                 <div class="input-container">
                     <span class="icon">👤</span>
-                    <input type="text" name="nome" placeholder="Nome de Usuário (João Silva)" required>
+                    <input type="text" name="nome" placeholder="Nome de Usuário" required>
+                    <span class="info-icon">ℹ️
+                        <span class="info-text">Exemplo: João Silva</span>
+                    </span>
                     <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📧</span>
-                    <input type="email" name="email_usuario" placeholder="E-mail (joaosilva@email.com)" required>
+                    <input type="email" name="email_usuario" placeholder="E-mail" required>
+                    <span class="info-icon">ℹ️
+                        <span class="info-text">Exemplo: joaosilva@email.com</span>
+                    </span>
                     <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">🔒</span>
-                    <input type="password" name="senha_usuario" placeholder="Senha (mínimo 8 caracteres)" required id="password">
+                    <input type="password" name="senha_usuario" placeholder="Senha" required id="password">
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                    <span class="info-icon">ℹ️
+                        <span class="info-text">Mínimo 8 caracteres</span>
+                    </span>
                     <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📞</span>
-                    <input type="text" name="telefone" placeholder="Telefone (11987654321)" required>
+                    <input type="text" name="telefone" placeholder="Telefone" required>
+                    <span class="info-icon">ℹ️
+                        <span class="info-text">Exemplo: 11987654321</span>
+                    </span>
                     <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📅</span>
-                    <input type="date" name="data_nascimento" placeholder="Data de Nascimento (dd/mm/aaaa)" required>
+                    <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
+                    <span class="info-icon">ℹ️
+                        <span class="info-text">Formato: dd/mm/aaaa</span>
+                    </span>
                     <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📄</span>
-                    <input type="text" name="cpf" placeholder="CPF (123.456.789-00)" required>
+                    <input type="text" name="cpf" placeholder="CPF" required>
+                    <span class="info-icon">ℹ️
+                        <span class="info-text">Formato: 123.456.789-00</span>
+                    </span>
                     <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
                 <button class="register-button" type="submit">Cadastrar</button>
@@ -133,4 +171,3 @@
     </script>
 </body>
 </html>
-
