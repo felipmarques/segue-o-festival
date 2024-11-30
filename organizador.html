@@ -5,163 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="organizador_styles.css"> 
-    <style>
-        .info-icon {
-            cursor: pointer;
-            margin-left: 5px;
-        }
-        .info-text {
-            display: none;
-            font-size: 12px;
-            color: #555;
-            margin-top: 5px;
-        }
-        .input-container {
-            position: relative;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>Bem-vindo Organizador!</h1>
         <p class="subtitle">Crie sua conta, é gratuita e fácil. Se você já tem uma conta, <strong><a href="index.html">clique aqui</a></strong>.</p>
         <form id="registrationForm">
-            <!-- Informações Pessoais -->
-            <div class="form-group">
-                <label for="nome">Nome do Responsável</label>
-                <div class="input-container">
-                    <input type="text" id="nome" name="nome" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: João Silva</span>
+            <div class="column">
+                <div class="form-group">
+                    <label for="nome">Nome do Responsável</label>
+                    <div class="input-container">
+                        <input type="text" id="nome" name="nome" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: João Silva</span>
+                    </div>
+                    <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
-                <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
-            </div>
-            <div class="form-group">
-                <label for="telefone">Número de Telefone</label>
-                <div class="input-container">
-                    <input type="tel" id="telefone" name="telefone" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: 11987654321</span>
+                <div class="form-group">
+                    <label for="telefone">Número de Telefone</label>
+                    <div class="input-container">
+                        <input type="tel" id="telefone" name="telefone" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 11987654321</span>
+                    </div>
+                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
-                <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
-            </div>
-            <div class="form-group">
-                <label for="email">Endereço de Email</label>
-                <div class="input-container">
-                    <input type="email" id="email" name="email" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: joaosilva@email.com</span>
+                <div class="form-group">
+                    <label for="email">Endereço de Email</label>
+                    <div class="input-container">
+                        <input type="email" id="email" name="email" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: joaosilva@email.com</span>
+                    </div>
+                    <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
-                <span class="error" id="emailError">Por favor, insira um email válido.</span>
-            </div>
-            
-            <!-- Endereço -->
-            <h2>Endereço</h2>
-            <div class="form-group">
-                <label for="cep">CEP</label>
-                <div class="input-container">
-                    <input type="text" id="cep" name="cep" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: 12345678</span>
+                <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <div class="input-container">
+                        <input type="text" id="cep" name="cep" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 12345678</span>
+                    </div>
+                    <span class="error" id="cepError">Por favor, insira um CEP válido.</span>
                 </div>
-                <span class="error" id="cepError">Por favor, insira um CEP válido.</span>
-            </div>
-            <div class="form-group">
-                <label for="rua">Rua</label>
-                <div class="input-container">
-                    <input type="text" id="rua" name="rua" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: Rua das Flores</span>
+                <div class="form-group">
+                    <label for="rua">Rua</label>
+                    <div class="input-container">
+                        <input type="text" id="rua" name="rua" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: Rua das Flores</span>
+                    </div>
+                    <span class="error" id="ruaError">Por favor, insira um nome de rua válido.</span>
                 </div>
-                <span class="error" id="ruaError">Por favor, insira um nome de rua válido.</span>
             </div>
-            <div class="form-group">
-                <label for="numero">Número</label>
-                <div class="input-container">
-                    <input type="text" id="numero" name="numero" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: 123</span>
+            <div class="column">
+                <div class="form-group">
+                    <label for="numero">Número</label>
+                    <div class="input-container">
+                        <input type="text" id="numero" name="numero" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 123</span>
+                    </div>
+                    <span class="error" id="numeroError">Por favor, insira um número válido.</span>
                 </div>
-                <span class="error" id="numeroError">Por favor, insira um número válido.</span>
-            </div>
-            <div class="form-group">
-                <label for="bairro">Bairro</label>
-                <div class="input-container">
-                    <input type="text" id="bairro" name="bairro" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: Centro</span>
+                <div class="form-group">
+                    <label for="complemento">Complemento</label>
+                    <div class="input-container">
+                        <input type="text" id="complemento" name="complemento">
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: Apartamento 101</span>
+                    </div>
+                    <span class="error" id="complementoError">Por favor, insira um complemento válido.</span>
                 </div>
-                <span class="error" id="bairroError">Por favor, insira um bairro válido.</span>
-            </div>
-            <div class="form-group">
-                <label for="cidade">Cidade</label>
-                <div class="input-container">
-                    <input type="text" id="cidade" name="cidade" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: São Paulo</span>
+                <div class="form-group">
+                    <label for="cnpj">CNPJ da Empresa</label>
+                    <div class="input-container">
+                        <input type="text" id="cnpj" name="cnpj" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 12345678000195</span>
+                    </div>
+                    <span class="error" id="cnpjError">Por favor, insira um CNPJ válido.</span>
                 </div>
-                <span class="error" id="cidadeError">Por favor, insira uma cidade válida.</span>
-            </div>
-            <div class="form-group">
-                <label for="estado">Estado</label>
-                <div class="input-container">
-                    <input type="text" id="estado" name="estado" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: SP</span>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <div class="input-container">
+                        <input type="password" id="senha" name="senha" required>
+                        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                    </div>
+                    <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
                 </div>
-                <span class="error" id="estadoError">Por favor, insira um estado válido.</span>
             </div>
-            
-            <!-- Empresa -->
-            <h2>Empresa</h2>
-            <div class="form-group">
-                <label for="cnpj">CNPJ da Empresa</label>
-                <div class="input-container">
-                    <input type="text" id="cnpj" name="cnpj" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: 12345678000195</span>
-                </div>
-                <span class="error" id="cnpjError">Por favor, insira um CNPJ válido.</span>
-            </div>
-            
-            <!-- Senha -->
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <div class="input-container">
-                    <input type="password" id="senha" name="senha" required>
-                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
-                </div>
-                <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
-            </div>
-            
-            <!-- Botão -->
             <div class="button-container">
                 <button type="submit">Cadastre-se</button>
             </div>
         </form>
     </div>
-    <script>
-        // Exibe/esconde a senha
-        function togglePassword() {
-            const senhaField = document.getElementById('senha');
-            senhaField.type = senhaField.type === 'password' ? 'text' : 'password';
-        }
-        
-        // Exibe/esconde informações de ajuda
-        function toggleInfo(icon) {
-            const infoText = icon.nextElementSibling;
-            infoText.style.display = infoText.style.display === 'block' ? 'none' : 'block';
-        }
-    </script>
-</body>
-</html>
 
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("senha");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+
+        function toggleInfo(element) {
+            var infoText = element.nextElementSibling;
+            if (infoText.style.display === "block") {
+                infoText.style.display = "none";
+                element.classList.remove('clicked');
+            } else {
+                infoText.style.display = "block";
+                element.classList.add('clicked');
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            var isValid = true;
+
+            var nome = document.querySelector('input[name="nome"]').value;
+            if (nome.length < 3) {
+                isValid = false;
+                document.getElementById('nomeError').style.display = 'block';
+            } else {
+                document.getElementById('nomeError').style.display = 'none';
+            }
+
+            var telefone = document.querySelector('input[name="telefone"]').value;
+            var telefonePattern = /^[0-9]{10,11}$/;
+            if (!telefonePattern.test(telefone)) {
+                isValid = false;
+                document.getElementById('telefoneError').style.display = 'block';
+            } else {
+                document.getElementById('telefoneError').style.display = 'none';
+            }
+
+            var email = document.querySelector('input[name="email"]').value;
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                document.getElementById('emailError').style.display = 'block';
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+
+            var cep = document.querySelector('input[name="cep"]').value;
+            var cepPattern = /^[0-9]{8}$/;
+            if (!cepPattern.test(cep)) {
+                isValid = false;
+                document.getElementById('cepError').style.display = 'block';
+            } else {
+                document.getElementById('cepError').style.display = 'none';
+            }
+
+            var rua = document.querySelector('input[name="rua"]').value;
+            if (rua.length < 3) {
+                isValid = false;
+                document.getElementById('ruaError').style.display = 'block';
+            } else {
+                document.getElementById('ruaError').style.display = 'none';
+            }
+
+            var numero = document.querySelector('input[name="numero"]').value;
+            if (numero.length < 1) {
+                isValid = false;
+                document.getElementById('numeroError').style.display = 'block';
+            } else {
+                document.getElementById('numeroError').style.display = 'none';
+            }
+
+            var complemento = document.querySelector('input[name="complemento"]').value;
+            if (complemento.length < [_{{{CITATION{{{_1{](https://github.com/ricardo-cas/pandas/tree/eefd8f3ed9250c15e029b7ae59a24ef9f7ffc4ab/GUIA_MARKDOWN.MD)[_{{{CITATION{{{_2{](https://github.com/dipinho/CRUD/tree/bad6a872aa4e385d9299a68362cd52cd7de341e6/CRUD%2Fcadastro_usuario.php)[_{{{CITATION{{{_3{](https://github.com/iliankostov/SoftUni/tree/74666fcf3103163224a732c7198499b77dfc0416/iBook%2Fjs%2Fservices%2FvalidationService.js)
