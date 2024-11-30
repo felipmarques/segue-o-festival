@@ -83,7 +83,7 @@
                     <span class="icon">📄</span>
                     <input type="text" name="cpf" placeholder="CPF" required>
                     <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Formato: 123.456.789-00</span>
+                    <span class="info-text">Formato: 12345678900</span>
                     <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
                 <button class="register-button" type="submit">Cadastrar</button>
@@ -150,7 +150,7 @@
             }
 
             var cpf = document.querySelector('input[name="cpf"]').value;
-            var cpfPattern = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+            var cpfPattern = /^\d{11}$/;
             if (!cpfPattern.test(cpf)) {
                 isValid = false;
                 document.getElementById('cpfError').style.display = 'block';
