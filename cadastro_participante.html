@@ -27,33 +27,33 @@
             <form id="registrationForm" action="/api/register" method="post">
                 <div class="input-container">
                     <span class="icon">👤</span>
-                    <input type="text" name="nome" placeholder="Nome de Usuário" required>
+                    <input type="text" name="nome" placeholder="Nome de Usuário (João Silva)" required>
                     <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📧</span>
-                    <input type="email" name="email_usuario" placeholder="E-mail" required>
+                    <input type="email" name="email_usuario" placeholder="E-mail (joaosilva@email.com)" required>
                     <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">🔒</span>
-                    <input type="password" name="senha_usuario" placeholder="Senha" required id="password">
+                    <input type="password" name="senha_usuario" placeholder="Senha (mínimo 8 caracteres)" required id="password">
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>
                     <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📞</span>
-                    <input type="text" name="telefone" placeholder="Telefone" required>
+                    <input type="text" name="telefone" placeholder="Telefone (11987654321)" required>
                     <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📅</span>
-                    <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
+                    <input type="date" name="data_nascimento" placeholder="Data de Nascimento (dd/mm/aaaa)" required>
                     <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
                 </div>
                 <div class="input-container">
                     <span class="icon">📄</span>
-                    <input type="text" name="cpf" placeholder="CPF" required>
+                    <input type="text" name="cpf" placeholder="CPF (123.456.789-00)" required>
                     <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
                 <button class="register-button" type="submit">Cadastrar</button>
@@ -133,3 +133,4 @@
     </script>
 </body>
 </html>
+
