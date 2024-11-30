@@ -39,8 +39,62 @@
                     </div>
                     <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
+                <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <div class="input-container">
+                        <input type="text" id="cep" name="cep" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 12345678</span>
+                    </div>
+                    <span class="error" id="cepError">Por favor, insira um CEP válido.</span>
+                </div>
+                <div class="form-group">
+                    <label for="rua">Rua</label>
+                    <div class="input-container">
+                        <input type="text" id="rua" name="rua" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: Rua das Flores</span>
+                    </div>
+                    <span class="error" id="ruaError">Por favor, insira um nome de rua válido.</span>
+                </div>
             </div>
             <div class="column">
+                <div class="form-group">
+                    <label for="numero">Número</label>
+                    <div class="input-container">
+                        <input type="text" id="numero" name="numero" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: 123</span>
+                    </div>
+                    <span class="error" id="numeroError">Por favor, insira um número válido.</span>
+                </div>
+                <div class="form-group">
+                    <label for="bairro">Bairro</label>
+                    <div class="input-container">
+                        <input type="text" id="bairro" name="bairro" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: Centro</span>
+                    </div>
+                    <span class="error" id="bairroError">Por favor, insira um bairro válido.</span>
+                </div>
+                <div class="form-group">
+                    <label for="cidade">Cidade</label>
+                    <div class="input-container">
+                        <input type="text" id="cidade" name="cidade" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: São Paulo</span>
+                    </div>
+                    <span class="error" id="cidadeError">Por favor, insira uma cidade válida.</span>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <div class="input-container">
+                        <input type="text" id="estado" name="estado" required>
+                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                        <span class="info-text">Exemplo: SP</span>
+                    </div>
+                    <span class="error" id="estadoError">Por favor, insira um estado válido.</span>
+                </div>
                 <div class="form-group">
                     <label for="cnpj">CNPJ da Empresa</label>
                     <div class="input-container">
@@ -49,15 +103,6 @@
                         <span class="info-text">Exemplo: 12345678000195</span>
                     </div>
                     <span class="error" id="cnpjError">Por favor, insira um CNPJ válido.</span>
-                </div>
-                <div class="form-group">
-                    <label for="endereco">Endereço da Empresa</label>
-                    <div class="input-container">
-                        <input type="text" id="endereco" name="endereco" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: Rua das Flores, 123</span>
-                    </div>
-                    <span class="error" id="enderecoError">Por favor, insira um endereço válido.</span>
                 </div>
                 <div class="form-group">
                     <label for="senha">Senha</label>
@@ -75,89 +120,5 @@
             </div>
         </form>
     </div>
-
-    <script>
-        function togglePassword() {
-            var passwordField = document.getElementById("senha");
-            var passwordFieldType = passwordField.getAttribute("type");
-            if (passwordFieldType === "password") {
-                passwordField.setAttribute("type", "text");
-            } else {
-                passwordField.setAttribute("type", "password");
-            }
-        }
-
-        function toggleInfo(element) {
-            var infoText = element.nextElementSibling;
-            if (infoText.style.display === "block") {
-                infoText.style.display = "none";
-                element.classList.remove('clicked');
-            } else {
-                infoText.style.display = "block";
-                element.classList.add('clicked');
-            }
-        }
-
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
-            var isValid = true;
-
-            var nome = document.querySelector('input[name="nome"]').value;
-            if (nome.length < 3) {
-                isValid = false;
-                document.getElementById('nomeError').style.display = 'block';
-            } else {
-                document.getElementById('nomeError').style.display = 'none';
-            }
-
-            var telefone = document.querySelector('input[name="telefone"]').value;
-            var telefonePattern = /^[0-9]{10,11}$/;
-            if (!telefonePattern.test(telefone)) {
-                isValid = false;
-                document.getElementById('telefoneError').style.display = 'block';
-            } else {
-                document.getElementById('telefoneError').style.display = 'none';
-            }
-
-            var email = document.querySelector('input[name="email"]').value;
-            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-            if (!emailPattern.test(email)) {
-                isValid = false;
-                document.getElementById('emailError').style.display = 'block';
-            } else {
-                document.getElementById('emailError').style.display = 'none';
-            }
-
-            var cnpj = document.querySelector('input[name="cnpj"]').value;
-            var cnpjPattern = /^[0-9]{14}$/;
-            if (!cnpjPattern.test(cnpj)) {
-                isValid = false;
-                document.getElementById('cnpjError').style.display = 'block';
-            } else {
-                document.getElementById('cnpjError').style.display = 'none';
-            }
-
-            var endereco = document.querySelector('input[name="endereco"]').value;
-            if (endereco.length < 3) {
-                isValid = false;
-                document.getElementById('enderecoError').style.display = 'block';
-            } else {
-                document.getElementById('enderecoError').style.display = 'none';
-            }
-
-            var senha = document.querySelector('input[name="senha"]').value;
-            var senhaPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if (!senhaPattern.test(senha)) {
-                isValid = false;
-                document.getElementById('senhaError').style.display = 'block';
-            } else {
-                document.getElementById('senhaError').style.display = 'none';
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-            }
-        });
-    </script>
 </body>
 </html>
-
