@@ -26,7 +26,9 @@ module.exports = async (req, res) => {
       console.log('Executando query:', query);
       console.log('Com valores:', values);
       
-      await pool.query(query, values);
+      // Executando a query
+      const result = await pool.query(query, values);
+      console.log('Resultado da query:', result);
       res.status(200).send('Usuário registrado com sucesso!');
     } catch (err) {
       console.error('Erro ao executar query:', err);
