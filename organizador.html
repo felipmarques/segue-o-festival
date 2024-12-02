@@ -125,10 +125,12 @@
             }
         }
 
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
             var isValid = true;
 
-            var nome = document.querySelector('input[name="nome"]').value;
+            const nome = document.querySelector('input[name="nome"]').value;
             if (nome.length < 3) {
                 isValid = false;
                 document.getElementById('nomeError').style.display = 'block';
@@ -136,20 +138,52 @@
                 document.getElementById('nomeError').style.display = 'none';
             }
 
-            var telefone = document.querySelector('input[name="telefone"]').value;
-            var telefonePattern = /^[0-9]{10,11}$/;
-            if (!telefonePattern.test(telefone)) {
-                isValid = false;
-                document.getElementById('telefoneError').style.display = 'block';
-            } else {
-                document.getElementById('telefoneError').style.display = 'none';
-            }
+            // Continue validando os campos (telefone, email, etc.) aqui.
 
-            var email = document.querySelector('input[name="email"]').value;
-            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-            if (!emailPattern.test(email)) {
-                isValid = false;
-                document.getElementById('emailError').style.display = 'block';
-            } else {
-                document.getElementById('emailError').style.display = 'none';
+            if (!isValid) return;
+
+            const formData = {
+                nome: document.querySelector('input[name="nome"]').value,
+                telefone: document.querySelector('input[name="telefone"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                cep: document.querySelector('input[name="cep"]').value,
+                rua: document.querySelector('input[name="rua"]').value,
+                numero: document.querySelector('input[name="numero"]').value,
+                complemento: document.querySelector('input[name="complemento"]').value || '',
+                cnpj: document.querySelector('input[name="cnpj"]').value,
+                senha: document.querySelector('input[name="senha"]').value
+            };
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch('/api/registerPromotor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                submitButton.textContent = 'Cadastre-se';
+                submitButton.disabled = false;
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                    document.getElementById('registrationForm').reset();
+                } else {
+                    const errorMessage = await response.text();
+                    alert(`Erro ao cadastrar: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
+                submitButton.textContent = 'Cadastre-se';
+                submitButton.disabled = false;
             }
+        });
+    </script>
+</body>
+</html>
