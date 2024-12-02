@@ -23,19 +23,21 @@
         <div class="left">
             <h1>Entre na sua conta</h1>
             <p>Entre com o seu e-mail ou CNPJ</p>
-            <div class="input-container">
-                <span class="icon">📧</span>
-                <input type="text" placeholder="E-mail/CNPJ">
-            </div>
-            <div class="input-container">
-                <span class="icon">🔒</span>
-                <input type="password" id="password" placeholder="Senha">
-                <span class="toggle-password" onclick="togglePassword()">👁️</span>
-            </div>
-            <div class="forgot-password">
-                <a href="#">Esqueceu a senha?</a>
-            </div>
-            <button class="login-button">Entrar</button>
+            <form id="loginForm">
+                <div class="input-container">
+                    <span class="icon">📧</span>
+                    <input type="text" id="identificador" name="identificador" placeholder="E-mail/CNPJ" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">🔒</span>
+                    <input type="password" id="password" name="senha" placeholder="Senha" required>
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                </div>
+                <div class="forgot-password">
+                    <a href="#">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="login-button">Entrar</button>
+            </form>
         </div>
         <div class="right">
             <h1>Bem-Vindo de volta!</h1>
@@ -54,6 +56,47 @@
                 passwordField.setAttribute("type", "password");
             }
         }
+
+        // Envio do formulário para a API
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            // Coletando dados do formulário
+            const identificador = document.getElementById("identificador").value;
+            const senha = document.getElementById("password").value;
+
+            const loginData = {
+                identificador: identificador,
+                senha: senha
+            };
+
+            // Enviar os dados para a API
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Se o login for bem-sucedido
+                    alert("Login bem-sucedido!");
+                    // Redirecionar ou exibir outra página após o login
+                    // window.location.href = "/dashboard"; // exemplo de redirecionamento
+                } else {
+                    // Se as credenciais forem inválidas
+                    alert(data.message || "Erro no login");
+                }
+            } catch (error) {
+                console.error("Erro de rede:", error);
+                alert("Houve um erro na requisição. Tente novamente mais tarde.");
+            }
+        });
     </script>
 </body>
 </html>
+
