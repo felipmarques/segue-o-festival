@@ -84,16 +84,16 @@
 
                 if (response.ok) {
                     // Se o login for bem-sucedido
-                    alert("Login bem-sucedido!");
+                    alert("Login bem-sucedido!");  // Exibindo pop-up de sucesso
                     // Redirecionar ou exibir outra página após o login
                     // window.location.href = "/dashboard"; // exemplo de redirecionamento
                 } else {
                     // Se as credenciais forem inválidas
-                    alert(data.message || "Erro no login");
+                    alert(data.message || "Erro no login");  // Exibindo pop-up de erro
                 }
             } catch (error) {
                 console.error("Erro de rede:", error);
-                alert("Houve um erro na requisição. Tente novamente mais tarde.");
+                alert("Houve um erro na requisição. Tente novamente mais tarde.");  // Exibindo erro de rede
             }
         });
     </script>
