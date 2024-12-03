@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Evento</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap'); /* Font similar to the one in the logo */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            height: 50px;
+        }
+
+        .header .logo-text {
+            font-family: 'Pacifico', cursive;
+            font-size: 36px;
+            color: #000;
+        }
+
+        .header .menu {
+            font-size: 14px;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-bottom: 2px solid yellow;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid yellow;
+            border-radius: 4px;
+            outline: none;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-group input[type="date"],
+        .form-group input[type="file"] {
+            width: 100%;
+        }
+
+        .date-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .date-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .date-container .form-group {
+            width: 48%;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .button-container button:hover {
+            background-color: #007B9E;
+        }
+
+        .navigation {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #007bff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-text">Segue o Festival!</div>
+            <div class="menu">Menu Pessoal</div>
+        </div>
+        <h1>Cadastro do Evento</h1>
+        <form action="/api/cadastro-evento" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nome-evento">Nome do Evento</label>
+                <input type="text" id="nome-evento" name="nome-evento">
+            </div>
+            <div class="form-group">
+                <label for="classificacao-indicativa">Classificação Indicativa</label>
+                <select id="classificacao-indicativa" name="classificacao-indicativa">
+                    <option value="Livre">Livre</option>
+                    <option value="10 anos">10 anos</option>
+                    <option value="12 anos">12 anos</option>
+                    <option value="14 anos">14 anos</option>
+                    <option value="16 anos">16 anos</option>
+                    <option value="18 anos">18 anos</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <textarea id="descricao" name="descricao" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="site-externo">Site externo para compra de ingresso</label>
+                <input type="text" id="site-externo" name="site-externo">
+            </div>
+            <div class="form-group date-title">Período em que o evento ficará disponível no Segue o Festival</div>
+            <div class="date-container">
+                <div class="form-group">
+                    <label for="data-inicio">Data Início</label>
+                    <input type="date" id="data-inicio" name="data-inicio">
+                </div>
+                <div class="form-group">
+                    <label for="data-fim">Data Fim</label>
+                    <input type="date" id="data-fim" name="data-fim">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="banners">Insira Aqui os Banners do Evento (máx. 2)</label>
+                <input type="file" id="banners" name="banners" multiple>
+            </div>
+            <div class="button-container">
+                <button type="submit">Próximo</button>
+            </div>
+        </form>
+        <div class="navigation">
+            Dados da Página > Localização > Revisão e Pagamento
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('banners').addEventListener('change', function() {
+            if (this.files.length > 2) {
+                alert('Você só pode enviar no máximo 2 banners.');
+                this.value = ''; // Limpa a seleção de arquivos
+            }
+        });
+    </script>
+</body>
+</html>
