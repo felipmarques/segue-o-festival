@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evento</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+     <header class="cabecalho">
+        <h3 class="cabecalho-titulo">
+            Segue<br>O Festival!
+        </h3>
+        <div class="cabecalho-botoes">
+            <button class="cabecalho-botao-entrar">Entrar</button>
+        </div>
+    </header>
+    
+
+    <main class="conteudo">
+        <div class="conteudo-menu">
+            <p>Músicas</p>
+            <p>Evento</p>
+            <p>Estados</p>
+            <p>Ingressos</p>
+            <p>Line-Up</p>
+            <p>Especiais</p>
+        </div>
+
+    <section class="conteudo-primario">
+        <div class="conteudo-banners"> 
+
+            <div class="principal-principal">
+                <img src="periclão.png" alt="Pagodão do Pericão">
+            </div>
+
+            <div class="principal-secundario">
+                <img src="pagodedopericao.png" alt="Pagodão do Pericão">
+            </div>
+        </div>
+ 
+        <div class="botao-container">  
+            <a href="https://pagodedopericao.com/">
+                <h2 class="botao-container-titulo">COMPRE AQUI</h2>
+            </a>
+        </div>
+    </section>
+
+
+        <section class="conteudo-secundario">
+        <div class="conteudo-secundario-informacoes">
+            <h1>Informações</h1>
+        </div>
+
+        <div class="conteudo-secundario-alinhamento">
+            <h3 class="conteudo-secundario-titulo">Gravação do DVD Pagode do Pericão</h3>
+            <p class="conteudo-secundario-paragrafo"> <strong>Pavilhão do Anhembi:</strong> Av. Olavo Fontoura, 1209 - Santana - São Paulo - SP <br> 
+                <strong>Organizador:</strong> Blá Eventos Ltda <br> <strong>Classificação:</strong> 18 Anos <br> 
+                <strong>Pagamento:</strong> Pix, Cartão de Débito e Crédito.</p>
+        </div>
+    </section>
+
+
+
+    </main>
+</body>
+</html>
