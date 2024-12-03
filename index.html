@@ -83,10 +83,8 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Se o login for bem-sucedido
-                    alert("Login bem-sucedido!");  // Exibindo pop-up de sucesso
-                    // Redirecionar ou exibir outra página após o login
-                    // window.location.href = "/dashboard"; // exemplo de redirecionamento
+                    // Se o login for bem-sucedido, redirecionar para a página home.html
+                    window.location.href = "home.html";
                 } else {
                     // Se as credenciais forem inválidas
                     alert(data.message || "Erro no login");  // Exibindo pop-up de erro
@@ -99,4 +97,5 @@
     </script>
 </body>
 </html>
+
 
