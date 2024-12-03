@@ -123,6 +123,28 @@
             color: #007bff;
             text-align: center;
         }
+
+        /* Estilo para o pop-up */
+        #popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #popup.success {
+            border-color: green;
+        }
+
+        #popup.error {
+            border-color: red;
+        }
     </style>
 </head>
 <body>
@@ -132,7 +154,7 @@
             <div class="menu">Menu Pessoal</div>
         </div>
         <h1>Cadastro do Evento</h1>
-        <form action="/api/cadastro-evento" method="post" enctype="multipart/form-data">
+        <form id="eventForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nome-evento">Nome do Evento</label>
                 <input type="text" id="nome-evento" name="nome-evento">
@@ -172,7 +194,7 @@
                 <input type="file" id="banners" name="banners" multiple>
             </div>
             <div class="button-container">
-                <button type="submit">Próximo</button>
+                <button type="submit">Enviar</button>
             </div>
         </form>
         <div class="navigation">
@@ -180,13 +202,43 @@
         </div>
     </div>
 
+    <!-- Pop-up de status -->
+    <div id="popup"></div>
+
     <script>
-        document.getElementById('banners').addEventListener('change', function() {
-            if (this.files.length > 2) {
-                alert('Você só pode enviar no máximo 2 banners.');
-                this.value = ''; // Limpa a seleção de arquivos
-            }
+        document.getElementById('eventForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            fetch('/api/cadastro-evento', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showPopup('Evento cadastrado com sucesso!', 'success');
+                } else {
+                    showPopup('Erro ao cadastrar o evento.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showPopup('Erro ao cadastrar o evento.', 'error');
+            });
         });
+
+        function showPopup(message, type) {
+            var popup = document.getElementById('popup');
+            popup.innerHTML = message;
+            popup.className = type;
+            popup.style.display = 'block';
+
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3000);
+        }
     </script>
 </body>
 </html>
