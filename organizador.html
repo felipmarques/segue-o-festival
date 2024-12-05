@@ -138,54 +138,49 @@
                 document.getElementById('nomeError').style.display = 'none';
             }
 
-            // Continue validando os campos (telefone, email, etc.) aqui.
-
-            if (!isValid) return;
-
-            const formData = {
-                nome: document.querySelector('input[name="nome"]').value,
-                telefone: document.querySelector('input[name="telefone"]').value,
-                email: document.querySelector('input[name="email"]').value,
-                cep: document.querySelector('input[name="cep"]').value,
-                rua: document.querySelector('input[name="rua"]').value,
-                numero: document.querySelector('input[name="numero"]').value,
-                complemento: document.querySelector('input[name="complemento"]').value || '',
-                cnpj: document.querySelector('input[name="cnpj"]').value,
-                senha: document.querySelector('input[name="senha"]').value
-            };
-
-            const submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Enviando...';
-
-            try {
-                const response = await fetch('/api/registerPromotor', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                submitButton.textContent = 'Cadastre-se';
-                submitButton.disabled = false;
-
-                if (response.ok) {
-                    alert('Cadastro realizado com sucesso!');
-                    document.getElementById('registrationForm').reset();
-                } else {
-                    const errorMessage = await response.text();
-                    alert(`Erro ao cadastrar: ${errorMessage}`);
-                }
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
-                submitButton.textContent = 'Cadastre-se';
-                submitButton.disabled = false;
+            const telefone = document.querySelector('input[name="telefone"]').value;
+            if (telefone.length < 10) {
+                isValid = false;
+                document.getElementById('telefoneError').style.display = 'block';
+            } else {
+                document.getElementById('telefoneError').style.display = 'none';
             }
-        });
-    </script>
-</body>
-</html>
 
+            const email = document.querySelector('input[name="email"]').value;
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                document.getElementById('emailError').style.display = 'block';
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+
+            const cep = document.querySelector('input[name="cep"]').value;
+            if (cep.length < 8) {
+                isValid = false;
+                document.getElementById('cepError').style.display = 'block';
+            } else {
+                document.getElementById('cepError').style.display = 'none';
+            }
+
+            const rua = document.querySelector('input[name="rua"]').value;
+            if (rua.length < 3) {
+                isValid = false;
+                document.getElementById('ruaError').style.display = 'block';
+            } else {
+                document.getElementById('ruaError').style.display = 'none';
+            }
+
+            const numero = document.querySelector('input[name="numero"]').value;
+            if (numero.length < 1) {
+                isValid = false;
+                document.getElementById('numeroError').style.display = 'block';
+            } else {
+                document.getElementById('numeroError').style.display = 'none';
+            }
+
+            const cnpj = document.querySelector('input[name="cnpj"]').value;
+            if (cnpj.length !== 14) {
+                isValid = false;
+                document.getElementById('cnpj[_{{{CITATION{{{_1{](https://github.com/ricardo-cas/pandas/tree/eefd8f3ed9250c15e029b7ae59a24ef9f7ffc4ab/GUIA_MARKDOWN.MD)[_{{{CITATION{{{_2{](https://github.com/dipinho/CRUD/tree/bad6a872aa4e385d9299a68362cd52cd7de341e6/CRUD%2Fcadastro_usuario.php)[_{{{CITATION{{{_3{](https://github.com/iliankostov/SoftUni/tree/74666fcf3103163224a732c7198499b77dfc0416/iBook%2Fjs%2Fservices%2FvalidationService.js)
 
