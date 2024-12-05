@@ -9,7 +9,7 @@ const pool = new Pool({
 
 module.exports = async (req, res) => {
   console.log('Requisição recebida:', req.body);
-  
+
   if (req.method === 'POST') {
     const { 
       nome, telefone, email, cep, rua, numero, complemento, cnpj 
@@ -20,6 +20,15 @@ module.exports = async (req, res) => {
     });
 
     try {
+   
+      const checkQuery = `SELECT 1 FROM usuario_promotor WHERE cnpj = $1`;
+      const checkResult = await pool.query(checkQuery, [cnpj]);
+
+      if (checkResult.rowCount > 0) {
+        console.warn(`CNPJ já cadastrado: ${cnpj}`);
+        return res.status(400).send('Erro: CNPJ já está registrado.');
+      }
+
       const query = `
         INSERT INTO usuario_promotor (
           nome_responsavel, cnpj, telefone, rua, numero, bairro, cidade, estado, cep
@@ -46,8 +55,13 @@ module.exports = async (req, res) => {
 
       res.status(200).send('Usuário promotor registrado com sucesso!');
     } catch (err) {
-      console.error('Erro ao executar query:', err);
-      res.status(500).send('Erro ao registrar usuário promotor.');
+      if (err.code === '23505') { // Código de erro para violação de chave única (UNIQUE constraint)
+        console.error('Erro de duplicidade de chave primária:', err);
+        res.status(400).send('Erro: CNPJ já está registrado.');
+      } else {
+        console.error('Erro ao executar query:', err);
+        res.status(500).send('Erro ao registrar usuário promotor.');
+      }
     }
   } else {
     res.status(405).send('Método não permitido');
