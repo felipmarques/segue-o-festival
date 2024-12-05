@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" type="text/css" href="styleperfil.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <header class="cabecalho">
+        <h3 class="cabecalho-titulo">Segue<br>O Festival!</h3>
+        <img class="cabecalho-imagem" src="perfilsof.jpg" alt="Imagem do Perfil">
+    </header>
+
+    <main>
+
+        <!--
+       <aside class="cabecalho-lateral">
+        <img src="home.png" alt="Home">
+        <img src="salvos.png" alt="Salvos">
+        <img src="mapa.png" alt="Mapa">
+        <img src="calendario.png" alt="Calendário">
+        </aside>
+        -->
+
+
+        <h1 class="conteudo-titulo">Perfil</h1>
+
+        <div >
+            <img class="conteudo-imagem" src="perfilsof.jpg" alt="Foto de Perfil">
+        </div>
+
+
+
+        <!--Quando for mexer no backend inserir aqui: <form action="#" method="post"> </form>-->
+
+        <section class="conteudo-formulario">
+        <div class="dados-pessoais-informacoes">
+            <div class="dados-pessoais-nome">
+            <p>Nome Completo</p>
+            <input class="dados-pessoais-nome-formulario" type="text" id="txtNome" placeholder="Nome Completo"/>
+            </div>
+
+            <div class="dados-pessoais-baixo">
+            <div class="dados-pessoais-telefone">
+                <p>CPF</p>
+                <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF">
+            </div>
+
+            <div class="dados-pessoais-datanascimento">
+                <p>Data de Nascimento</p>
+                <input class="dados-pessoais-datanascimento-formulario" type="date" id="dateNascimento" placeholder="Insira a Data de Nascimento">
+            </div>
+
+            <div class="dados-pessoais-sexo">
+                <p>Sexo</p>
+                <select class="dados-pessoais-sexo-formulario" id="sexo" name="sexo">
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
+                <option value="nao_informar">Prefiro não informar</option>
+                </select>
+            </div>
+            </div>
+        </div>
+
+        <div class="dados-pessoais-morada">
+            <div class="dados-pessoais-endereco">
+                <p>Endereço</p>
+                <input class="dados-pessoais-endereco-formulario" type="text" id="txtEndereço" placeholder="Insira o Endereço"/>
+            </div>
+
+            <div class="dados-endereco-abaixo" >
+            <div class="dados-pessoais-cep">
+                <p>CEP</p>
+                <input class="dados-pessoais-cep-formulario" type="tel" id="telCEP" placeholder="CEP">
+            </div>
+
+            <div class="dados-pessoais-numero">
+                <p>Número</p>
+                <input class="dados-pessoais-numero-formulario" type="tel" id="telNum" placeholder="Número da Residência">
+            </div>
+
+            <div class="dados-pessoais-complemento" >
+                <p>Complemento</p>
+                <input class="dados-pessoais-complemento-formulario" type="tel" id="telCom" placeholder="Complemento">
+            </div>
+            </div>
+
+            <div class="dados-endereco-abaixo-secundario" >
+            <div class="dados-pessoais-municipio" >
+                <p>Município</p>
+                <select class="dados-pessoais-municipio-formulario" id="municipio" name="municipio">
+                <option value="americana">Americana</option>
+                <option value="barueri">Barueri</option>
+                <option value="braganca_paulista">Bragança Paulista</option>
+                <option value="cajamar">Cajamar</option>
+                <option value="campinas">Campinas</option>
+                <option value="carapicuiba">Carapicuíba</option>
+                <option value="diadema">Diadema</option>
+                <option value="embu_das_artes">Embu das Artes</option>
+                <option value="guaruja">Guarujá</option>
+                <option value="hortolandia">Hortolândia</option>
+                <option value="itatiba">Itatiba</option>
+                <option value="itapecerica_da_serra">Itapecerica da Serra</option>
+                <option value="jundiai">Jundiaí</option>
+                <option value="maua">Mauá</option>
+                <option value="osasco">Osasco</option>
+                <option value="piracicaba">Piracicaba</option>
+                <option value="praia_grande">Praia Grande</option>
+                <option value="ribeirao_pires">Ribeirão Pires</option>
+                <option value="rio_grande_da_serra">Rio Grande da Serra</option>
+                <option value="santana_de_parnaiba">Santana de Parnaíba</option>
+                <option value="santo_andre">Santo André</option>
+                <option value="santos">Santos</option>
+                <option value="sao_bernardo">São Bernardo do Campo</option>
+                <option value="sao_caetano">São Caetano do Sul</option>
+                <option value="sao_jose_dos_campos">São José dos Campos</option>
+                <option value="sao_paulo">São Paulo</option>
+                <option value="sorocaba">Sorocaba</option>
+                <option value="sumare">Sumaré</option>
+                <option value="taubate">Taubaté</option>
+                <option value="taboao_da_serra">Taboão da Serra</option>
+                </select>
+            </div>
+                
+
+            <div class="dados-pessoais-uf">
+                <p>UF</p>
+                <select class="dados-pessoais-uf-formulario" id="uf" name="uf">
+                <option value="AC">Acre (AC)</option>
+                <option value="AL">Alagoas (AL)</option>
+                <option value="AP">Amapá (AP)</option>
+                <option value="AM">Amazonas (AM)</option>
+                <option value="BA">Bahia (BA)</option>
+                <option value="CE">Ceará (CE)</option>
+                <option value="DF">Distrito Federal (DF)</option>
+                <option value="ES">Espírito Santo (ES)</option>
+                <option value="GO">Goiás (GO)</option>
+                <option value="MA">Maranhão (MA)</option>
+                <option value="MT">Mato Grosso (MT)</option>
+                <option value="MS">Mato Grosso do Sul (MS)</option>
+                <option value="MG">Minas Gerais (MG)</option>
+                <option value="PA">Pará (PA)</option>
+                <option value="PB">Paraíba (PB)</option>
+                <option value="PR">Paraná (PR)</option>
+                <option value="PE">Pernambuco (PE)</option>
+                <option value="PI">Piauí (PI)</option>
+                <option value="RJ">Rio de Janeiro (RJ)</option>
+                <option value="RN">Rio Grande do Norte (RN)</option>
+                <option value="RS">Rio Grande do Sul (RS)</option>
+                <option value="RO">Rondônia (RO)</option>
+                <option value="RR">Roraima (RR)</option>
+                <option value="SC">Santa Catarina (SC)</option>
+                <option value="SP">São Paulo (SP)</option>
+                <option value="SE">Sergipe (SE)</option>
+                <option value="TO">Tocantins (TO)</option>
+                </select>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="dados-pessoais-usuario" >
+            <div class="dados-pessoais-email">
+                <p>E-mail</p>
+                <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail"/>
+            </div>
+
+            <div class="dados-pessoais-senha">
+                <p>Trocar de Senha</p>
+                <input class="dados-pessoais-senha-formulario" type="password" id="passwordSen" placeholder="Trocar de Senha"/>
+            </div>
+        </div>     
+
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+</html>
