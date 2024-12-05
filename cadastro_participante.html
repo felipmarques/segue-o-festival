@@ -194,7 +194,7 @@
                     window.location.href = 'login.html';
                 } else {
                     const errorMessage = await response.text();
-                    alert(Erro ao cadastrar: ${errorMessage});
+                    alert(`Erro ao cadastrar: ${errorMessage}`);
                 }
             } catch (error) {
                 console.error('Erro na requisição:', error);
@@ -204,5 +204,6 @@
     </script>
 </body>
 </html>
+
 
 
