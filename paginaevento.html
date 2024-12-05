@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evento</title>
     <link rel="stylesheet" type="text/css" href="styleevento.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
 </head>
 <body>
@@ -13,9 +15,8 @@
             Segue<br>O Festival!
         </h3>
         <div class="cabecalho-botoes">
-            <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
+            <button class="cabecalho-botao-entrar">Entrar</button>
         </div>
-
     </header>
     
 
@@ -48,7 +49,6 @@
         </div>
     </section>
 
-
         <section class="conteudo-secundario">
         <div class="conteudo-secundario-informacoes">
             <h1>Informações</h1>
@@ -62,8 +62,26 @@
         </div>
     </section>
 
-
+    <section class="conteudo-mapa">
+        <h2>Localização do Evento</h2>
+        <div id="map" style="width: 100%; height: 400px;"></div> 
+    </section>
 
     </main>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        var map = L.map('map').setView([-23.544, -46.638], 13); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([-23.544, -46.638]).addTo(map)
+            .bindPopup('<b>Pavilhão do Anhembi</b><br>Av. Olavo Fontoura, 1209')
+            .openPopup();
+    </script>
+
 </body>
 </html>
