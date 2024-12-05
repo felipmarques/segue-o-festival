@@ -105,66 +105,77 @@
 
     <script>
     function togglePassword() {
-        var passwordField = document.getElementById("senha");
-        var passwordFieldType = passwordField.getAttribute("type");
-        if (passwordFieldType === "password") {
-            passwordField.setAttribute("type", "text");
-        } else {
-            passwordField.setAttribute("type", "password");
-        }
+        const passwordField = document.getElementById("senha");
+        const passwordFieldType = passwordField.getAttribute("type");
+        passwordField.setAttribute("type", passwordFieldType === "password" ? "text" : "password");
     }
 
     function toggleInfo(element) {
-        var infoText = element.nextElementSibling;
+        const infoText = element.nextElementSibling;
         if (infoText.style.display === "block") {
             infoText.style.display = "none";
-            element.classList.remove('clicked');
+            element.classList.remove("clicked");
         } else {
             infoText.style.display = "block";
-            element.classList.add('clicked');
+            element.classList.add("clicked");
         }
     }
 
-    document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+    function validateCNPJ(cnpj) {
+        // Valida se o CNPJ tem 14 dígitos numéricos
+        return /^\d{14}$/.test(cnpj);
+    }
+
+    async function checkCNPJExists(cnpj) {
+        try {
+            const response = await fetch(`/api/checkCnpj?cnpj=${cnpj}`);
+            if (response.ok) {
+                const { exists } = await response.json();
+                return exists;
+            } else {
+                console.error("Erro ao verificar o CNPJ no servidor.");
+                return false;
+            }
+        } catch (error) {
+            console.error("Erro ao verificar o CNPJ:", error);
+            throw new Error("Erro ao verificar o CNPJ. Tente novamente mais tarde.");
+        }
+    }
+
+    document.getElementById("registrationForm").addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        var isValid = true;
+        let isValid = true;
 
         // Validação do nome
         const nome = document.querySelector('input[name="nome"]').value.trim();
         if (nome.length < 3) {
             isValid = false;
-            document.getElementById('nomeError').style.display = 'block';
+            document.getElementById("nomeError").style.display = "block";
         } else {
-            document.getElementById('nomeError').style.display = 'none';
+            document.getElementById("nomeError").style.display = "none";
         }
 
         // Validação do CNPJ
         const cnpj = document.querySelector('input[name="cnpj"]').value.trim();
-        const cnpjError = document.getElementById('cnpjError');
-        if (!/^\d{14}$/.test(cnpj)) {
+        const cnpjError = document.getElementById("cnpjError");
+
+        if (!validateCNPJ(cnpj)) {
             isValid = false;
-            cnpjError.textContent = 'Por favor, insira um CNPJ válido com 14 dígitos numéricos.';
-            cnpjError.style.display = 'block';
+            cnpjError.textContent = "Por favor, insira um CNPJ válido com 14 dígitos numéricos.";
+            cnpjError.style.display = "block";
         } else {
-            // Verificar no servidor se o CNPJ já está cadastrado
             try {
-                const response = await fetch(`/api/checkCnpj?cnpj=${cnpj}`);
-                if (response.ok) {
-                    const { exists } = await response.json();
-                    if (exists) {
-                        isValid = false;
-                        cnpjError.textContent = 'Este CNPJ já está cadastrado.';
-                        cnpjError.style.display = 'block';
-                    } else {
-                        cnpjError.style.display = 'none';
-                    }
+                const exists = await checkCNPJExists(cnpj);
+                if (exists) {
+                    isValid = false;
+                    cnpjError.textContent = "Este CNPJ já está cadastrado.";
+                    cnpjError.style.display = "block";
                 } else {
-                    throw new Error('Erro ao verificar o CNPJ no servidor.');
+                    cnpjError.style.display = "none";
                 }
             } catch (error) {
-                console.error('Erro ao verificar o CNPJ:', error);
-                alert('Erro ao verificar o CNPJ. Tente novamente mais tarde.');
+                alert(error.message);
                 return;
             }
         }
@@ -173,6 +184,7 @@
 
         if (!isValid) return;
 
+        // Criação do objeto formData
         const formData = {
             nome,
             telefone: document.querySelector('input[name="telefone"]').value.trim(),
@@ -180,42 +192,44 @@
             cep: document.querySelector('input[name="cep"]').value.trim(),
             rua: document.querySelector('input[name="rua"]').value.trim(),
             numero: document.querySelector('input[name="numero"]').value.trim(),
-            complemento: document.querySelector('input[name="complemento"]').value.trim() || '',
+            complemento: document.querySelector('input[name="complemento"]').value.trim() || "",
             cnpj,
-            senha: document.querySelector('input[name="senha"]').value.trim()
+            senha: document.querySelector('input[name="senha"]').value.trim(),
         };
 
+        // Envio do formulário
         const submitButton = document.querySelector('button[type="submit"]');
         submitButton.disabled = true;
-        submitButton.textContent = 'Enviando...';
+        submitButton.textContent = "Enviando...";
 
         try {
-            const response = await fetch('/api/registerPromotor', {
-                method: 'POST',
+            const response = await fetch("/api/registerPromotor", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
             });
 
-            submitButton.textContent = 'Cadastre-se';
+            submitButton.textContent = "Cadastre-se";
             submitButton.disabled = false;
 
             if (response.ok) {
-                alert('Cadastro realizado com sucesso!');
-                document.getElementById('registrationForm').reset();
+                alert("Cadastro realizado com sucesso!");
+                document.getElementById("registrationForm").reset();
             } else {
                 const errorMessage = await response.text();
                 alert(`Erro ao cadastrar: ${errorMessage}`);
             }
         } catch (error) {
-            console.error('Erro na requisição:', error);
-            alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
-            submitButton.textContent = 'Cadastre-se';
+            console.error("Erro na requisição:", error);
+            alert("Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.");
+            submitButton.textContent = "Cadastre-se";
             submitButton.disabled = false;
         }
     });
 </script>
+
 
 </body>
 </html>
