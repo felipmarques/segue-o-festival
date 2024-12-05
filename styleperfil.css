@@ -1,0 +1,306 @@
+@import url("https://use.typekit.net/qrb0jox.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+  }
+
+
+  body {
+    font-size: 100%;
+    background-color: #ffffff !important;
+  }
+
+  .cabecalho {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 20px;
+}
+
+.cabecalho-titulo {
+    font-family: 'Droog', sans-serif;
+    font-size: 27px;
+    color: #00bfff;
+    text-align: left;
+    line-height: 1.2;
+    margin: 0; 
+}
+
+.cabecalho-imagem {
+    width: 70px; 
+    height: 70px;
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin-right: 10px;
+}
+
+
+/*
+.cabecalho-lateral {
+  position: relative
+  top: 30px; 
+  left: 30px; 
+  display: flex;
+  flex-direction: column; 
+  gap: 50px; /
+  z-index: 10; 
+}
+
+
+.cabecalho-lateral img {
+  width: 70px;
+  height: 30px;
+  object-fit: contain; 
+  cursor: pointer;
+}
+*/
+
+
+.conteudo-titulo {
+  font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 800; 
+    font-size: 24px; 
+    color: #000; 
+    position: relative;
+    display: inline-block;
+    margin: 25px auto;
+    margin-left: 60px;
+}
+
+.conteudo-titulo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -9px; /* Alinhamento abaixo do texto */
+  width: 1300px; /* Largura da linha amarela */
+  height: 2px; /* Altura da linha amarela */
+  background-color: #00bfff; /* Cor amarela */
+}
+
+.conteudo-imagem {
+  margin-top: 30px;
+  left: 650px;
+  width: 150px; /* Define a largura da imagem */
+  height: 150px; /* Define a altura da imagem */
+  border-radius: 50%; /* Torna a imagem circular */
+  object-fit: cover; /* Garante que a imagem se ajuste ao tamanho sem distorcer */
+  position: relative; /* Posicionamento absoluto para centralizar */
+
+}
+
+.dados-pessoais-nome {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-nome-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 400px; 
+  outline: none; 
+}
+
+.dados-pessoais-baixo {
+  display: flex; 
+  justify-content: center; 
+  margin-left: -500px;
+}
+
+.dados-pessoais-telefone {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-telefone-formulario {
+  border: 1px solid #FFF100; /* Define a borda amarela */
+  padding: 5px 50px; /* (Opcional) Adiciona um pouco de espaçamento interno */
+  outline: none; /* (Opcional) Remove o contorno padrão ao focar */
+}
+
+.dados-pessoais-datanascimento {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-datanascimento-formulario {
+  border: 1px solid #FFF100; /* Define a borda amarela */
+  padding: 5px 50px; /* (Opcional) Adiciona um pouco de espaçamento interno */
+  outline: none; /* (Opcional) Remove o contorno padrão ao focar */
+}
+
+.dados-pessoais-sexo {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-sexo-formulario {
+  border: 1px solid #FFF100; /* Define a borda amarela */
+  padding: 5px 50px; /* (Opcional) Adiciona um pouco de espaçamento interno */
+  outline: none; /* (Opcional) Remove o contorno padrão ao focar */
+}
+
+
+.dados-pessoais-morada {
+  margin-top: 100px;
+}
+
+.dados-pessoais-endereco {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-endereco-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 400px; 
+  outline: none; 
+}
+
+.dados-endereco-abaixo {
+  display: flex; 
+  justify-content: center; 
+  margin-left: -500px;
+}
+
+.dados-pessoais-cep {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 110px;
+}
+
+.dados-pessoais-cep-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 50px; 
+  outline: none; 
+}
+
+.dados-pessoais-numero {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 80px;
+}
+
+.dados-pessoais-numero-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 50px; 
+  outline: none; 
+}
+
+.dados-pessoais-complemento {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 80px;
+}
+
+.dados-pessoais-complemento-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 40px; 
+  outline: none; 
+}
+
+.dados-endereco-abaixo-secundario {
+  display: flex; 
+  justify-content: center; 
+  margin-left: -800px;
+}
+
+.dados-pessoais-municipio {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 80px;
+}
+
+.dados-pessoais-municipio-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 45px; 
+  outline: none; 
+}
+
+.dados-pessoais-uf {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 15px;
+  margin-left: 80px;
+}
+
+.dados-pessoais-uf-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 40px; 
+  outline: none; 
+}
+
+.dados-pessoais-usuario {
+  margin-top: 90px;
+  display: flex; 
+  justify-content: center; 
+  margin-left: -770px;
+  margin-bottom: 80px;
+}
+
+.dados-pessoais-email {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-email-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 70px; 
+  outline: none;
+}
+
+.dados-pessoais-senha {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 500; 
+  font-size: 14px; 
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+.dados-pessoais-senha-formulario {
+  border: 1px solid #FFF100; 
+  padding: 5px 40px; 
+  outline: none;
+}
+
+
