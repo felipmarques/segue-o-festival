@@ -3,242 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Evento</title>
+    <title>Tela de Login e Registro</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap'); /* Font similar to the one in the logo */
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
+        .input-container {
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 1000px;
-            box-sizing: border-box;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header img {
-            height: 50px;
-        }
-
-        .header .logo-text {
-            font-family: 'Pacifico', cursive;
-            font-size: 36px;
-            color: #000;
-        }
-
-        .header .menu {
-            font-size: 14px;
-            color: #333;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: left;
-            border-bottom: 2px solid yellow;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid yellow;
-            border-radius: 4px;
-            outline: none;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        .form-group input[type="date"],
-        .form-group input[type="file"] {
-            width: 100%;
-        }
-
-        .date-title {
-            font-weight: bold;
             margin-bottom: 10px;
         }
-
-        .date-container {
-            display: flex;
-            justify-content: space-between;
+        .icon {
+            margin-right: 5px;
         }
-
-        .date-container .form-group {
-            width: 48%;
-        }
-
-        .button-container {
-            text-align: center;
-        }
-
-        .button-container button {
-            padding: 10px 20px;
-            background-color: #008CBA;
-            color: white;
-            border: none;
-            border-radius: 25px;
+        .info-icon {
             cursor: pointer;
-            font-size: 16px;
+            margin-left: 10px;
         }
-
-        .button-container button:hover {
-            background-color: #007B9E;
-        }
-
-        .navigation {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #007bff;
-            text-align: center;
-        }
-
-        /* Estilo para o pop-up */
-        #popup {
+        .info-text {
+            color: #555;
+            font-size: 0.85em;
             display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+            margin-left: 5px;
         }
-
-        #popup.success {
-            border-color: green;
-        }
-
-        #popup.error {
-            border-color: red;
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo-text">Segue o Festival!</div>
-            <div class="menu">Menu Pessoal</div>
+        <div class="left">
+            <h1>Bem-Vindo!</h1>
+            <p>Se você já tem uma conta, entre!</p>
+            <a href="login.html">
+                <button class="login-button">Entrar</button>
+            </a>
         </div>
-        <h1>Cadastro do Evento</h1>
-        <form id="eventForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="nome-evento">Nome do Evento</label>
-                <input type="text" id="nome-evento" name="nome-evento">
-            </div>
-            <div class="form-group">
-                <label for="classificacao-indicativa">Classificação Indicativa</label>
-                <select id="classificacao-indicativa" name="classificacao-indicativa">
-                    <option value="Livre">Livre</option>
-                    <option value="10 anos">10 anos</option>
-                    <option value="12 anos">12 anos</option>
-                    <option value="14 anos">14 anos</option>
-                    <option value="16 anos">16 anos</option>
-                    <option value="18 anos">18 anos</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="descricao">Descrição</label>
-                <textarea id="descricao" name="descricao" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="site-externo">Site externo para compra de ingresso</label>
-                <input type="text" id="site-externo" name="site-externo">
-            </div>
-            <div class="form-group date-title">Período em que o evento ficará disponível no Segue o Festival</div>
-            <div class="date-container">
-                <div class="form-group">
-                    <label for="data-inicio">Data Início</label>
-                    <input type="date" id="data-inicio" name="data-inicio">
+        <div class="right">
+            <h1>Crie uma nova conta</h1>
+            <form id="registrationForm" action="/api/register" method="post">
+                <div class="input-container">
+                    <span class="icon">👤</span>
+                    <input type="text" name="nome" placeholder="Nome de Usuário" required>
+                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <span class="info-text">Exemplo: João Silva</span>
+                    <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
-                <div class="form-group">
-                    <label for="data-fim">Data Fim</label>
-                    <input type="date" id="data-fim" name="data-fim">
+                <div class="input-container">
+                    <span class="icon">📧</span>
+                    <input type="email" name="email_usuario" placeholder="E-mail" required>
+                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <span class="info-text">Exemplo: joaosilva@email.com</span>
+                    <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="banners">Insira Aqui os Banners do Evento (máx. 2)</label>
-                <input type="file" id="banners" name="banners" multiple>
-            </div>
-            <div class="button-container">
-                <button type="submit">Enviar</button>
-            </div>
-        </form>
-        <div class="navigation">
-            Dados da Página > Localização > Revisão e Pagamento
+                <div class="input-container">
+                    <span class="icon">🔒</span>
+                    <input type="password" name="senha_usuario" placeholder="Senha" required id="password">
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                    <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📞</span>
+                    <input type="text" name="telefone" placeholder="Telefone" required>
+                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <span class="info-text">Exemplo: 11987654321</span>
+                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📅</span>
+                    <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
+                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <span class="info-text">Formato: data de nascimento</span>
+                    <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
+                </div>
+                <div class="input-container">
+                    <span class="icon">📄</span>
+                    <input type="text" name="cpf" placeholder="CPF" required>
+                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <span class="info-text">Formato: 12345678900</span>
+                    <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
+                </div>
+                <button class="register-button" type="submit">Cadastrar</button>
+            </form>
         </div>
     </div>
 
-    <!-- Pop-up de status -->
-    <div id="popup"></div>
-
     <script>
-        document.getElementById('eventForm').addEventListener('submit', function(event) {
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+
+        function toggleInfo(element) {
+            var infoText = element.nextElementSibling;
+            if (infoText.style.display === "block") {
+                infoText.style.display = "none";
+            } else {
+                infoText.style.display = "block";
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            var formData = new FormData(this);
+            var isValid = true;
 
-            fetch('/api/cadastro-evento', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showPopup('Evento cadastrado com sucesso!', 'success');
+            var nome = document.querySelector('input[name="nome"]').value;
+            if (nome.length < 3) {
+                isValid = false;
+                document.getElementById('nomeError').style.display = 'block';
+            } else {
+                document.getElementById('nomeError').style.display = 'none';
+            }
+
+            var email = document.querySelector('input[name="email_usuario"]').value;
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                document.getElementById('emailError').style.display = 'block';
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+
+            var senha = document.querySelector('input[name="senha_usuario"]').value;
+            var senhaPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!senhaPattern.test(senha)) {
+                isValid = false;
+                document.getElementById('senhaError').style.display = 'block';
+            } else {
+                document.getElementById('senhaError').style.display = 'none';
+            }
+
+            var telefone = document.querySelector('input[name="telefone"]').value;
+            var telefonePattern = /^[0-9]{10,11}$/;
+            if (!telefonePattern.test(telefone)) {
+                isValid = false;
+                document.getElementById('telefoneError').style.display = 'block';
+            } else {
+                document.getElementById('telefoneError').style.display = 'none';
+            }
+
+            var cpf = document.querySelector('input[name="cpf"]').value;
+            var cpfPattern = /^\d{11}$/;
+            if (!cpfPattern.test(cpf)) {
+                isValid = false;
+                document.getElementById('cpfError').style.display = 'block';
+            } else {
+                document.getElementById('cpfError').style.display = 'none';
+            }
+
+            var dataNascimento = document.querySelector('input[name="data_nascimento"]').value;
+            if (dataNascimento === '') {
+                isValid = false;
+                document.getElementById('dataNascimentoError').style.display = 'block';
+            } else {
+                document.getElementById('dataNascimentoError').style.display = 'none';
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome: document.querySelector('input[name="nome"]').value,
+                        email_usuario: document.querySelector('input[name="email_usuario"]').value,
+                        senha_usuario: document.querySelector('input[name="senha_usuario"]').value,
+                        telefone: document.querySelector('input[name="telefone"]').value,
+                        data_nascimento: document.querySelector('input[name="data_nascimento"]').value,
+                        cpf: document.querySelector('input[name="cpf"]').value
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                    window.location.href = 'login.html';
                 } else {
-                    showPopup('Erro ao cadastrar o evento.', 'error');
+                    const errorMessage = await response.text();
+                    alert(`Erro ao cadastrar: ${errorMessage}`);
                 }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                showPopup('Erro ao cadastrar o evento.', 'error');
-            });
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
+            }
         });
-
-        function showPopup(message, type) {
-            var popup = document.getElementById('popup');
-            popup.innerHTML = message;
-            popup.className = type;
-            popup.style.display = 'block';
-
-            setTimeout(() => {
-                popup.style.display = 'none';
-            }, 3000);
-        }
     </script>
 </body>
 </html>
