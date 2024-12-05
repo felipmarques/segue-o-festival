@@ -55,7 +55,7 @@ module.exports = async (req, res) => {
 
       res.status(200).send('Usuário promotor registrado com sucesso!');
     } catch (err) {
-      if (err.code === '23505') { // Código de erro para violação de chave única (UNIQUE constraint)
+      if (err.code === '23505') { 
         console.error('Erro de duplicidade de chave primária:', err);
         res.status(400).send('Erro: CNPJ já está registrado.');
       } else {
