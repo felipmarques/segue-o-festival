@@ -142,8 +142,8 @@
                 </div>
                 <div class="input-container">
                     <label for="data_nascimento">Data de Nascimento</label>
-                    <input type="text" name="data_nascimento" id="data_nascimento" placeholder="Digite sua data de nascimento" required>
-                    <span class="info-text">Formato esperado: dd/mm/aaaa</span>
+                    <input type="date" name="data_nascimento" id="data_nascimento" required>
+                    <span class="info-text">Formato esperado: dd/mm/aaaa.</span>
                     <span class="error" id="dataNascimentoError">Idade mínima: 10 anos.</span>
                 </div>
                 <div class="input-container">
@@ -161,23 +161,11 @@
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            const dataInput = document.getElementById('data_nascimento').value;
+            const birthDate = new Date(document.getElementById('data_nascimento').value);
+            const age = new Date().getFullYear() - birthDate.getFullYear();
             const errorSpan = document.getElementById('dataNascimentoError');
 
-            // Expressão regular para verificar o formato dd/mm/aaaa
-            const dataRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-            if (!dataRegex.test(dataInput)) {
-                errorSpan.style.display = 'block';
-                errorSpan.textContent = 'Por favor, insira uma data no formato dd/mm/aaaa.';
-                return;
-            }
-
-            // Separar dia, mês e ano para validar a idade
-            const [dia, mes, ano] = dataInput.split('/').map(Number);
-            const nascimento = new Date(ano, mes - 1, dia);
-            const idade = new Date().getFullYear() - nascimento.getFullYear();
-
-            if (isNaN(nascimento.getTime()) || idade < 10) {
+            if (age < 10) {
                 errorSpan.style.display = 'block';
                 errorSpan.textContent = 'Usuários devem ter pelo menos 10 anos.';
             } else {
@@ -188,6 +176,5 @@
     </script>
 </body>
 </html>
-
 
 
