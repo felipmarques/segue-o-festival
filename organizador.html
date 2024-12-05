@@ -75,6 +75,7 @@
                         <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
                         <span class="info-text">Exemplo: Apartamento 101</span>
                     </div>
+                    <span class="error" id="complementoError">Por favor, insira um complemento válido.</span>
                 </div>
                 <div class="form-group">
                     <label for="cnpj">8. CNPJ da Empresa</label>
@@ -104,54 +105,42 @@
 
     <script>
         function togglePassword() {
-            const passwordField = document.getElementById("senha");
-            const passwordFieldType = passwordField.getAttribute("type");
-            passwordField.setAttribute("type", passwordFieldType === "password" ? "text" : "password");
+            var passwordField = document.getElementById("senha");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
         }
 
         function toggleInfo(element) {
-            const infoText = element.nextElementSibling;
-            infoText.style.display = infoText.style.display === "block" ? "none" : "block";
+            var infoText = element.nextElementSibling;
+            if (infoText.style.display === "block") {
+                infoText.style.display = "none";
+                element.classList.remove('clicked');
+            } else {
+                infoText.style.display = "block";
+                element.classList.add('clicked');
+            }
         }
 
-        document.getElementById('registrationForm').addEventListener('submit', async function (event) {
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            let isValid = true;
 
-            const requiredFields = ['nome', 'telefone', 'email', 'cep', 'rua', 'numero', 'cnpj', 'senha'];
-            requiredFields.forEach((field) => {
-                const input = document.querySelector(`input[name="${field}"]`);
-                const errorElement = document.getElementById(`${field}Error`);
-                if (!input.value.trim()) {
-                    isValid = false;
-                    errorElement.style.display = 'block';
-                } else {
-                    errorElement.style.display = 'none';
-                }
-            });
+            var isValid = true;
+
+            const nome = document.querySelector('input[name="nome"]').value;
+            if (nome.length < 3) {
+                isValid = false;
+                document.getElementById('nomeError').style.display = 'block';
+            } else {
+                document.getElementById('nomeError').style.display = 'none';
+            }
+
+            // Continue validando os campos (telefone, email, etc.) aqui.
 
             if (!isValid) return;
-
-            const cnpj = document.querySelector('input[name="cnpj"]').value;
-
-            // Verifica se o CNPJ já está cadastrado
-            try {
-                const cnpjCheckResponse = await fetch(`/api/checkCnpj?cnpj=${cnpj}`);
-                if (cnpjCheckResponse.ok) {
-                    const cnpjExists = await cnpjCheckResponse.json();
-                    if (cnpjExists) {
-                        alert('Este CNPJ já está cadastrado. Por favor, insira um CNPJ diferente.');
-                        return;
-                    }
-                } else {
-                    alert('Erro ao verificar o CNPJ. Tente novamente mais tarde.');
-                    return;
-                }
-            } catch (error) {
-                console.error('Erro ao verificar CNPJ:', error);
-                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
-                return;
-            }
 
             const formData = {
                 nome: document.querySelector('input[name="nome"]').value,
@@ -161,8 +150,8 @@
                 rua: document.querySelector('input[name="rua"]').value,
                 numero: document.querySelector('input[name="numero"]').value,
                 complemento: document.querySelector('input[name="complemento"]').value || '',
-                cnpj: cnpj,
-                senha: document.querySelector('input[name="senha"]').value,
+                cnpj: document.querySelector('input[name="cnpj"]').value,
+                senha: document.querySelector('input[name="senha"]').value
             };
 
             const submitButton = document.querySelector('button[type="submit"]');
@@ -172,8 +161,10 @@
             try {
                 const response = await fetch('/api/registerPromotor', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
                 });
 
                 submitButton.textContent = 'Cadastre-se';
@@ -184,5 +175,17 @@
                     document.getElementById('registrationForm').reset();
                 } else {
                     const errorMessage = await response.text();
+                    alert(`Erro ao cadastrar: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
+                submitButton.textContent = 'Cadastre-se';
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
 
 
