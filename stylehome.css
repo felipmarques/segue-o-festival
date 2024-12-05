@@ -103,7 +103,13 @@
     background-size: cover; /* Faz a imagem preencher o banner */
     overflow: hidden; /* Garante que o conteúdo dentro do elemento siga o border-radius */
 }
-
+.conteudo-banners img {
+    width: 100%; /* Ajuste a largura da imagem para 100% do contêiner */
+    height: auto; /* Mantém a proporção da imagem */
+    display: block; /* Remove qualquer espaço extra abaixo da imagem */
+    object-fit: cover; /* Faz a imagem cobrir o contêiner, sem distorção */
+    object-position: center; /* Centraliza a imagem no contêiner */
+}
 
 
 .pesquisa {
