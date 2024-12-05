@@ -1,190 +1,181 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de Login e Registro</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Cadastro de Usuário</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #ffffff, #007bff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .welcome-section {
+            background-color: #f8f9fa;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 40%;
+        }
+
+        .welcome-section h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-section p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-section {
+            padding: 40px;
+            width: 60%;
+        }
+
         .input-container {
             display: flex;
             flex-direction: column;
             margin-bottom: 20px;
         }
-        .icon {
-            margin-right: 5px;
+
+        .input-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-        .info-icon {
-            cursor: pointer;
-            margin-left: 10px;
+
+        .input-container input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: 100%;
         }
+
         .info-text {
+            font-size: 0.9em;
             color: #555;
-            font-size: 0.85em;
-            display: none;
-            margin-left: 5px;
+            margin-top: 5px;
         }
+
         .error {
             color: red;
             font-size: 0.9em;
             display: none;
         }
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .register-button {
+            background-color: #ffa500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .register-button:hover {
+            background-color: #e69500;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="left">
+        <div class="welcome-section">
             <h1>Bem-Vindo!</h1>
             <p>Se você já tem uma conta, entre!</p>
-            <a href="login.html">
-                <button class="login-button">Entrar</button>
-            </a>
+            <a href="/login.html" class="register-button">Entrar</a>
         </div>
-        <div class="right">
-            <h1>Crie uma nova conta</h1>
-            <form id="registrationForm" action="/api/register" method="post">
+        <div class="form-section">
+            <form id="register-form">
                 <div class="input-container">
                     <label for="nome">Nome de Usuário</label>
-                    <span class="icon">👤</span>
-                    <input type="text" name="nome" id="nome" placeholder="Nome de Usuário" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <input type="text" name="nome" id="nome" placeholder="Digite seu nome" required>
                     <span class="info-text">Exemplo: João Silva</span>
                     <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="input-container">
                     <label for="email_usuario">E-mail</label>
-                    <span class="icon">📧</span>
-                    <input type="email" name="email_usuario" id="email_usuario" placeholder="E-mail" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <input type="email" name="email_usuario" id="email_usuario" placeholder="Digite seu e-mail" required>
                     <span class="info-text">Exemplo: joaosilva@email.com</span>
                     <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
                 <div class="input-container">
                     <label for="senha_usuario">Senha</label>
-                    <span class="icon">🔒</span>
-                    <input type="password" name="senha_usuario" id="password" placeholder="Senha" required>
-                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
-                    <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                    <input type="password" name="senha_usuario" id="senha_usuario" placeholder="Digite sua senha" required>
+                    <span class="info-text">A senha deve ter pelo menos 8 caracteres.</span>
+                    <span class="error" id="senhaError">Senha inválida.</span>
                 </div>
                 <div class="input-container">
                     <label for="telefone">Telefone</label>
-                    <span class="icon">📞</span>
-                    <input type="text" name="telefone" id="telefone" placeholder="Telefone" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" required>
                     <span class="info-text">Exemplo: 11987654321</span>
-                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
+                    <span class="error" id="telefoneError">Telefone inválido.</span>
                 </div>
                 <div class="input-container">
                     <label for="data_nascimento">Data de Nascimento</label>
-                    <span class="icon">📅</span>
                     <input type="date" name="data_nascimento" id="data_nascimento" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
                     <span class="info-text">Formato: dd/mm/aaaa</span>
-                    <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
+                    <span class="error" id="dataNascimentoError">Idade mínima: 10 anos.</span>
                 </div>
                 <div class="input-container">
                     <label for="cpf">CPF</label>
-                    <span class="icon">📄</span>
-                    <input type="text" name="cpf" id="cpf" placeholder="CPF" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                    <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF" required>
                     <span class="info-text">Formato: 12345678900</span>
-                    <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
+                    <span class="error" id="cpfError">CPF inválido.</span>
                 </div>
-                <button class="register-button" type="submit">Cadastrar</button>
+                <button type="submit" class="register-button">Cadastrar</button>
             </form>
         </div>
     </div>
-
     <script>
-        function togglePassword() {
-            var passwordField = document.getElementById("password");
-            var passwordFieldType = passwordField.getAttribute("type");
-            if (passwordFieldType === "password") {
-                passwordField.setAttribute("type", "text");
-            } else {
-                passwordField.setAttribute("type", "password");
-            }
-        }
-
-        function toggleInfo(element) {
-            var infoText = element.nextElementSibling;
-            if (infoText.style.display === "block") {
-                infoText.style.display = "none";
-            } else {
-                infoText.style.display = "block";
-            }
-        }
-
-        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+        const form = document.getElementById('register-form');
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            var isValid = true;
-            var errorMessage = "";
+            const birthDate = new Date(document.getElementById('data_nascimento').value);
+            const age = new Date().getFullYear() - birthDate.getFullYear();
+            const errorSpan = document.getElementById('dataNascimentoError');
 
-            // Validação de idade
-            var dataNascimento = document.querySelector('input[name="data_nascimento"]').value;
-            if (dataNascimento === '') {
-                isValid = false;
-                errorMessage += "Data de nascimento inválida.\n";
+            if (age < 10) {
+                errorSpan.style.display = 'block';
+                errorSpan.textContent = 'Usuários devem ter pelo menos 10 anos.';
             } else {
-                var today = new Date();
-                var birthDate = new Date(dataNascimento);
-                var age = today.getFullYear() - birthDate.getFullYear();
-                var monthDiff = today.getMonth() - birthDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                if (age < 10) {
-                    isValid = false;
-                    errorMessage += "Usuários menores de 10 anos não podem se cadastrar.\n";
-                }
-            }
-
-            // Outras validações continuam iguais (exemplo: email, senha, CPF, etc.)
-            // Verificar outras validações aqui...
-
-            if (!isValid) {
-                alert("Erros encontrados:\n" + errorMessage);
-                return;
-            }
-
-            // Envio do formulário via API
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        nome: document.querySelector('input[name="nome"]').value,
-                        email_usuario: document.querySelector('input[name="email_usuario"]').value,
-                        senha_usuario: document.querySelector('input[name="senha_usuario"]').value,
-                        telefone: document.querySelector('input[name="telefone"]').value,
-                        data_nascimento: dataNascimento,
-                        cpf: document.querySelector('input[name="cpf"]').value
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Cadastro realizado com sucesso!');
-                    window.location.href = 'login.html';
-                } else {
-                    const errorMessage = await response.text();
-                    alert(`Erro ao cadastrar: ${errorMessage}`);
-                }
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
+                errorSpan.style.display = 'none';
+                alert('Usuário cadastrado com sucesso!');
             }
         });
     </script>
 </body>
 </html>
+
 
 
