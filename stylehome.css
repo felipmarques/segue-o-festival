@@ -1,0 +1,272 @@
+@import url("https://use.typekit.net/qrb0jox.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+  }
+
+
+  body {
+    font-size: 100%;
+    background-color: whitesmoke;
+  }
+
+  .cabecalho {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+
+.cabecalho-titulo {
+    font-family: 'Droog', sans-serif;
+    font-size: 27px;
+    color: #00bfff;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.cabecalho-botoes {
+    display: flex;
+    gap: 20px;
+}
+
+.cabecalho-botao-organizador, .cabecalho-botao-entrar {
+    position: relative;
+    width: 170px;
+    height: 50px;
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 28px;
+    text-align: center;
+    color: #FFFFFF;
+    background: linear-gradient(90deg, #08C2FF 48.5%, #A0DEFF 100%);
+    border: 2px solid #FFF100;
+    border-radius: 100px;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.cabecalho-botao-organizador:hover, .cabecalho-botao-entrar:hover {
+    background: linear-gradient(90deg, #A0DEFF 48.5%, #08C2FF 100%);
+}
+
+
+.cabecalho-botao-organizador {
+    margin-right: 10px;
+}
+
+.cabecalho-titulo-container {
+    display: flex;
+    align-items: center;
+}
+
+
+
+/*Menu*/
+
+.conteudo-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+    background: linear-gradient(90deg, #08C2FF 0%, #A0DEFF 100%);
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 100;
+    font-size: 25px;
+}
+
+
+.conteudo-banners {
+    position: relative; 
+    width: 100%; 
+    max-width: 1200px; 
+    height: 390px; 
+    margin: 25px auto; 
+    border-radius: 10px; 
+    
+    /* Propriedades da imagem de fundo */
+    background: url('periclão.png') no-repeat center center;
+    background-size: cover; /* Faz a imagem preencher o banner */
+    overflow: hidden; /* Garante que o conteúdo dentro do elemento siga o border-radius */
+}
+
+
+
+.pesquisa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Ocupa toda a largura do container */
+    max-width: 1300px;
+    height: 60px;
+    margin: 25px auto;
+    border: 2px solid #FFF100; /* Cor da borda */
+    padding: 10px;
+    background-color: #F5F5F5; /* Fundo leve para o container */
+    box-sizing: border-box;
+}
+
+.pesquisa-busca-evento, .pesquisa-busca-local, .pesquisa-busca-data {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+}
+
+.pesquisa-busca-evento {
+    flex: 1;
+    border-right: 1px solid #FFF100; /* Separador entre os campos */
+}
+
+.pesquisa-busca-local {
+    flex: 1;
+    border-right: 1px solid #FFF100;
+}
+
+.pesquisa-busca-data {
+    flex: 1;
+}
+
+.pesquisa input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #666; /* Cor do texto */
+    background: none; /* Remove o fundo branco */
+    width: 100%;
+    padding-left: 10px;
+}
+
+.pesquisa input::placeholder {
+    color: #AAA; /* Placeholder com cor mais suave */
+}
+
+.pesquisa img {
+    width: 24px; /* Tamanho do ícone */
+    height: 24px;
+    margin-left: 10px;
+    align-self: center; /* Centraliza o ícone verticalmente */
+}
+
+
+
+/* Estilo do título "Destaques" */
+.conteudo-secundario-destaque {
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 500; 
+    font-size: 15px; 
+    color: #000; 
+    position: relative;
+    display: inline-block;
+    margin: 25px auto;
+    margin-left: 60px; 
+}
+
+.conteudo-secundario-destaque::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -9px; /* Alinhamento abaixo do texto */
+    width: 55px; /* Largura da linha amarela */
+    height: 8px; /* Altura da linha amarela */
+    background-color: #FFF100; /* Cor amarela */
+}
+
+
+.conteudo-secundario-primeiralinha,
+.conteudo-secundario-segundalinha,
+.conteudo-secundario-terceiralinha {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 0 50px; 
+}
+
+
+.conteudo-secundario-primeiralinha div,
+.conteudo-secundario-segundalinha div,
+.conteudo-secundario-terceiralinha div {
+
+  text-align: center;
+  width: 20%; 
+  border-top: 0.5px solid #FFF100; 
+  border-right: 0.5px solid #FFF100; 
+  border-bottom: 0.5px solid #FFF100; 
+  border-left: 1px solid #FFF100; 
+  box-sizing: border-box;
+}
+
+/* Estilos das imagens */
+.conteudo-secundario-imagem {
+  width: 100%;
+  height: 70%;
+}
+
+/* Estilos dos títulos (h3) */
+.conteudo-secundario-titulo {
+  font-size: 1.1em;
+  margin: 7px 0 5px;
+  color: #000000;
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+}
+
+/* Estilos dos parágrafos */
+.conteudo-secundario-paragrafo {
+  font-size: 0.9em;
+  color: #000000;
+  margin: 5px 0;
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+}
+
+
+/* Adicionando o ícone de localização ao lado do endereço 
+p:last-of-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p:last-of-type:before {
+  content: url('path-to-location-icon.png'); /* Substitua pelo caminho correto do ícone 
+  margin-right: 5px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+*/
+
+/* Estilo responsivo para telas menores */
+@media (max-width: 1024px) {
+  .conteudo-secundario-primeiralinha div,
+  .conteudo-secundario-segundalinha div,
+  .conteudo-secundario-terceiralinha div {
+    width: 48%; /* Ajuste para 2 itens por linha em telas menores */
+  }
+}
+
+@media (max-width: 768px) {
+  .conteudo-secundario-primeiralinha div,
+  .conteudo-secundario-segundalinha div,
+  .conteudo-secundario-terceiralinha div {
+    width: 100%; /* 1 item por linha em dispositivos menores */
+    margin-bottom: 20px;
+  }
+}
