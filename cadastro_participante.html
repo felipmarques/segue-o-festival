@@ -111,7 +111,9 @@
             }
         }
 
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
             var isValid = true;
 
             var nome = document.querySelector('input[name="nome"]').value;
@@ -167,7 +169,35 @@
             }
 
             if (!isValid) {
-                event.preventDefault();
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome: document.querySelector('input[name="nome"]').value,
+                        email_usuario: document.querySelector('input[name="email_usuario"]').value,
+                        senha_usuario: document.querySelector('input[name="senha_usuario"]').value,
+                        telefone: document.querySelector('input[name="telefone"]').value,
+                        data_nascimento: document.querySelector('input[name="data_nascimento"]').value,
+                        cpf: document.querySelector('input[name="cpf"]').value
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                    window.location.href = 'login.html';
+                } else {
+                    const errorMessage = await response.text();
+                    alert(`Erro ao cadastrar: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Ocorreu um erro ao se conectar ao servidor. Tente novamente mais tarde.');
             }
         });
     </script>
