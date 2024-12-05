@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Localização do Evento</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+  <style>
+    @import url("https://use.typekit.net/qrb0jox.css");
+     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+    }
+
+    body {
+      font-size: 100%;
+      background-color: whitesmoke;
+    }
+
+    .container {
+      padding: 20px;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #00bfff;
+      font-family: 'Droog', sans-serif;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      color: #fff;
+      background: linear-gradient(90deg, #08C2FF 48.5%, #A0DEFF 100%);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #A0DEFF 48.5%, #08C2FF 100%);
+    }
+
+    #map-container {
+      width: 100%;
+      max-width: 600px;  
+      height: 300px; 
+      margin: 20px auto; 
+      border: 5px solid #00bfff; 
+      border-radius: 10px; 
+      overflow: hidden; 
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Localização do Evento</h1>
+    <form id="form-localizacao">
+      <div class="form-group">
+      </div>
+      <div class="form-group">
+        <label for="logradouro">Rua, Avenida, Logradouro</label>
+        <input type="text" id="logradouro" name="logradouro" placeholder="Digite o endereço" required>
+      </div>
+
+      <div class="form-group">
+        <label for="cep-mapa">CEP</label>
+        <input type="text" id="cep-mapa" placeholder="Digite o CEP para o mapa" required>
+      </div>
+
+      <button type="button" class="btn" id="buscar">Buscar Localização</button>
+
+      <div id="map-container">
+        <div id="map"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="numero">Número</label>
+        <input type="text" id="numero" name="numero" placeholder="Digite o número" required>
+      </div>
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <input type="text" id="estado" name="estado" placeholder="Digite o estado" required>
+      </div>
+      <div class="form-group">
+        <label for="nome-local">Nome do Local</label>
+        <input type="text" id="nome-local" name="nome-local" placeholder="Digite o nome do local" required>
+      </div>
+      <button type="submit" class="btn">Próximo</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([-15.7942, -47.8822], 5);  
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var marker = L.marker([-15.7942, -47.8822]).addTo(map);  
+    document.getElementById('buscar').addEventListener('click', function() {
+      const cep = document.getElementById('cep-mapa').value.trim();
+      
+      if (cep) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.erro) {
+              alert('CEP não encontrado.');
+              return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?q=${data.logradouro || data.localidade}&format=json&limit=1`)
+              .then(res => res.json())
+              .then(geoData => {
+                if (geoData.length > 0) {
+                  const { lat, lon } = geoData[0];
+                  const position = [lat, lon];
+
+                  marker.setLatLng(position);
+                  map.setView(position, 15);
+                } else {
+                  alert('Endereço não localizado no mapa.');
+                }
+              });
+          });
+      } else {
+        alert('Digite um CEP válido.');
+      }
+    });
+
+    document.getElementById('form-localizacao').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const localizacao = {
+        cep: document.getElementById('cep-principal').value,
+        logradouro: document.getElementById('logradouro').value,
+        numero: document.getElementById('numero').value,
+        estado: document.getElementById('estado').value,
+        nomeLocal: document.getElementById('nome-local').value,
+      };
+
+      localStorage.setItem('localizacao', JSON.stringify(localizacao));
+      window.location.href = 'revisao_pagamento.html';
+    });
+  </script>
+</body>
+</html>

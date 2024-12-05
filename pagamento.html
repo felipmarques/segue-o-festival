@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Pagamento</title>
+  <link rel="stylesheet" href="https://use.typekit.net/qrb0jox.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Raleway', sans-serif;
+      background-color: #f9f9f9;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 18px;
+      color: #fff;
+      background: linear-gradient(90deg, #08C2FF 48.5%, #A0DEFF 100%);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #A0DEFF 48.5%, #08C2FF 100%);
+    }
+
+    .payment-options {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .payment-options div {
+      margin-bottom: 15px;
+    }
+
+    #qr-code-container, #boleto-container {
+      margin-top: 20px;
+    }
+
+    #boleto-gerado {
+      font-weight: bold;
+      color: #28a745;
+    }
+
+    #countdown {
+      font-size: 20px;
+      margin-top: 20px;
+      color: #ff0000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cadastro de Forma de Pagamento</h1>
+
+    <form>
+      <div class="form-group">
+        <label for="tipo-pagamento">Escolha a forma de pagamento:</label>
+        <select id="tipo-pagamento" name="tipo-pagamento">
+          <option value="cartao">Cartão de Crédito</option>
+          <option value="pix">Pix</option>
+          <option value="boleto">Boleto</option>
+        </select>
+      </div>
+
+      <div id="cartao-info" class="payment-options">
+        <div class="form-group">
+          <label for="nome-titular">Nome do Titular do Cartão:</label>
+          <input type="text" id="nome-titular" name="nome-titular" placeholder="Nome do titular" required>
+        </div>
+
+        <div class="form-group">
+          <label for="numero-cartao">Número do Cartão:</label>
+          <input type="text" id="numero-cartao" name="numero-cartao" placeholder="Digite o número do cartão" required>
+        </div>
+
+        <div class="form-group">
+          <label for="cvv">CVV (Código de segurança):</label>
+          <input type="text" id="cvv" name="cvv" placeholder="Digite o CVV" required>
+        </div>
+
+        <div class="form-group">
+          <label for="data-validade">Data de Validade:</label>
+          <input type="month" id="data-validade" name="data-validade" required>
+        </div>
+      </div>
+
+      <div id="pix-boleto-info" class="payment-options">
+        <div class="form-group">
+          <label for="qr-code">QR Code para Pix:</label>
+          <div id="qr-code-container"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="boleto-gerado">Boleto Gerado:</label>
+          <div id="boleto-container">
+            <span id="boleto-gerado"></span>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn" onclick="window.location.href='teste.cronometro.html';">Confirmar Pagamento</button>
+    </form>
+
+    <div id="countdown"></div>
+  </div>
+
+  <script>
+    const tipoPagamento = document.getElementById('tipo-pagamento');
+    const cartaoInfo = document.getElementById('cartao-info');
+    const pixBoletoInfo = document.getElementById('pix-boleto-info');
+    const qrCodeContainer = document.getElementById('qr-code-container');
+    const boletoContainer = document.getElementById('boleto-container');
+    const boletoGerado = document.getElementById('boleto-gerado');
+    const countdownDisplay = document.getElementById('countdown');
+
+    let timeLeft = 5 * 60; 
+
+    function updateCountdown() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      countdownDisplay.textContent = `Tempo restante para pagamento: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+      if (timeLeft <= 0) {
+        countdownDisplay.textContent = 'Tempo de confirmação expirado!';
+        document.querySelector('button[type="submit"]').disabled = true;
+      } else {
+        timeLeft--;
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+
+    tipoPagamento.addEventListener('change', function() {
+      if (tipoPagamento.value === 'pix' || tipoPagamento.value === 'boleto') {
+        cartaoInfo.style.display = 'none';
+        pixBoletoInfo.style.display = 'block';
+
+        // Gerar QR Code para Pix
+        if (tipoPagamento.value === 'pix') {
+          generateQRCode('00020101021226840014BR.GOV.BCB.PIX01360014+55019988887771?d=123456789');
+        }
+
+        if (tipoPagamento.value === 'boleto') {
+          generateBoleto();
+        }
+
+      } else if (tipoPagamento.value === 'cartao') {
+        cartaoInfo.style.display = 'block';
+        pixBoletoInfo.style.display = 'none';
+        qrCodeContainer.innerHTML = '';
+        boletoContainer.innerHTML = '';
+      }
+    });
+
+    function generateQRCode(data) {
+      QRCode.toDataURL(data, function(error, url) {
+        if (error) {
+          console.error(error);
+        } else {
+          qrCodeContainer.innerHTML = `<img src="${url}" alt="QR Code Pix">`;
+        }
+      });
+    }
+
+    function generateBoleto() {
+      const boletoNumber = '23793.90740 60000.000013 45979.257601 8 1234567890'; 
+      boletoGerado.textContent = `Número do Boleto: ${boletoNumber}`;
+    }
+    cartaoInfo.style.display = 'block';
+  </script>
+</body>
+</html>

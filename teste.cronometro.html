@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento Confirmado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      color: #fff;
+      background: #28a745;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #218838;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #ff0000;
+    }
+
+    #countdown {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #ff0000;
+    }
+
+    .check-img {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Verificação de Pagamento</h1>
+    <button id="confirmar-pagamento" class="btn">Confirmar Pagamento</button>
+    <div id="status"></div>
+    <div id="countdown"></div>
+  </div>
+
+  <script>
+    const confirmarPagamento = document.getElementById('confirmar-pagamento');
+    const statusDiv = document.getElementById('status');
+    const countdownDiv = document.getElementById('countdown');
+    
+    let timeLeft = 5 * 60;
+    let timerInterval;
+
+    function updateCountdown() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      countdownDiv.textContent = `Tempo restante: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+      if (timeLeft <= 0) {
+        countdownDiv.textContent = 'Tempo de confirmação expirado!';
+        clearInterval(timerInterval); 
+      } else {
+        timeLeft--;
+      }
+    }
+
+    function startCountdown() {
+      timerInterval = setInterval(updateCountdown, 1000);
+    }
+
+    function verificarPagamento() {
+      const randomStatus = Math.random() < 0.5 ? 'pago' : 'falha'; // 50% de chance de sucesso
+
+      if (randomStatus === 'pago') {
+        statusDiv.innerHTML = `
+          <!-- Ícone SVG do check -->
+          <svg class="check-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+          Pagamento Confirmado com Sucesso!
+        `;
+        statusDiv.style.color = '#28a745'; // Verde
+      } else {
+        statusDiv.innerHTML = `
+          <img src="https://via.placeholder.com/50/ff0000/ffffff?text=X" class="check-img" alt="Falha no Pagamento">
+          Falha no pagamento. Tente novamente.
+        `;
+        statusDiv.style.color = '#ff0000'; // Vermelho
+      }
+    }   
+
+    confirmarPagamento.addEventListener('click', function() {
+      startCountdown();
+
+      const verificarInterval = setInterval(() => {
+        verificarPagamento(); 
+        clearInterval(verificarInterval); 
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

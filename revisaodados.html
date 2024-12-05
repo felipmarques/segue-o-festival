@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisão e Pagamento</title>
+  <link rel="stylesheet" href="https://use.typekit.net/qrb0jox.css">
+  <style>
+    body {
+      font-family: 'Raleway', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #00bfff;
+      font-size: 32px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #info-evento p {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      color: #fff;
+      background: linear-gradient(90deg, #08C2FF 48.5%, #A0DEFF 100%);
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #A0DEFF 48.5%, #08C2FF 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Revisão dos Dados</h1>
+    <div id="info-evento">
+    </div>
+    <a href="localizacaoevento.html" class="btn">Alterar Localização</a>
+  </div>
+
+  <script>
+    const localizacao = JSON.parse(localStorage.getItem('localizacao'));
+
+    if (localizacao) {
+      document.getElementById('info-evento').innerHTML = `
+        <p><strong>Nome do Local:</strong> ${localizacao.nomeLocal}</p>
+        <p><strong>Endereço:</strong> ${localizacao.logradouro}, ${localizacao.numero}</p>
+        <p><strong>Estado:</strong> ${localizacao.estado}</p>
+        <p><strong>CEP:</strong> ${localizacao.cep}</p>
+      `;
+    } else {
+      alert('Nenhum dado encontrado. Redirecionando...');
+      window.location.href = 'localizacao.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisão e Pagamento</title>
+  <link rel="stylesheet" href="https://use.typekit.net/qrb0jox.css">
+  <style>
+    body {
+      font-family: 'Raleway', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #00bfff;
+      font-size: 32px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #banner-evento {
+  width: 100%;
+  height: 250px;
+  background-color: #e1e1e1;
+  background-image: url('file:///C:/Users/Nicoly/SegueoFestival/periclão.png'); 
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+
+
+    #info-evento p {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      color: #fff;
+      background: linear-gradient(90deg, #08C2FF 48.5%, #A0DEFF 100%);
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #A0DEFF 48.5%, #08C2FF 100%);
+    }
+
+    .pagamento {
+      margin-top: 20px;
+    }
+
+    label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      appearance: none; /* Remove o estilo padrão da seta do navegador */
+      cursor: pointer;
+    }
+
+    select:hover {
+      background-color: #e5f7ff;
+      border-color: #00bfff;
+    }
+
+    option:hover {
+      background-color: #00bfff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Revisão e Pagamento</h1>
+
+    <div id="banner-evento"></div>
+
+    <div id="info-evento">
+      <p><strong>Nome do Local:</strong> Exemplo de Local</p>
+      <p><strong>Endereço:</strong> Rua Exemplo, 123, São Paulo</p>
+      <p><strong>Descrição do Evento:</strong> Este é um evento especial para todos os apaixonados por tecnologia e inovação. Venha participar e aprender mais sobre as novas tendências do mercado.</p>
+      <p><strong>Preço Final:</strong> R$ 199,99</p>
+    </div>
+
+    <div class="pagamento">
+      <h2>Escolha a Forma de Pagamento</h2>
+      <label for="forma-pagamento">Selecione a forma de pagamento:</label>
+      <select id="forma-pagamento">
+        <option value="pix">PIX</option>
+        <option value="cartao-credito">Cartão de Crédito</option>
+        <option value="debito">Cartão de Débito</option>
+        <option value="boleto">Boleto</option>
+      </select>
+    </div>
+
+    <a href="pagamento.html" class="btn">Prosseguir</a>
+  </div>
+
+  <script>
+    const localizacao = JSON.parse(localStorage.getItem('localizacao'));
+
+    if (localizacao) {
+      document.getElementById('info-evento').innerHTML = `
+        <p><strong>Nome do Local:</strong> ${localizacao.nomeLocal}</p>
+        <p><strong>Endere-ço:</strong> ${localizacao.logradouro}, ${localizacao.numero}</p>
+        <p><strong>Estado:</strong> ${localizacao.estado}</p>
+        <p><strong>CEP:</strong> ${localizacao.cep}</p>
+      `;
+    } else {
+      alert('Nenhum dado encontrado. Redirecionando...');
+      window.location.href = 'localizacaoevento.html';
+    }
+  </script>
+</body>
+</html>
