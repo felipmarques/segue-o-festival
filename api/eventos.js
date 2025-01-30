@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     const imagens = req.files ? req.files.map(file => file.buffer) : [];
 
     console.log('Dados recebidos para inserção:', { 
-      nome, descricao, cep, endereco, link_ingresso, line_up, imagens
+      nome, descricao, cep, endereco, link_ingresso, line_up
     });
 
     try {
@@ -39,8 +39,8 @@ module.exports = async (req, res) => {
         : '{}';
 
       const query = `
-        INSERT INTO eventos (nome, descricao, cep, endereco, link_ingresso, line_up, imagens)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO eventos (nome, descricao, cep, endereco, link_ingresso, line_up)
+        VALUES ($1, $2, $3, $4, $5, $6)
       `;
 
       const values = [nome, descricao, cep, endereco, link_ingresso, line_up, imagensArray];
@@ -66,20 +66,4 @@ module.exports = async (req, res) => {
   }
 };
 
-// Middleware para lidar com o upload de arquivos
-module.exports = (req, res) => {
-  upload.array('fotos', 5)(req, res, async (err) => {
-    if (err) {
-      console.error('Erro no upload de arquivos:', err.message, err.stack);
-      res.status(500).send('Erro no upload de arquivos: ' + err.message);
-    } else {
-      try {
-        await module.exports(req, res);
-      } catch (err) {
-        console.error('Erro ao processar a requisição:', err.message, err.stack);
-        res.status(500).send('Erro ao processar a requisição: ' + err.message);
-      }
-    }
-  });
-};
 
