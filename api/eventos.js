@@ -1,5 +1,5 @@
-import { Pool } from 'pg';
-import multer from 'multer';
+const { Pool } = require('pg');
+const multer = require('multer');
 
 const upload = multer();
 
@@ -10,7 +10,7 @@ const pool = new Pool({
   }
 });
 
-const handler = async (req, res) => {
+module.exports = async (req, res) => {
   if (req.method === 'POST') {
     console.log('Requisição recebida:', req.body);
 
@@ -37,9 +37,9 @@ const handler = async (req, res) => {
       console.log('Executando query:', query);
       console.log('Com valores:', values);
 
+      // Executando a query
       const result = await pool.query(query, values);
       console.log('Resultado da query:', result);
-
       res.status(200).send('Evento cadastrado com sucesso!');
     } catch (err) {
       console.error('Erro ao executar query:', err.message, err.stack);
@@ -50,14 +50,19 @@ const handler = async (req, res) => {
   }
 };
 
-// Exportando o manipulador com upload de arquivos
-export default (req, res) => {
-  upload.array('fotos', 5)(req, res, (err) => {
+// Middleware para lidar com o upload de arquivos
+module.exports = (req, res) => {
+  upload.array('fotos', 5)(req, res, async (err) => {
     if (err) {
+      console.error('Erro no upload de arquivos:', err.message, err.stack);
       res.status(500).send('Erro no upload de arquivos: ' + err.message);
     } else {
-      handler(req, res);
+      try {
+        await module.exports(req, res);
+      } catch (err) {
+        console.error('Erro ao processar a requisição:', err.message, err.stack);
+        res.status(500).send('Erro ao processar a requisição: ' + err.message);
+      }
     }
   });
 };
-
