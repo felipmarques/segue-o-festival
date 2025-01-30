@@ -47,5 +47,22 @@
         </div>
     </div>
 
+    <!-- Script para exibir o pop-up -->
+    <script>
+        document.getElementById("eventoForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+            
+            // Simulação de envio bem-sucedido (pode substituir por um AJAX para backend)
+            let sucesso = true; 
+
+            if (sucesso) {
+                alert("🎉 Evento cadastrado com sucesso!");
+                document.getElementById("eventoForm").reset(); // Limpa os campos do formulário
+            } else {
+                alert("⚠️ Erro ao cadastrar o evento. Tente novamente.");
+            }
+        });
+    </script>
+
 </body>
 </html>
