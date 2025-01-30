@@ -1,0 +1,105 @@
+/* Reset padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilização da página */
+body {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: #f8f8f8;
+}
+
+/* Contêiner principal */
+.container {
+    display: flex;
+    width: 900px;
+    height: 500px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Área do formulário (esquerda) */
+.formulario {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.formulario h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.formulario label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+.formulario input,
+.formulario textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.formulario input:focus,
+.formulario textarea:focus {
+    outline: none;
+    border-color: #FFA500;
+}
+
+/* Botão de cadastro */
+.formulario button {
+    width: 100%;
+    background: #FFD700;
+    color: black;
+    padding: 12px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.formulario button:hover {
+    background: #FFA500;
+}
+
+/* Área informativa (direita) */
+.info {
+    flex: 1;
+    background: linear-gradient(to bottom, #00A6FF, #0056B3);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.info h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.info p {
+    font-size: 14px;
+}
