@@ -18,8 +18,8 @@ body {
 /* Contêiner principal */
 .container {
     display: flex;
-    width: 900px;
-    height: 500px;
+    width: 960px; /* Aumentado para melhor espaçamento */
+    min-height: 600px; /* Evita cortes */
     background: #fff;
     border-radius: 10px;
     overflow: hidden;
@@ -29,10 +29,11 @@ body {
 /* Área do formulário (esquerda) */
 .formulario {
     flex: 1;
-    padding: 40px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-y: auto; /* Garante que todo o formulário fique visível */
 }
 
 .formulario h2 {
@@ -62,6 +63,13 @@ body {
 .formulario textarea:focus {
     outline: none;
     border-color: #FFA500;
+}
+
+/* Ajuste para exibir corretamente o primeiro campo */
+.formulario input[type="text"],
+.formulario input[type="url"],
+.formulario textarea {
+    min-height: 40px;
 }
 
 /* Botão de cadastro */
@@ -103,3 +111,4 @@ body {
 .info p {
     font-size: 14px;
 }
+
