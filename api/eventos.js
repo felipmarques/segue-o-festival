@@ -20,7 +20,7 @@ const handleEventCreation = async (req, res) => {
   const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
   const imagens = req.files ? req.files.map((file) => file.buffer) : [];
 
-  console.log('Dados recebidos para inserção:', { nome, descricao, cep, endereco, link_ingresso, line_up, imagens });
+  console.log('Dados recebidos para inserção:', { nome, descricao, cep, endereco, link_ingresso, line_up});
 
   try {
     // Convertendo as imagens para o formato BYTEA
@@ -48,18 +48,4 @@ const handleEventCreation = async (req, res) => {
   }
 };
 
-// Middleware para lidar com o upload de arquivos
-const handleFileUpload = (req, res) => {
-  upload.array('fotos', 5)(req, res, async (err) => {
-    if (err) {
-      console.error('Erro no upload de arquivos:', err.message, err.stack);
-      res.status(500).send('Erro no upload de arquivos: ' + err.message);
-    } else {
-      // Após o upload de arquivos, chama a função principal para processar o evento
-      await handleEventCreation(req, res);
-    }
-  });
-};
 
-// Exporta o middleware para a função de upload
-module.exports = handleFileUpload;
