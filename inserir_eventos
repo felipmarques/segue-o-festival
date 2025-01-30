@@ -4,69 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Evento</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="insere_eventos.css">
 </head>
 <body>
-    <header>
-        <h2>Cadastro de Evento</h2>
-    </header>
-    <main>
-        <form id="eventoForm">
-            <label for="nome">Nome do Evento:</label>
-            <input type="text" id="nome" name="nome" required>
 
-            <label for="descricao">Descrição:</label>
-            <textarea id="descricao" name="descricao" rows="4" required></textarea>
+    <div class="container">
+        <!-- Formulário de Cadastro -->
+        <div class="formulario">
+            <h2>Cadastro de Evento</h2>
+            <form id="eventoForm">
+                <label for="nome">Nome do Evento:</label>
+                <input type="text" id="nome" name="nome" required>
 
-            <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" required>
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-            <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" name="endereco" required>
+                <label for="cep">CEP:</label>
+                <input type="text" id="cep" name="cep" required>
 
-            <label for="link_ingresso">Link para Compra de Ingressos:</label>
-            <input type="url" id="link_ingresso" name="link_ingresso" required>
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="endereco" required>
 
-            <label for="lineup">Line-Up:</label>
-            <textarea id="lineup" name="lineup" rows="3" required></textarea>
+                <label for="link_ingresso">Link para Compra de Ingressos:</label>
+                <input type="url" id="link_ingresso" name="link_ingresso" required>
 
-            <label for="fotos">Fotos do Evento (até 5 imagens):</label>
-            <input type="file" id="fotos" name="fotos[]" accept="image/*" multiple required>
-            
-            <button type="submit">Cadastrar Evento</button>
-        </form>
-    </main>
+                <label for="lineup">Line-Up:</label>
+                <textarea id="lineup" name="lineup" rows="3" required></textarea>
 
-    <script>
-        document.getElementById('eventoForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+                <label for="fotos">Fotos do Evento (até 5 imagens):</label>
+                <input type="file" id="fotos" name="fotos[]" accept="image/*" multiple required>
 
-            const formData = new FormData();
-            formData.append('nome', document.getElementById('nome').value);
-            formData.append('descricao', document.getElementById('descricao').value);
-            formData.append('cep', document.getElementById('cep').value);
-            formData.append('endereco', document.getElementById('endereco').value);
-            formData.append('link_ingresso', document.getElementById('link_ingresso').value);
-            formData.append('line_up', document.getElementById('lineup').value);
+                <button type="submit">Cadastrar Evento</button>
+            </form>
+        </div>
 
-            const fotosInput = document.getElementById('fotos');
-            for (let i = 0; i < fotosInput.files.length && i < 5; i++) {
-                formData.append('fotos', fotosInput.files[i]);
-            }
+        <!-- Área Informativa -->
+        <div class="info">
+            <div>
+                <h2>Bem-Vindo ao Cadastro de Eventos!</h2>
+                <p>Preencha os dados necessários para cadastrar seu evento e torná-lo acessível para o público.</p>
+            </div>
+        </div>
+    </div>
 
-            try {
-                const response = await fetch('/api/eventos', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.text();
-                alert(result); // Mostra mensagem de sucesso ou erro
-            } catch (error) {
-                console.error('Erro ao cadastrar evento:', error);
-                alert('Erro ao cadastrar evento.');
-            }
-        });
-    </script>
 </body>
 </html>
