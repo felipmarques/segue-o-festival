@@ -57,7 +57,7 @@
             const mensagemErro = document.getElementById("mensagemErro");
 
             try {
-                const response = await fetch('/eventos', {
+                const response = await fetch('/api/eventos', {
                     method: 'POST',
                     body: formData
                 });
