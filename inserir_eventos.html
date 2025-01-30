@@ -36,6 +36,7 @@
 
                 <button type="submit">Cadastrar Evento</button>
             </form>
+            <div id="mensagemErro" style="color: red; margin-top: 10px;"></div>
         </div>
 
         <!-- Área Informativa -->
@@ -53,6 +54,7 @@
             event.preventDefault(); // Impede o envio padrão do formulário
 
             const formData = new FormData(event.target);
+            const mensagemErro = document.getElementById("mensagemErro");
 
             try {
                 const response = await fetch('/eventos', {
@@ -63,12 +65,14 @@
                 if (response.ok) {
                     alert("🎉 Evento cadastrado com sucesso!");
                     document.getElementById("eventoForm").reset(); // Limpa os campos do formulário
+                    mensagemErro.textContent = ""; // Limpa a mensagem de erro
                 } else {
-                    alert("⚠️ Erro ao cadastrar o evento. Tente novamente.");
+                    const errorMessage = await response.text();
+                    mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento: " + errorMessage;
                 }
             } catch (error) {
                 console.error('Erro ao enviar dados:', error);
-                alert("⚠️ Erro ao cadastrar o evento. Tente novamente.");
+                mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento. Tente novamente.";
             }
         });
     </script>
