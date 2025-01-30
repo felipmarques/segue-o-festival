@@ -1,68 +1,67 @@
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-const fs = require('fs');
+import express from 'express';
+import { Pool } from 'pg';
+import multer from 'multer';
+import fs from 'fs';
+import eventosHandler from './api/eventos'; // Ajuste o caminho conforme necessário
+import loginHandler from './api/login'; // Ajuste o caminho conforme necessário
+import registerHandler from './api/register'; // Ajuste o caminho conforme necessário
+import registerPromotorHandler from './api/registerPromotor'; // Ajuste o caminho conforme necessário
 
+// Configuração do Neon (uso de variáveis de ambiente no Vercel)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // No Vercel, a variável DATABASE_URL é configurada nas configurações do projeto
+  ssl: {
+    rejectUnauthorized: false,  // Certifique-se de que a conexão com SSL seja permitida no Neon
+  },
+});
+
+// Função para converter arquivo em blob (para banners de eventos)
 const convertToBlob = (filePath) => {
   return fs.readFileSync(filePath);
 };
 
-module.exports = async (req, res) => {
-  console.log('Requisição recebida:', req.body);
+// Criação do app Express
+const app = express();
 
-  if (req.method === 'POST') {
-    const {
-      nome_evento, classificacao_indicativa, descricao, site_externo, data_inicio, data_fim
-    } = req.body;
+// Middleware para parsing de JSON e formulários
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    console.log('Valores recebidos para inserção:', {
-      nome_evento, classificacao_indicativa, descricao, site_externo, data_inicio, data_fim
+// Configuração do multer para upload de arquivos
+const upload = multer({ dest: 'uploads/' });
+
+// Rota para registrar usuários
+app.post('/api/register', registerHandler);
+
+// Rota para registrar promotores
+app.post('/api/register-promotor', registerPromotorHandler);
+
+// Rota de login
+app.post('/api/login', loginHandler);
+
+// Rota para criar eventos (com upload de banners)
+app.post('/api/eventos', upload.array('banners', 2), eventosHandler);
+
+// Rota para listar eventos
+app.get('/api/eventos', eventosHandler);
+
+// Função para iniciar o servidor
+const startServer = async () => {
+  try {
+    // Testando a conexão com o banco de dados
+    await pool.connect();
+    console.log('Conectado ao banco de dados com sucesso!');
+
+    // Iniciando o servidor na porta 3000 ou a porta definida em ambiente
+    app.listen(process.env.PORT || 3000, () => {
+      console.log('Servidor rodando na porta 3000');
     });
-
-    let banner1 = null;
-    let banner2 = null;
-
-    if (req.files) {
-      banner1 = req.files[0] ? convertToBlob(req.files[0].path) : null;
-      banner2 = req.files[1] ? convertToBlob(req.files[1].path) : null;
-    }
-
-    try {
-      const query = `
-        INSERT INTO evento (
-          nome_evento, classificacao_indicativa, descricao, site_externo, data_inicio, data_fim, banner1, banner2
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING id;
-      `;
-
-      const values = [
-        nome_evento,
-        classificacao_indicativa,
-        descricao,
-        site_externo,
-        data_inicio,
-        data_fim,
-        banner1,
-        banner2
-      ];
-
-      console.log('Executando query:', query);
-      console.log('Com valores:', values);
-
-      const result = await pool.query(query, values);
-      console.log('Resultado da query:', result);
-
-      res.status(200).send(`Evento registrado com sucesso! ID: ${result.rows[0].id}`);
-    } catch (err) {
-      console.error('Erro ao executar query:', err);
-      res.status(500).send('Erro ao registrar o evento.');
-    }
-  } else {
-    res.status(405).send('Método não permitido');
+  } catch (error) {
+    console.error('Erro ao conectar ao banco de dados:', error);
   }
 };
+
+// Iniciando o servidor
+startServer();
+
 
