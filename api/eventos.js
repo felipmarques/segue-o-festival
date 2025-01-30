@@ -1,4 +1,9 @@
+const express = require('express');
+const multer = require('multer');
 const { Pool } = require('pg');
+
+const app = express();
+const upload = multer();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -7,12 +12,15 @@ const pool = new Pool({
   }
 });
 
-module.exports = async (req, res) => {
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/eventos', upload.array('fotos', 5), async (req, res) => {
   console.log('Requisição recebida:', req.body);
 
   if (req.method === 'POST') {
     const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
-    const imagens = req.files ? req.files.fotos : [];
+    const imagens = req.files ? req.files.map(file => file.buffer) : [];
 
     console.log('Dados recebidos para inserção:', { 
       nome, descricao, cep, endereco, link_ingresso, line_up, imagens
@@ -20,11 +28,8 @@ module.exports = async (req, res) => {
 
     try {
       // Converter imagens para BYTEA
-      const imagensBytes = imagens.map(img => img.data);
-
-      // Criar array de imagens em formato PostgreSQL
-      const imagensArray = imagensBytes.length > 0 
-        ? `{${imagensBytes.map(img => `'\\x${img.toString('hex')}'`).join(',')}}`
+      const imagensArray = imagens.length > 0 
+        ? `{${imagens.map(img => `'\\x${img.toString('hex')}'`).join(',')}}`
         : '{}';
 
       const query = `
@@ -48,4 +53,9 @@ module.exports = async (req, res) => {
   } else {
     res.status(405).send('Método não permitido');
   }
-};
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
