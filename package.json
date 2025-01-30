@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node api/eventos.js"
+    "start": "node api/register.js"
   },
   "dependencies": {
     "express": "^4.17.1",
