@@ -12,52 +12,74 @@ const pool = new Pool({
   },
 });
 
-const handleEventCreation = async (req, res) => {
-  console.log('Função handleEventCreation chamada');
-
-  // Adicionar logs antes de processar qualquer coisa
+module.exports = async (req, res) => {
   console.log('Requisição recebida:', req.body);
 
-  // Extrair dados do formulário
-  const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
+  if (req.method === 'POST') {
+    const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
+    const imagens = req.files ? req.files.map(file => file.buffer) : [];
 
-  // Verificando se todos os campos necessários estão presentes
-  if (!nome || !descricao || !cep || !endereco || !link_ingresso || !line_up) {
-    console.error('Erro: Campos obrigatórios não foram preenchidos.');
-    return res.status(400).send('Todos os campos são obrigatórios.');
-  }
+    console.log('Dados recebidos para inserção:', { 
+      nome, descricao, cep, endereco, link_ingresso, line_up, imagens
+    });
 
-  console.log('Dados recebidos para inserção:', { nome, descricao, cep, endereco, link_ingresso, line_up });
+    try {
+      // Verificar se o nome do evento já está cadastrado
+      const checkQuery = `SELECT 1 FROM eventos WHERE nome = $1`;
+      const checkResult = await pool.query(checkQuery, [nome]);
 
-  try {
-    // Logando antes de executar a query para garantir que tudo está correto
-    console.log('Iniciando a execução da query no banco de dados...');
+      if (checkResult.rowCount > 0) {
+        console.warn(`Evento já cadastrado: ${nome}`);
+        return res.status(400).send('Erro: Evento já está registrado.');
+      }
 
-    // Query de inserção no banco de dados
-    const query = `
-      INSERT INTO eventos (nome, descricao, cep, endereco, link_ingresso, line_up)
-      VALUES ($1, $2, $3, $4, $5, $6)
-    `;
+      // Converter imagens para BYTEA
+      const imagensArray = imagens.length > 0 
+        ? `{${imagens.map(img => `'\\x${img.toString('hex')}'`).join(',')}}`
+        : '{}';
 
-    const values = [nome, descricao, cep, endereco, link_ingresso, line_up];
+      const query = `
+        INSERT INTO eventos (nome, descricao, cep, endereco, link_ingresso, line_up, imagens)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `;
 
-    console.log('Executando query:', query);
-    console.log('Com valores:', values);
+      const values = [nome, descricao, cep, endereco, link_ingresso, line_up, imagensArray];
 
-    // Executando a query para inserir o evento
-    const result = await pool.query(query, values);
+      console.log('Executando query:', query);
+      console.log('Com valores:', values);
 
-    // Logando o resultado da query
-    console.log('Resultado da query:', result);
+      const result = await pool.query(query, values);
+      console.log('Resultado da query:', result);
 
-    res.status(200).send('Evento cadastrado com sucesso!');
-  } catch (err) {
-    // Logando o erro completo
-    console.error('Erro ao executar query:', err.message, err.stack);
-    res.status(500).send('Erro ao cadastrar evento: ' + err.message);
+      res.status(200).send('Evento cadastrado com sucesso!');
+    } catch (err) {
+      if (err.code === '23505') {
+        console.error('Erro de duplicidade de chave primária:', err);
+        res.status(400).send('Erro: Evento já está registrado.');
+      } else {
+        console.error('Erro ao executar query:', err);
+        res.status(500).send('Erro ao cadastrar evento.');
+      }
+    }
+  } else {
+    res.status(405).send('Método não permitido');
   }
 };
 
-// Definindo a função como o export de módulo
-module.exports = handleEventCreation;
+// Middleware para lidar com o upload de arquivos
+module.exports = (req, res) => {
+  upload.array('fotos', 5)(req, res, async (err) => {
+    if (err) {
+      console.error('Erro no upload de arquivos:', err.message, err.stack);
+      res.status(500).send('Erro no upload de arquivos: ' + err.message);
+    } else {
+      try {
+        await module.exports(req, res);
+      } catch (err) {
+        console.error('Erro ao processar a requisição:', err.message, err.stack);
+        res.status(500).send('Erro ao processar a requisição: ' + err.message);
+      }
+    }
+  });
+};
 
