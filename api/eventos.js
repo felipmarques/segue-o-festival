@@ -47,8 +47,8 @@ app.post('/eventos', upload.array('fotos', 5), async (req, res) => {
 
       res.status(200).send('Evento cadastrado com sucesso!');
     } catch (err) {
-      console.error('Erro ao executar query:', err);
-      res.status(500).send('Erro ao cadastrar evento.');
+      console.error('Erro ao executar query:', err.message, err.stack);
+      res.status(500).send('Erro ao cadastrar evento: ' + err.message);
     }
   } else {
     res.status(405).send('Método não permitido');
@@ -59,3 +59,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
