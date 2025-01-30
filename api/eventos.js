@@ -1,8 +1,6 @@
-const express = require('express');
-const multer = require('multer');
-const { Pool } = require('pg');
+import { Pool } from 'pg';
+import multer from 'multer';
 
-const app = express();
 const upload = multer();
 
 const pool = new Pool({
@@ -12,13 +10,10 @@ const pool = new Pool({
   }
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.post('/eventos', upload.array('fotos', 5), async (req, res) => {
-  console.log('Requisição recebida:', req.body);
-
+const handler = async (req, res) => {
   if (req.method === 'POST') {
+    console.log('Requisição recebida:', req.body);
+
     const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
     const imagens = req.files ? req.files.map(file => file.buffer) : [];
 
@@ -53,10 +48,16 @@ app.post('/eventos', upload.array('fotos', 5), async (req, res) => {
   } else {
     res.status(405).send('Método não permitido');
   }
-});
+};
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Exportando o manipulador com upload de arquivos
+export default (req, res) => {
+  upload.array('fotos', 5)(req, res, (err) => {
+    if (err) {
+      res.status(500).send('Erro no upload de arquivos: ' + err.message);
+    } else {
+      handler(req, res);
+    }
+  });
+};
 
