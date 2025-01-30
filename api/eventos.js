@@ -1,8 +1,4 @@
 const { Pool } = require('pg');
-const multer = require('multer');
-
-// Configurando o multer para aceitar o upload de arquivos
-const upload = multer();
 
 // Configuração do pool de conexões do PostgreSQL (Neon)
 const pool = new Pool({
@@ -18,22 +14,23 @@ const handleEventCreation = async (req, res) => {
 
   // Extrair dados do formulário
   const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
-  const imagens = req.files ? req.files.map((file) => file.buffer) : [];
 
-  console.log('Dados recebidos para inserção:', { nome, descricao, cep, endereco, link_ingresso, line_up});
+  // Verificando se todos os campos necessários estão presentes
+  if (!nome || !descricao || !cep || !endereco || !link_ingresso || !line_up) {
+    console.error('Erro: Campos obrigatórios não foram preenchidos.');
+    return res.status(400).send('Todos os campos são obrigatórios.');
+  }
+
+  console.log('Dados recebidos para inserção:', { nome, descricao, cep, endereco, link_ingresso, line_up });
 
   try {
-    // Convertendo as imagens para o formato BYTEA
-    const imagensArray = imagens.length > 0
-      ? `{${imagens.map((img) => `'\\x${img.toString('hex')}'`).join(',')}}`
-      : '{}';
-
+    // Query de inserção no banco de dados
     const query = `
-      INSERT INTO eventos (nome, descricao, cep, endereco, link_ingresso, line_up, imagens)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO eventos (nome, descricao, cep, endereco, link_ingresso, line_up)
+      VALUES ($1, $2, $3, $4, $5, $6)
     `;
 
-    const values = [nome, descricao, cep, endereco, link_ingresso, line_up, imagensArray];
+    const values = [nome, descricao, cep, endereco, link_ingresso, line_up];
 
     console.log('Executando query:', query);
     console.log('Com valores:', values);
@@ -48,4 +45,5 @@ const handleEventCreation = async (req, res) => {
   }
 };
 
+module.exports = handleEventCreation;
 
