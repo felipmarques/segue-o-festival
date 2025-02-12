@@ -1,0 +1,11 @@
+Este bloco de notas descreve a finalidad cada uma das páginas html que se encontram nesse repositório
+
+"index.html": Página inicial do site Segue o Festival. Essa é a página principal para pessoas não logadas. Ao clicar no link do nosso site, essa é a primeira página a aparecer.
+"home.html": Página inicial para as pessoas que estão logadas no site.
+"organizador.html": Página de cadastro dos organizadores
+"cadastro_participante.html": Página de cadastro de participantes dos festivais
+"login.html": Página de login dos usuários, sejam promotores ou participantes dos eventos
+"identifica.html": Página para identificação dos usuários (Promotor ou participante?)
+"inserir_eventos.html": Página para criação/registro de eventos
+"paginaevento.html": Página para visualização completa dos detalhes dos eventos
+"perfil.html": Página para visualização dos dados do usuário (perfil) 
