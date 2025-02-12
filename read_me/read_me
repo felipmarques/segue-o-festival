@@ -1,4 +1,4 @@
-Este bloco de notas descreve a finalidad cada uma das páginas html que se encontram nesse repositório
+Este bloco de notas descreve a finalidade cada uma das páginas html que se encontram nesse repositório
 
 "index.html": Página inicial do site Segue o Festival. Essa é a página principal para pessoas não logadas. Ao clicar no link do nosso site, essa é a primeira página a aparecer.
 "home.html": Página inicial para as pessoas que estão logadas no site.
