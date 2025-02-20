@@ -5,6 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Evento</title>
     <link rel="stylesheet" type="text/css" href="css/insere_evento.css">
+
+    <!-- Incluindo SDKs do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+
+    <script>
+        // Sua configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKq5m8hEKe4twc1zfa67RueiehEwC_4SE",
+            authDomain: "segue-o-festival.firebaseapp.com",
+            projectId: "segue-o-festival",
+            storageBucket: "segue-o-festival.appspot.com",
+            messagingSenderId: "387089259016",
+            appId: "1:387089259016:web:0519a34ec7c31041d30fbd",
+            measurementId: "G-18EV6GDNNH"
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+        const firestore = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
 </head>
 <body>
 
@@ -31,6 +56,10 @@
                 <label for="lineup">Line-Up:</label>
                 <textarea id="lineup" name="lineup" rows="3" required></textarea>
 
+                <label for="imagens">Imagens do Evento:</label>
+                <input type="file" id="imagens" name="imagens" accept="image/*" multiple required>
+                <small>Selecione até 5 imagens.</small>
+
                 <button type="submit">Cadastrar Evento</button>
             </form>
             <div id="mensagemErro" style="color: red; margin-top: 10px;"></div>
@@ -51,22 +80,45 @@
             event.preventDefault(); // Impede o envio padrão do formulário
 
             const formData = new FormData(event.target);
+            const imagens = document.getElementById("imagens").files;
             const mensagemErro = document.getElementById("mensagemErro");
 
-            try {
-                const response = await fetch('/api/eventos.js', {
-                    method: 'POST',
-                    body: formData
-                });
+            // Verifica o número de imagens (até 5)
+            if (imagens.length > 5) {
+                mensagemErro.textContent = "⚠️ Você pode selecionar no máximo 5 imagens!";
+                return;
+            }
 
-                if (response.ok) {
-                    alert("🎉 Evento cadastrado com sucesso!");
-                    document.getElementById("eventoForm").reset(); // Limpa os campos do formulário
-                    mensagemErro.textContent = ""; // Limpa a mensagem de erro
-                } else {
-                    const errorMessage = await response.text();
-                    mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento: " + errorMessage;
+            try {
+                // Carregar imagens para o Firebase Storage
+                const urlsImagens = [];
+                for (let i = 0; i < imagens.length; i++) {
+                    const imagem = imagens[i];
+                    const storageRef = storage.ref().child('eventos/' + imagem.name);
+                    const snapshot = await storageRef.put(imagem);
+                    const url = await snapshot.ref.getDownloadURL();
+                    urlsImagens.push(url);
                 }
+
+                // Preparar dados do evento (incluindo as URLs das imagens)
+                const eventoData = {
+                    nome: formData.get("nome"),
+                    descricao: formData.get("descricao"),
+                    cep: formData.get("cep"),
+                    endereco: formData.get("endereco"),
+                    link_ingresso: formData.get("link_ingresso"),
+                    lineup: formData.get("lineup"),
+                    imagens: urlsImagens
+                };
+
+                // Enviar os dados para o Firestore (banco de dados)
+                const eventosCollection = firestore.collection('eventos');
+                await eventosCollection.add(eventoData);
+
+                // Sucesso
+                alert("🎉 Evento cadastrado com sucesso!");
+                document.getElementById("eventoForm").reset(); // Limpa os campos do formulário
+                mensagemErro.textContent = ""; // Limpa a mensagem de erro
             } catch (error) {
                 console.error('Erro ao enviar dados:', error);
                 mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento. Tente novamente.";
