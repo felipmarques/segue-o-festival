@@ -1,71 +1,87 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Segue o Festival</title>
-    <link rel="stylesheet" type="text/css" href="css/stylehome.css">
+    <title>Página Inicial - Eventos</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Certifique-se de que o caminho para o CSS está correto -->
 </head>
+
 <body>
+    <!-- Cabeçalho -->
     <header class="cabecalho">
-        <h3 class="cabecalho-titulo">Segue<br>O Festival!</h3>
+        <div class="cabecalho-titulo-container">
+            <h1 class="cabecalho-titulo">Nome do Site</h1>
+        </div>
+        <div class="cabecalho-botoes">
+            <button class="cabecalho-botao-organizador">Organizador</button>
+            <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
+        </div>
     </header>
 
-    <main class="conteudo">
-        <div class="conteudo-menu">
-            <p>Músicas</p>
-            <p>Evento</p>
-            <p>Estados</p>
-            <p>Ingressos</p>
-            <p>Line-Up</p>
-            <p>Especiais</p>
-        </div>
+    <!-- Menu -->
+    <div class="conteudo-menu">
+        <div>Menu 1</div>
+        <div>Menu 2</div>
+        <div>Menu 3</div>
+    </div>
 
-        <section id="eventos-lista">
-            <!-- Os eventos serão carregados aqui como links -->
-        </section>
-    </main>
+    <!-- Banner -->
+    <div class="conteudo-banners">
+        <a href="/paginaevento.html">
+            <img src="imagens/periclão.png" alt="Banner Pagode do Pericão">
+        </a>
+    </div>
+
+    <!-- Busca -->
+    <div class="pesquisa">
+        <div class="pesquisa-busca-evento">
+            <input type="text" placeholder="Buscar evento">
+        </div>
+        <div class="pesquisa-busca-local">
+            <input type="text" placeholder="Buscar por local">
+        </div>
+        <div class="pesquisa-busca-data">
+            <input type="text" placeholder="Buscar por data">
+        </div>
+    </div>
+
+    <!-- Lista de Eventos -->
+    <div class="conteudo-secundario-destaque">
+        Eventos
+    </div>
+
+    <div class="lista-eventos" id="eventos-lista">
+        <!-- Os eventos serão carregados aqui via JavaScript -->
+    </div>
 
     <script>
-        // Função para carregar os eventos da API
+        // Função para carregar os eventos e exibi-los na tela inicial
         async function carregarEventos() {
             try {
-                // Fazendo a requisição GET para a API para buscar os eventos
                 const response = await fetch('/api/buscaeventos');
-                const eventos = await response.json(); // Retorna os eventos como JSON
+                const eventos = await response.json();
 
-                // Seleciona a seção onde os eventos serão exibidos
-                const eventosLista = document.getElementById('eventos-lista');
+                const listaEventos = document.getElementById('eventos-lista');
+                listaEventos.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
 
-                // Verifica se há eventos
-                if (eventos.length > 0) {
-                    // Limpa o conteúdo atual da lista de eventos
-                    eventosLista.innerHTML = '';
+                eventos.forEach(evento => {
+                    const eventoLink = document.createElement('a');
+                    eventoLink.href = `/detalhes/${evento.nome}`; // Link para a página do evento
+                    eventoLink.textContent = evento.nome; // Nome do evento
 
-                    // Cria um link para cada evento
-                    eventos.forEach(evento => {
-                        const eventoLink = document.createElement('a');
-                        eventoLink.href = `/paginaevento.html?id=${evento.id}`; // Redireciona para a página do evento com o ID
-                        eventoLink.textContent = evento.nome; // Nome do evento como texto do link
-                        eventoLink.classList.add('evento-link'); // Adiciona uma classe para estilizar
-
-                        // Adiciona o link à lista de eventos
-                        eventosLista.appendChild(eventoLink);
-                        eventosLista.appendChild(document.createElement('br')); // Quebra de linha entre os eventos
-                    });
-                } else {
-                    // Se não houver eventos, exibe uma mensagem
-                    eventosLista.innerHTML = '<p>Nenhum evento encontrado.</p>';
-                }
-            } catch (error) {
-                console.error('Erro ao carregar eventos:', error);
-                document.getElementById('eventos-lista').innerHTML = '<p>Erro ao carregar eventos.</p>';
+                    listaEventos.appendChild(eventoLink); // Adiciona o evento à lista
+                });
+            } catch (err) {
+                console.error('Erro ao carregar eventos:', err);
             }
         }
 
-        // Chama a função para carregar os eventos assim que a página for carregada
+        // Chama a função para carregar os eventos quando a página é carregada
         window.onload = carregarEventos;
     </script>
 </body>
+
 </html>
 
