@@ -21,94 +21,61 @@
     <!-- Menu de filtros -->
     <nav class="menu">
         <div class="menu-item">
-            <button class="menu-btn" onclick="toggleDropdown('estado-dropdown')">Estado</button>
-            <div id="estado-dropdown" class="dropdown-content">
-                <p onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</p>
-                <p onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</p>
-                <p onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</p>
-                <p onclick="filtrarEventos('estado', 'Bahia')">Bahia</p>
-                <p onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</p>
-            </div>
+            <button class="menu-botao">Estado</button>
+            <ul class="menu-lista" id="lista-estados">
+                <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+                <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+                <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+                <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+                <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
+                <!-- Adicione os demais estados -->
+            </ul>
         </div>
         <div class="menu-item">
-            <button class="menu-btn" onclick="toggleDropdown('tipo-dropdown')">Tipo de Evento</button>
-            <div id="tipo-dropdown" class="dropdown-content">
-                <p onclick="filtrarEventos('tipo', 'Música')">Música</p>
-                <p onclick="filtrarEventos('tipo', 'Festival')">Festival</p>
-                <p onclick="filtrarEventos('tipo', 'Concerto')">Concerto</p>
-                <p onclick="filtrarEventos('tipo', 'Religioso')">Religioso</p>
-                <p onclick="filtrarEventos('tipo', 'Palestra')">Palestra</p>
-            </div>
+            <button class="menu-botao">Tipo de Evento</button>
+            <ul class="menu-lista" id="lista-tipos">
+                <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
+                <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+                <li onclick="filtrarEventos('tipo', 'Concerto')">Concerto</li>
+                <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+                <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Banner Capa -->
-    <div class="conteudo-banners">
-        <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
-            <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
-        </a>
-    </div>
-
-    <!-- Destaques de Eventos -->
-    <section class="conteudo-secundario">
-        <div class="conteudo-secundario-destaque">
-            <h1>Destaques</h1>
+    <main class="conteudo">
+        <!-- Banner Capa -->
+        <div class="conteudo-banners">
+            <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
+                <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
+            </a>
         </div>
 
-        <div class="conteudo-secundario-linha" id="eventos-lista">
-            <!-- Os eventos serão carregados aqui via JavaScript -->
-        </div>
-    </section>
+        <!-- Destaques de Eventos -->
+        <section class="conteudo-secundario">
+            <div class="conteudo-secundario-destaque">
+                <h1>Destaques</h1>
+            </div>
+
+            <div class="conteudo-secundario-linha" id="eventos-lista">
+                <!-- Os eventos serão carregados aqui via JavaScript -->
+            </div>
+        </section>
+    </main>
 
     <script>
-        function toggleDropdown(id) {
-            document.getElementById(id).classList.toggle("show");
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-btn')) {
-                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-                    dropdown.classList.remove('show');
-                });
-            }
-        }
-
-        async function carregarEventos() {
-            try {
-                const response = await fetch('/api/buscaeventos');
-                const eventos = await response.json();
-                exibirEventos(eventos);
-            } catch (err) {
-                console.error('Erro ao carregar eventos:', err);
-            }
-        }
-
-        function exibirEventos(eventos) {
-            const listaEventos = document.getElementById('eventos-lista');
-            listaEventos.innerHTML = '';
+        function filtrarEventos(categoria, valor) {
+            const eventos = document.querySelectorAll('.conteudo-secundario-item');
             eventos.forEach(evento => {
-                const eventoDiv = document.createElement('div');
-                eventoDiv.classList.add('conteudo-secundario-item');
-                eventoDiv.innerHTML = `
-                    <a href="/detalhes/${evento.id}">
-                        <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
-                        <p class="conteudo-secundario-paragrafo">${evento.local}</p>
-                    </a>
-                `;
-                listaEventos.appendChild(eventoDiv);
+                const estado = evento.getAttribute('data-estado');
+                const tipo = evento.getAttribute('data-tipo');
+                if ((categoria === 'estado' && estado === valor) || (categoria === 'tipo' && tipo === valor)) {
+                    evento.style.display = 'block';
+                } else {
+                    evento.style.display = 'none';
+                }
             });
         }
-
-        function filtrarEventos(tipo, valor) {
-            fetch(`/api/buscaeventos?${tipo}=${valor}`)
-                .then(response => response.json())
-                .then(eventos => exibirEventos(eventos))
-                .catch(err => console.error('Erro ao filtrar eventos:', err));
-        }
-
-        window.onload = carregarEventos;
     </script>
 </body>
 </html>
