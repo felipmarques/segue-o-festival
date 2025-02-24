@@ -1,43 +1,37 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Segue O Festival!</title>
+    <title>Home</title>
     <link rel="stylesheet" type="text/css" href="css/stylehome.css">
-    <style>
-        .menu {
-            background-color: #007BFF;
-            display: flex;
-            justify-content: center;
-            padding: 10px;
-            gap: 20px;
-        }
-        .menu-item {
-            position: relative;
-            color: white;
-            cursor: pointer;
-            padding: 10px;
-        }
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            color: black;
-            border: 1px solid #ccc;
-            width: 150px;
-        }
-        .dropdown div {
-            padding: 8px;
-            cursor: pointer;
-        }
-        .dropdown div:hover {
-            background-color: #ddd;
-        }
-    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const estadosDropdown = document.getElementById("estados-dropdown");
+            const tiposDropdown = document.getElementById("tipos-dropdown");
+            const eventos = document.querySelectorAll(".evento-item");
+
+            function filtrarEventos() {
+                const estadosSelecionados = Array.from(document.querySelectorAll("#estados-dropdown input:checked")).map(e => e.value);
+                const tiposSelecionados = Array.from(document.querySelectorAll("#tipos-dropdown input:checked")).map(e => e.value);
+                
+                eventos.forEach(evento => {
+                    const estadoEvento = evento.dataset.estado;
+                    const tipoEvento = evento.dataset.tipo;
+                    
+                    const estadoMatch = estadosSelecionados.length === 0 || estadosSelecionados.includes(estadoEvento);
+                    const tipoMatch = tiposSelecionados.length === 0 || tiposSelecionados.includes(tipoEvento);
+                    
+                    evento.style.display = estadoMatch && tipoMatch ? "block" : "none";
+                });
+            }
+            
+            document.querySelectorAll("#estados-dropdown input, #tipos-dropdown input").forEach(input => {
+                input.addEventListener("change", filtrarEventos);
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -48,26 +42,31 @@
         </div>
     </header>
 
-  <div class="conteudo-banners">
-             <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
-                 <img src="imagens/periclão.png" alt="Banner Periclão"/>
-              </a>
-  </div>    
-
-    <!-- Menu de Filtros -->
-    <div class="menu">
-        <div class="menu-item" onclick="toggleDropdown('estadoDropdown')">Estado
-            <div id="estadoDropdown" class="dropdown"></div>
-        </div>
-        <div class="menu-item" onclick="toggleDropdown('tipoDropdown')">Tipo de Evento
-            <div id="tipoDropdown" class="dropdown">
-                <div onclick="filtrarEventos('', 'Música')">Música</div>
-                <div onclick="filtrarEventos('', 'Festival')">Festival</div>
-                <div onclick="filtrarEventos('', 'Concerto')">Concerto</div>
-                <div onclick="filtrarEventos('', 'Religioso')">Religioso</div>
-                <div onclick="filtrarEventos('', 'Palestra')">Palestra</div>
+    <nav class="menu">
+        <div class="menu-item">
+            <button onclick="document.getElementById('estados-dropdown').classList.toggle('show')">Estado</button>
+            <div id="estados-dropdown" class="dropdown-content">
+                <label><input type="checkbox" value="SP"> São Paulo</label>
+                <label><input type="checkbox" value="RJ"> Rio de Janeiro</label>
+                <label><input type="checkbox" value="MG"> Minas Gerais</label>
+                <label><input type="checkbox" value="BA"> Bahia</label>
+                <label><input type="checkbox" value="RS"> Rio Grande do Sul</label>
             </div>
         </div>
+        <div class="menu-item">
+            <button onclick="document.getElementById('tipos-dropdown').classList.toggle('show')">Tipo de Evento</button>
+            <div id="tipos-dropdown" class="dropdown-content">
+                <label><input type="checkbox" value="Música"> Música</label>
+                <label><input type="checkbox" value="Festival"> Festival</label>
+                <label><input type="checkbox" value="Concerto"> Concerto</label>
+                <label><input type="checkbox" value="Religioso"> Religioso</label>
+                <label><input type="checkbox" value="Palestra"> Palestra</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="conteudo-banners">
+        <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
     </div>
 
     <main class="conteudo">
@@ -75,70 +74,22 @@
             <div class="conteudo-secundario-destaque">
                 <h1>Destaques</h1>
             </div>
-            <div id="eventos-container" class="conteudo-secundario-linha"></div>
+            <div class="conteudo-secundario-linha">
+                <div class="evento-item" data-estado="SP" data-tipo="Música">
+                    <img class="conteudo-secundario-imagem" src="imagens/thetown.jpg" alt="Banner The Town">
+                    <h3 class="conteudo-secundario-titulo">The Town</h3>
+                </div>
+                <div class="evento-item" data-estado="RJ" data-tipo="Festival">
+                    <img class="conteudo-secundario-imagem" src="imagens/rockinrio.jpg" alt="Banner Rock In Rio">
+                    <h3 class="conteudo-secundario-titulo">Rock In Rio</h3>
+                </div>
+                <div class="evento-item" data-estado="BA" data-tipo="Religioso">
+                    <img class="conteudo-secundario-imagem" src="imagens/oktoberfest.jpg" alt="Banner Oktoberfest">
+                    <h3 class="conteudo-secundario-titulo">Oktoberfest</h3>
+                </div>
+            </div>
         </section>
     </main>
-
-    <script>
-        const estados = ["Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins"];
-        
-        function toggleDropdown(id) {
-            document.getElementById(id).style.display = document.getElementById(id).style.display === 'block' ? 'none' : 'block';
-        }
-        
-        function preencherEstados() {
-            let dropdown = document.getElementById('estadoDropdown');
-            estados.forEach(estado => {
-                let div = document.createElement('div');
-                div.textContent = estado;
-                div.onclick = () => filtrarEventos(estado, '');
-                dropdown.appendChild(div);
-            });
-        }
-        
-        async function carregarEventos() {
-            try {
-                const response = await fetch('/api/buscaeventos');
-                const eventos = await response.json();
-                exibirEventos(eventos);
-            } catch (err) {
-                console.error('Erro ao carregar eventos:', err);
-            }
-        }
-        
-        function exibirEventos(eventos) {
-            const container = document.getElementById('eventos-container');
-            container.innerHTML = '';
-            eventos.forEach(evento => {
-                let eventoDiv = document.createElement('div');
-                eventoDiv.innerHTML = `<h3>${evento.nome}</h3><p>${evento.data}</p><p>${evento.local}</p>`;
-                container.appendChild(eventoDiv);
-            });
-        }
-        
-        async function filtrarEventos(estado, tipo) {
-            try {
-                const response = await fetch('/api/buscaeventos');
-                let eventos = await response.json();
-                
-                if (estado) {
-                    eventos = eventos.filter(evento => evento.estado === estado);
-                }
-                if (tipo) {
-                    eventos = eventos.filter(evento => evento.tipo === tipo);
-                }
-                
-                exibirEventos(eventos);
-            } catch (err) {
-                console.error('Erro ao filtrar eventos:', err);
-            }
-        }
-
-        window.onload = () => {
-            preencherEstados();
-            carregarEventos();
-        };
-    </script>
 </body>
 </html>
 
