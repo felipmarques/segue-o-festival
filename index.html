@@ -52,14 +52,14 @@
                     const eventoDiv = document.createElement('div');
                     eventoDiv.classList.add('conteudo-secundario-item');
 
-                    eventoDiv.innerHTML = `
+                    eventoDiv.innerHTML = 
                         <a href="/detalhes/${evento.id}">
                             <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
                             <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
                             <p class="conteudo-secundario-paragrafo">${evento.data}</p>
                             <p class="conteudo-secundario-paragrafo">${evento.local}</p>
                         </a>
-                    `;
+                    ;
                     listaEventos.appendChild(eventoDiv);
                 });
             } catch (err) {
@@ -73,4 +73,3 @@
 </body>
 
 </html>
-
