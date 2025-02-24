@@ -14,43 +14,38 @@ module.exports = async (req, res) => {
   // Verificando se a requisição é do tipo POST
   if (req.method === 'POST') {
     // Extraindo dados do corpo da requisição
-    const { 
-      nome, telefone, email, cep, rua, numero, complemento, cnpj 
-    } = req.body;
+    const { nome, descricao, cep, endereco, link_ingresso, line_up } = req.body;
 
     console.log('Valores recebidos para inserção:', {
-      nome, telefone, email, cep, rua, numero, complemento, cnpj
+      nome, descricao, cep, endereco, link_ingresso, line_up
     });
 
     try {
-      // Verificando se o CNPJ já existe na tabela usuario_promotor
-      const checkQuery = `SELECT 1 FROM usuario_promotor WHERE cnpj = $1`;
-      const checkResult = await pool.query(checkQuery, [cnpj]);
+      // Verificando se o evento já existe no banco de dados (você pode modificar isso conforme sua lógica)
+      const checkQuery = `SELECT 1 FROM eventos WHERE nome = $1 AND cep = $2`;
+      const checkResult = await pool.query(checkQuery, [nome, cep]);
 
-      // Caso o CNPJ já esteja registrado, retorna erro
+      // Caso o evento já exista, retorna erro
       if (checkResult.rowCount > 0) {
-        console.warn(`CNPJ já cadastrado: ${cnpj}`);
-        return res.status(400).send('Erro: CNPJ já está registrado.');
+        console.warn(`Evento já cadastrado: ${nome}`);
+        return res.status(400).send('Erro: Evento já está registrado.');
       }
 
-      // Se o CNPJ não for duplicado, insere os dados do novo promotor
+      // Se o evento não for duplicado, insere os dados do novo evento
       const query = `
-        INSERT INTO usuario_promotor (
-          nome_responsavel, cnpj, telefone, rua, numero, bairro, cidade, estado, cep
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        INSERT INTO eventos (
+          nome, descricao, cep, endereco, link_ingresso, line_up
+        ) VALUES ($1, $2, $3, $4, $5, $6)
       `;
 
       // Valores a serem inseridos na tabela
       const values = [
         nome, 
-        cnpj, 
-        telefone, 
-        rua, 
-        numero, 
-        complemento || '', // Se o complemento não for fornecido, usa uma string vazia
-        '',  // Cidade
-        '',  // Estado
-        cep
+        descricao, 
+        cep, 
+        endereco, 
+        link_ingresso, 
+        line_up
       ];
 
       console.log('Executando query:', query);
@@ -61,15 +56,15 @@ module.exports = async (req, res) => {
       console.log('Resultado da query:', result);
 
       // Envia resposta de sucesso ao cliente
-      res.status(200).send('Usuário promotor registrado com sucesso!');
+      res.status(200).send('Evento registrado com sucesso!');
     } catch (err) {
       // Tratamento de erro, se ocorrer algum problema na execução da query
       if (err.code === '23505') { 
         console.error('Erro de duplicidade de chave primária:', err);
-        res.status(400).send('Erro: CNPJ já está registrado.');
+        res.status(400).send('Erro: Evento já está registrado.');
       } else {
         console.error('Erro ao executar query:', err);
-        res.status(500).send('Erro ao registrar usuário promotor.');
+        res.status(500).send('Erro ao registrar evento.');
       }
     }
   } else {
@@ -77,4 +72,3 @@ module.exports = async (req, res) => {
     res.status(405).send('Método não permitido');
   }
 };
-
