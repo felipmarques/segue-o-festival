@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     try {
       // Consulta para buscar todos os eventos da tabela 'eventos'
-      const query = 'SELECT nome, descricao, cep, endereco, link_ingresso, line_up, imagem, data FROM eventos ORDER BY data ASC';
+      const query = 'SELECT nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento FROM eventos ORDER BY data ASC';
 
       console.log('Executando query:', query);
 
