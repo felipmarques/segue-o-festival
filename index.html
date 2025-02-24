@@ -18,56 +18,82 @@
         </div>
     </header>
 
-    <main class="conteudo">
-        <!-- Banner Capa -->
-        <div class="conteudo-banners">
-            <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
-                <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
-            </a>
+    <!-- Menu de Filtros -->
+    <nav class="menu">
+        <div class="menu-item">
+            <button class="menu-btn" onclick="toggleDropdown('estado')">Estado</button>
+            <div id="estado" class="dropdown">
+                <label><input type="checkbox" value="SP"> São Paulo</label>
+                <label><input type="checkbox" value="RJ"> Rio de Janeiro</label>
+                <label><input type="checkbox" value="MG"> Minas Gerais</label>
+                <label><input type="checkbox" value="RS"> Rio Grande do Sul</label>
+                <label><input type="checkbox" value="BA"> Bahia</label>
+            </div>
+        </div>
+        <div class="menu-item">
+            <button class="menu-btn" onclick="toggleDropdown('tipo-evento')">Tipo de Evento</button>
+            <div id="tipo-evento" class="dropdown">
+                <label><input type="checkbox" value="Musica"> Música</label>
+                <label><input type="checkbox" value="Festival"> Festival</label>
+                <label><input type="checkbox" value="Concerto"> Concerto</label>
+                <label><input type="checkbox" value="Religioso"> Religioso</label>
+                <label><input type="checkbox" value="Palestra"> Palestra</label>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Banner Capa -->
+    <div class="conteudo-banners">
+        <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
+            <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
+        </a>
+    </div>
+
+    <!-- Destaques de Eventos -->
+    <section class="conteudo-secundario">
+        <div class="conteudo-secundario-destaque">
+            <h1>Destaques</h1>
         </div>
 
-        <!-- Destaques de Eventos -->
-        <section class="conteudo-secundario">
-            <div class="conteudo-secundario-destaque">
-                <h1>Destaques</h1>
-            </div>
-
-            <div class="conteudo-secundario-linha" id="eventos-lista">
-                <!-- Os eventos serão carregados aqui via JavaScript -->
-            </div>
-        </section>
-    </main>
+        <div class="conteudo-secundario-linha" id="eventos-lista">
+            <!-- Os eventos serão carregados aqui via JavaScript -->
+        </div>
+    </section>
 
     <script>
-        // Função para carregar os eventos e exibi-los na tela inicial
+        function toggleDropdown(id) {
+            document.getElementById(id).classList.toggle("show");
+        }
+
         async function carregarEventos() {
             try {
                 const response = await fetch('/api/buscaeventos');
                 const eventos = await response.json();
-
-                const listaEventos = document.getElementById('eventos-lista');
-                listaEventos.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
-
-                eventos.forEach(evento => {
-                    const eventoDiv = document.createElement('div');
-                    eventoDiv.classList.add('conteudo-secundario-item');
-
-                    eventoDiv.innerHTML = `
-                        <a href="/detalhes/${evento.id}">
-                            <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
-                            <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                            <p class="conteudo-secundario-paragrafo">${evento.data}</p>
-                            <p class="conteudo-secundario-paragrafo">${evento.local}</p>
-                        </a>
-                    `;
-                    listaEventos.appendChild(eventoDiv);
-                });
+                renderizarEventos(eventos);
             } catch (err) {
                 console.error('Erro ao carregar eventos:', err);
             }
         }
 
-        // Chama a função para carregar os eventos quando a página é carregada
+        function renderizarEventos(eventos) {
+            const listaEventos = document.getElementById('eventos-lista');
+            listaEventos.innerHTML = '';
+
+            eventos.forEach(evento => {
+                const eventoDiv = document.createElement('div');
+                eventoDiv.classList.add('conteudo-secundario-item');
+                eventoDiv.innerHTML = `
+                    <a href="/detalhes/${evento.id}">
+                        <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
+                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
+                        <p class="conteudo-secundario-paragrafo">${evento.local}</p>
+                    </a>
+                `;
+                listaEventos.appendChild(eventoDiv);
+            });
+        }
+
         window.onload = carregarEventos;
     </script>
 </body>
