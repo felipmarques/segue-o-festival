@@ -1,60 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial - Eventos</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Certifique-se de que o caminho para o CSS está correto -->
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="css/stylehome.css">
 </head>
 
 <body>
-    <!-- Cabeçalho -->
     <header class="cabecalho">
-        <div class="cabecalho-titulo-container">
-            <h1 class="cabecalho-titulo">Nome do Site</h1>
-        </div>
+        <h3 class="cabecalho-titulo">
+            Segue<br>O Festival!
+        </h3>
         <div class="cabecalho-botoes">
-            <button class="cabecalho-botao-organizador">Organizador</button>
             <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
         </div>
     </header>
 
-    <!-- Menu -->
-    <div class="conteudo-menu">
-        <div>Menu 1</div>
-        <div>Menu 2</div>
-        <div>Menu 3</div>
-    </div>
-
-    <!-- Banner -->
-    <div class="conteudo-banners">
-        <a href="/paginaevento.html">
-            <img src="imagens/periclão.png" alt="Banner Pagode do Pericão">
-        </a>
-    </div>
-
-    <!-- Busca -->
-    <div class="pesquisa">
-        <div class="pesquisa-busca-evento">
-            <input type="text" placeholder="Buscar evento">
+    <main class="conteudo">
+        <!-- Banner Capa -->
+        <div class="conteudo-banners">
+            <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
+                <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
+            </a>
         </div>
-        <div class="pesquisa-busca-local">
-            <input type="text" placeholder="Buscar por local">
-        </div>
-        <div class="pesquisa-busca-data">
-            <input type="text" placeholder="Buscar por data">
-        </div>
-    </div>
 
-    <!-- Lista de Eventos -->
-    <div class="conteudo-secundario-destaque">
-        Eventos
-    </div>
+        <!-- Destaques de Eventos -->
+        <section class="conteudo-secundario">
+            <div class="conteudo-secundario-destaque">
+                <h1>Destaques</h1>
+            </div>
 
-    <div class="lista-eventos" id="eventos-lista">
-        <!-- Os eventos serão carregados aqui via JavaScript -->
-    </div>
+            <div class="conteudo-secundario-linha" id="eventos-lista">
+                <!-- Os eventos serão carregados aqui via JavaScript -->
+            </div>
+        </section>
+    </main>
 
     <script>
         // Função para carregar os eventos e exibi-los na tela inicial
@@ -67,11 +49,18 @@
                 listaEventos.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
 
                 eventos.forEach(evento => {
-                    const eventoLink = document.createElement('a');
-                    eventoLink.href = `/detalhes/${evento.nome}`; // Link para a página do evento
-                    eventoLink.textContent = evento.nome; // Nome do evento
+                    const eventoDiv = document.createElement('div');
+                    eventoDiv.classList.add('conteudo-secundario-item');
 
-                    listaEventos.appendChild(eventoLink); // Adiciona o evento à lista
+                    eventoDiv.innerHTML = `
+                        <a href="/detalhes/${evento.id}">
+                            <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
+                            <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                            <p class="conteudo-secundario-paragrafo">${evento.data}</p>
+                            <p class="conteudo-secundario-paragrafo">${evento.local}</p>
+                        </a>
+                    `;
+                    listaEventos.appendChild(eventoDiv);
                 });
             } catch (err) {
                 console.error('Erro ao carregar eventos:', err);
@@ -84,4 +73,5 @@
 </body>
 
 </html>
+
 
