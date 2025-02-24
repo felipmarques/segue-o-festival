@@ -31,6 +31,50 @@
                 <label for="lineup">Line-Up:</label>
                 <textarea id="lineup" name="lineup" rows="3" required></textarea>
 
+                <!-- Lista suspensa para Estado -->
+                <label for="estado">Estado:</label>
+                <select id="estado" name="estado" required>
+                    <option value="">Selecione o Estado</option>
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="DF">Distrito Federal</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PR">Paraná</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="SC">Santa Catarina</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="SE">Sergipe</option>
+                    <option value="TO">Tocantins</option>
+                </select>
+
+                <!-- Lista suspensa para Tipo de Evento -->
+                <label for="tipo_evento">Tipo de Evento:</label>
+                <select id="tipo_evento" name="tipo_evento" required>
+                    <option value="">Selecione o Tipo de Evento</option>
+                    <option value="Música">Música</option>
+                    <option value="Festival">Festival</option>
+                    <option value="Palestra">Palestra</option>
+                    <option value="Concerto">Concerto</option>
+                    <option value="Religioso">Religioso</option>
+                </select>
+
                 <button type="submit">Cadastrar Evento</button>
             </form>
             <div id="mensagemErro" style="color: red; margin-top: 10px;"></div>
@@ -60,7 +104,9 @@
                 cep: formData.get("cep"),
                 endereco: formData.get("endereco"),
                 link_ingresso: formData.get("link_ingresso"),
-                line_up: formData.get("lineup"), // Alterado para 'line_up', conforme seu código
+                line_up: formData.get("lineup"),
+                estado: formData.get("estado"), // Novo campo com lista suspensa
+                tipo_evento: formData.get("tipo_evento") // Novo campo com lista suspensa
             };
 
             try {
