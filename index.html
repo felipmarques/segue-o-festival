@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/stylehome.css">
     <style>
         .menu {
-            background-color: blue; /* Cor de fundo azul */
+            background-color: blue;
             display: flex;
             justify-content: left;
             padding: 10px;
@@ -51,6 +51,18 @@
 
         .menu-item:hover .menu-lista {
             display: block;
+        }
+
+        .conteudo-secundario-item {
+            display: inline-block;
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .conteudo-secundario-item img {
+            width: 200px;
+            height: auto;
         }
     </style>
 </head>
@@ -123,23 +135,53 @@
             </div>
 
             <div class="conteudo-secundario-linha" id="eventos-lista">
-                </div>
+            </div>
         </section>
     </main>
 
     <script>
-        function filtrarEventos(categoria, valor) {
-            const eventos = document.querySelectorAll('.conteudo-secundario-item');
-            eventos.forEach(evento => {
-                const estado = evento.getAttribute('data-estado');
-                const tipo = evento.getAttribute('data-tipo');
-                if ((categoria === 'estado' && estado === valor) || (categoria === 'tipo' && tipo === valor)) {
-                    evento.style.display = 'block';
-                } else {
-                    evento.style.display = 'none';
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+        const eventos = [
+            {
+                nome: 'Pagode do Pericão',
+                imagem: 'imagens/periclão.png',
+                estado: 'São Paulo',
+                tipo: 'Música'
+            },
+            {
+                nome: 'Show do Roupa Nova',
+                imagem: 'imagens/roupanova.jpeg',
+                estado: 'Rio de Janeiro',
+                tipo: 'Música'
+            },
+            {
+                nome: 'Festival de Inverno',
+                imagem: 'imagens/festivalinverno.jpeg',
+                estado: 'Minas Gerais',
+                tipo: 'Festival'
+            },
+            {
+                nome: 'Concerto de Orquestra',
+                imagem: 'imagens/concerto.jpeg',
+                estado: 'São Paulo',
+                tipo: 'Concerto'
+            },
+            {
+                nome: 'Evento Religioso',
+                imagem: 'imagens/religioso.jpeg',
+                estado: 'Bahia',
+                tipo: 'Religioso'
+            },
+            {
+                nome: 'Palestra de Marketing',
+                imagem: 'imagens/palestra.jpeg',
+                estado: 'São Paulo',
+                tipo: 'Palestra'
+            },
+        ];
+
+        const eventosLista = document.getElementById('eventos-lista');
+
+        eventos.forEach(evento => {
+            const eventoElement = document.createElement('div');
+            eventoElement.classList.add('conteudo-secundario-item');
+            eventoElement.
