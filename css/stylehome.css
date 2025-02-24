@@ -275,4 +275,33 @@ p:last-of-type:before {
     width: 100%; /* 1 item por linha em dispositivos menores */
     margin-bottom: 20px;
   }
+
+ /* Estilo para a lista de eventos na tela inicial */
+.lista-eventos {
+    display: flex;
+    flex-wrap: wrap; /* Para que eles se ajustem em várias linhas caso a tela seja pequena */
+    gap: 20px; /* Espaço entre os itens */
+    padding: 20px;
+    justify-content: flex-start; /* Alinha à esquerda */
+}
+
+.lista-eventos a {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700; /* Título mais destacado */
+    font-size: 1.5rem; /* Tamanho da fonte maior */
+    color: #000; /* Cor preta */
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #FFF100; /* Fundo amarelo para destacar */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombrinha suave */
+    text-transform: uppercase; /* Maiúsculas para os nomes dos eventos */
+    transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+}
+
+.lista-eventos a:hover {
+    background-color: #08C2FF; /* Cor de fundo quando passar o mouse */
+    color: #fff; /* Cor do texto em branco quando hover */
+}
+   
 }
