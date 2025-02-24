@@ -65,7 +65,7 @@
 
             try {
                 // Enviar os dados para o backend (API)
-                const response = await fetch("http://localhost:3001/eventos", {
+                const response = await fetch('/api/eventos', {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(eventoData),
