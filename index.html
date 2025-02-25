@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Segue o Festival!</title>
     <link rel="stylesheet" type="text/css" href="css/stylehome.css">
     <style>
         .menu {
@@ -90,24 +90,12 @@
                 <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
                 <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
                 <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
-                <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
-                <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
-                <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
                 <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
-                <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
-                <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
                 <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
                 <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
-                <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
                 <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
-                <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
                 <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
-                <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
-                <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
-                <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
                 <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
-                <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
-                <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
             </ul>
         </div>
         <div class="menu-item">
@@ -124,7 +112,7 @@
 
     <main class="conteudo">
         <div class="conteudo-banners">
-            <a href="https://segue-o-festival-git-main-felipmarques-projects.vercel.app/paginaevento.html">
+            <a href="paginaevento.html">
                 <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
             </a>
         </div>
@@ -140,48 +128,61 @@
     </main>
 
     <script>
-        const eventos = [
-            {
-                nome: 'Pagode do Pericão',
-                imagem: 'imagens/periclão.png',
-                estado: 'São Paulo',
-                tipo: 'Música'
-            },
-            {
-                nome: 'Show do Roupa Nova',
-                imagem: 'imagens/roupanova.jpeg',
-                estado: 'Rio de Janeiro',
-                tipo: 'Música'
-            },
-            {
-                nome: 'Festival de Inverno',
-                imagem: 'imagens/festivalinverno.jpeg',
-                estado: 'Minas Gerais',
-                tipo: 'Festival'
-            },
-            {
-                nome: 'Concerto de Orquestra',
-                imagem: 'imagens/concerto.jpeg',
-                estado: 'São Paulo',
-                tipo: 'Concerto'
-            },
-            {
-                nome: 'Evento Religioso',
-                imagem: 'imagens/religioso.jpeg',
-                estado: 'Bahia',
-                tipo: 'Religioso'
-            },
-            {
-                nome: 'Palestra de Marketing',
-                imagem: 'imagens/palestra.jpeg',
-                estado: 'São Paulo',
-                tipo: 'Palestra'
-            },
-        ];
+        let eventos = []; // Lista global para armazenar eventos carregados do banco
+        let estadoSelecionado = null;
+        let tipoSelecionado = null;
 
-        const eventosLista = document.getElementById('eventos-lista');
+        // Função para carregar os eventos do banco de dados
+        async function carregarEventos() {
+            try {
+                const response = await fetch('/api/buscaeventos'); // Faz a requisição para a API
+                eventos = await response.json(); // Armazena os eventos na variável global
+                exibirEventos(); // Exibe os eventos após o carregamento
+            } catch (err) {
+                console.error('Erro ao carregar eventos:', err);
+            }
+        }
 
-        eventos.forEach(evento => {
-            const eventoElement = document.createElement('div');
-            eventoElement.classList.add('conteudo-secundario-item');
-            eventoElement.
+        // Função para exibir eventos de acordo com os filtros
+        function exibirEventos() {
+            const eventosLista = document.getElementById('eventos-lista');
+            eventosLista.innerHTML = ''; // Limpa a lista antes de adicionar os eventos filtrados
+
+            // Aplica os filtros se houverem seleções
+            const eventosFiltrados = eventos.filter(evento => {
+                return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+                    (!tipoSelecionado || evento.tipo === tipoSelecionado);
+            });
+
+            // Exibe os eventos filtrados
+            eventosFiltrados.forEach(evento => {
+                const eventoElement = document.createElement('div');
+                eventoElement.classList.add('conteudo-secundario-item');
+                eventoElement.innerHTML = `
+                    <a href="/detalhes/${evento.id}">
+                        <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
+                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
+                        <p class="conteudo-secundario-paragrafo">${evento.local}</p>
+                    </a>
+                `;
+                eventosLista.appendChild(eventoElement);
+            });
+        }
+
+        // Função para filtrar os eventos ao selecionar um estado ou tipo
+        function filtrarEventos(tipo, valor) {
+            if (tipo === 'estado') {
+                estadoSelecionado = valor;
+            } else if (tipo === 'tipo') {
+                tipoSelecionado = valor;
+            }
+            exibirEventos(); // Atualiza a exibição após a seleção do filtro
+        }
+
+        // Chama a função para carregar os eventos quando a página é carregada
+        window.onload = carregarEventos;
+    </script>
+</body>
+
+</html>
