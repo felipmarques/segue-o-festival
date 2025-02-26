@@ -20,7 +20,6 @@ module.exports = async (req, res) => {
     });
 
     try {
-   
       const checkQuery = `SELECT 1 FROM usuario_promotor WHERE cnpj = $1`;
       const checkResult = await pool.query(checkQuery, [cnpj]);
 
@@ -31,14 +30,15 @@ module.exports = async (req, res) => {
 
       const query = `
         INSERT INTO usuario_promotor (
-          nome_responsavel, cnpj, telefone, rua, numero, bairro, cidade, estado, cep
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          nome_responsavel, cnpj, telefone, email, rua, numero, bairro, cidade, estado, cep
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       `;
 
       const values = [
         nome, 
         cnpj, 
         telefone, 
+        email, // Incluído o campo email
         rua, 
         numero, 
         complemento || '', 
