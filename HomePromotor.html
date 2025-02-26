@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segue o Festival!</title>
+    <link rel="stylesheet" type="text/css" href="css/stylehome.css">
+    <style>
+        .conteudo-secundario-item {
+            display: inline-block;
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .conteudo-secundario-item img {
+            width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="cabecalho">
+        <h3 class="cabecalho-titulo">
+            Segue<br>O Festival!
+        </h3>
+        <div class="cabecalho-botoes">
+            <button class="cabecalho-botao-entrar" onclick="location.href='cadastra_evento.html'">Cadastrar eventos</button>
+        </div>
+    </header>
+
+    <main class="conteudo">
+        <div class="conteudo-banners">
+            <a href="paginaevento.html">
+                <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
+            </a>
+        </div>
+
+        <section class="conteudo-secundario">
+            <div class="conteudo-secundario-destaque">
+                <h1>Meus eventos</h1>
+            </div>
+
+            <div class="conteudo-secundario-linha" id="eventos-lista">
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let eventos = [];
+
+        async function carregarEventos() {
+            try {
+                const response = await fetch('/api/buscaeventos');
+                eventos = await response.json();
+                exibirEventos();
+            } catch (err) {
+                console.error('Erro ao carregar eventos:', err);
+            }
+        }
+
+        function exibirEventos() {
+            const eventosLista = document.getElementById('eventos-lista');
+            eventosLista.innerHTML = '';
+
+            eventos.forEach(evento => {
+                const eventoElement = document.createElement('div');
+                eventoElement.classList.add('conteudo-secundario-item');
+                eventoElement.innerHTML = `
+                    <a href="/detalhes/${evento.id}">
+                        <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
+                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
+                        <p class="conteudo-secundario-paragrafo">${evento.local}</p>
+                    </a>
+                `;
+                eventosLista.appendChild(eventoElement);
+            });
+        }
+
+        window.onload = carregarEventos;
+    </script>
+</body>
+
+</html>
