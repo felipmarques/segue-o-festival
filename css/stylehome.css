@@ -304,6 +304,7 @@ p:last-of-type:before {
     color: #fff; /* Cor do texto em branco quando hover */
 }
 
+/* Estilo do menu */
 .menu {
     background-color: blue;
     display: flex;
@@ -311,11 +312,13 @@ p:last-of-type:before {
     padding: 10px;
 }
 
+/* Estilo de cada item do menu */
 .menu-item {
     position: relative;
     margin-right: 20px;
 }
 
+/* Estilo do botão do menu */
 .menu-botao {
     background-color: white;
     color: black;
@@ -324,6 +327,7 @@ p:last-of-type:before {
     cursor: pointer;
 }
 
+/* Estilo da lista de opções do menu */
 .menu-lista {
     list-style: none;
     padding: 0;
@@ -335,6 +339,9 @@ p:last-of-type:before {
     border: 1px solid #ccc;
     display: none;
     z-index: 10;
+    opacity: 0; /* Adicionando opacidade 0 inicialmente */
+    visibility: hidden; /* Tornando invisível inicialmente */
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* Transição suave */
 }
 
 .menu-lista li {
@@ -346,20 +353,12 @@ p:last-of-type:before {
     background-color: #f0f0f0;
 }
 
+/* Mostrando a lista do menu ao passar o mouse */
 .menu-item:hover .menu-lista {
     display: block;
-}
-
-.conteudo-secundario-item {
-    display: inline-block;
-    margin: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-}
-
-.conteudo-secundario-item img {
-    width: 200px;
-    height: auto;
+    opacity: 1; /* Torna visível a lista */
+    visibility: visible; /* Torna visível a lista */
+    transition: opacity 0.3s ease, visibility 0s 0s; /* Suaviza a transição */
 }
 
 }
