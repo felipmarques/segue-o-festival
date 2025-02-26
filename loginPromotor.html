@@ -72,7 +72,7 @@
 
             // Enviar os dados para a API
             try {
-                const response = await fetch("/api/login", {
+                const response = await fetch("/api/loginPromotor", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -83,7 +83,6 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Se o login for bem-sucedido, redirecionar para a página home.html
                     window.location.href = "home.html";
                 } else {
                     // Se as credenciais forem inválidas
@@ -97,3 +96,4 @@
     </script>
 </body>
 </html>
+
