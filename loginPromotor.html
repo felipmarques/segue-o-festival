@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login e Registro</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .input-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Entre na sua conta</h1>
+            <p>Entre com o seu e-mail</p>
+            <form id="loginForm">
+                <div class="input-container">
+                    <span class="icon">📧</span>
+                    <input type="text" id="identificador" name="identificador" placeholder="joaosilva@email.com" required>
+                </div>
+                <div class="input-container">
+                    <span class="icon">🔒</span>
+                    <input type="password" id="password" name="senha" placeholder="Senha" required>
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                </div>
+                <div class="forgot-password">
+                    <a href="#">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="login-button">Entrar</button>
+            </form>
+        </div>
+        <div class="right">
+            <h1>Bem-Vindo de volta, Promotor!</h1>
+            <p>Por favor insira os dados necessários para continuar</p>
+            <a href="identifica.html" class="register-link">Novo por aqui? Cadastre-se!</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+
+        // Envio do formulário para a API
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            // Coletando dados do formulário
+            const identificador = document.getElementById("identificador").value;
+            const senha = document.getElementById("password").value;
+
+            const loginData = {
+                identificador: identificador,
+                senha: senha
+            };
+
+            // Enviar os dados para a API
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Se o login for bem-sucedido, redirecionar para a página home.html
+                    window.location.href = "home.html";
+                } else {
+                    // Se as credenciais forem inválidas
+                    alert(data.message || "Erro no login"); 
+                }
+            } catch (error) {
+                console.error("Erro de rede:", error);
+                alert("Houve um erro na requisição. Tente novamente mais tarde."); 
+            }
+        });
+    </script>
+</body>
+</html>
