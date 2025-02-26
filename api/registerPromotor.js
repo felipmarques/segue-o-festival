@@ -42,14 +42,14 @@ module.exports = async (req, res) => {
         nome, 
         cnpj, 
         telefone, 
-        email, // Incluído o campo email
+        email, 
         rua, 
         numero, 
         complemento || '', 
         '', 
         '', 
         cep,
-        senha // Senha sem criptografia
+        senha 
       ];
 
       console.log('Executando query:', query);
