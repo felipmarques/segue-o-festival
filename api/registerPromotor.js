@@ -12,12 +12,16 @@ module.exports = async (req, res) => {
 
   if (req.method === 'POST') {
     const { 
-      nome, telefone, email, cep, rua, numero, complemento, cnpj 
+      nome, telefone, email, cep, rua, numero, complemento, cnpj, senha 
     } = req.body;
 
     console.log('Valores recebidos para inserção:', {
-      nome, telefone, email, cep, rua, numero, complemento, cnpj
+      nome, telefone, email, cep, rua, numero, complemento, cnpj, senha
     });
+
+    if (!senha) {
+      return res.status(400).send('Erro: A senha é obrigatória.');
+    }
 
     try {
       const checkQuery = `SELECT 1 FROM usuario_promotor WHERE cnpj = $1`;
@@ -30,8 +34,8 @@ module.exports = async (req, res) => {
 
       const query = `
         INSERT INTO usuario_promotor (
-          nome_responsavel, cnpj, telefone, email, rua, numero, bairro, cidade, estado, cep
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          nome_responsavel, cnpj, telefone, email, rua, numero, bairro, cidade, estado, cep, senha
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       `;
 
       const values = [
@@ -44,7 +48,8 @@ module.exports = async (req, res) => {
         complemento || '', 
         '', 
         '', 
-        cep
+        cep,
+        senha // Senha sem criptografia
       ];
 
       console.log('Executando query:', query);
@@ -67,3 +72,4 @@ module.exports = async (req, res) => {
     res.status(405).send('Método não permitido');
   }
 };
+
