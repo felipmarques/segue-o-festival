@@ -9,10 +9,10 @@ const pool = new Pool({
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { identificador, senha } = req.body;
+    const { email, senha } = req.body;
 
-    if (!identificador || !senha) {
-      return res.status(400).json({ message: "Identificador e senha são obrigatórios." });
+    if (!email || !senha) {
+      return res.status(400).json({ message: "email e senha são obrigatórios." });
     }
 
     try {
