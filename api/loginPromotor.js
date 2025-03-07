@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       // Consulta na tabela usuarioPromotor
       const queryUsuarioPromotor = `
         SELECT * FROM usuarioPromotor 
-        WHERE (cnpj = $1 OR telefone = $1) AND senha_promotor = $2
+        WHERE (cnpj = $1 OR telefone = $1 OR email = $1) AND senha_promotor = $2
       `;
       const resultUsuarioPromotor = await pool.query(queryUsuarioPromotor, [identificador, senha]);
 
