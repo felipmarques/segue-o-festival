@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     try {
       // Consulta na tabela usuarioPromotor
       const queryUsuarioPromotor = `
-        SELECT * FROM usuarioPromotor 
+        SELECT * FROM usuario_Promotor 
         WHERE email = $1 AND senha = $2
       `;
       
