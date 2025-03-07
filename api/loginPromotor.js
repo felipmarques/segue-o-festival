@@ -9,10 +9,10 @@ const pool = new Pool({
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, senha } = req.body;
+    const { email, senha } = req.body; // Acessando corretamente as variáveis
 
     if (!email || !senha) {
-      return res.status(400).json({ message: "email e senha são obrigatórios." });
+      return res.status(400).json({ message: "Email e senha são obrigatórios." });
     }
 
     try {
@@ -21,7 +21,9 @@ export default async function handler(req, res) {
         SELECT * FROM usuarioPromotor 
         WHERE email = $1 AND senha = $2
       `;
-      const resultUsuarioPromotor = await pool.query(queryUsuarioPromotor, [identificador, senha]);
+      
+      // Corrigido: usando as variáveis corretamente
+      const resultUsuarioPromotor = await pool.query(queryUsuarioPromotor, [email, senha]);
 
       if (resultUsuarioPromotor.rowCount > 0) {
         return res.status(200).json({
