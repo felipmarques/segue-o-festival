@@ -30,7 +30,7 @@
                 </div>
                 <div class="input-container">
                     <span class="icon">🔒</span>
-                    <input type="password" id="password" name="senha" placeholder="Senha" required>
+                    <input type="password" id="senha" name="senha" placeholder="Senha" required>
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>
                 </div>
                 <div class="forgot-password">
@@ -48,7 +48,7 @@
 
     <script>
         function togglePassword() {
-            var passwordField = document.getElementById("password");
+            var passwordField = document.getElementById("senha");
             var passwordFieldType = passwordField.getAttribute("type");
             if (passwordFieldType === "password") {
                 passwordField.setAttribute("type", "text");
@@ -63,7 +63,7 @@
 
             // Coletando dados do formulário
             const email = document.getElementById("email").value;
-            const senha = document.getElementById("password").value;
+            const senha = document.getElementById("senha").value;
 
             const loginData = {
                 email: email,
@@ -95,7 +95,6 @@
         });
     </script>
 </body>
-  
-
 </html>
+
 
