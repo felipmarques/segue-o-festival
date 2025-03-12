@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Segue o Festival!</title>
     <link rel="stylesheet" type="text/css" href="css/stylehome.css">
-    <style>
+     <style>
         .menu {
             background-color: blue;
             display: flex;
@@ -76,10 +77,54 @@
             <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Meus Eventos</button>
             <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">Meu Perfil</button>
             <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">FAQ</button>
+            
         </div>
     </header>
 
-    <div id="usuario-saudacao"></div>
+    <nav class="menu">
+        <div class="menu-item">
+            <button class="menu-botao">Estado</button>
+            <ul class="menu-lista" id="lista-estados">
+                <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
+                <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
+                <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
+                <li onclick="filtrarEventos('estado', 'Amazonas')">Amazonas</li>
+                <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+                <li onclick="filtrarEventos('estado', 'Ceará')">Ceará</li>
+                <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
+                <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
+                <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
+                <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
+                <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
+                <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
+                <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+                <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
+                <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
+                <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
+                <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
+                <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
+                <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+                <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
+                <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
+                <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
+                <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
+                <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
+                <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+                <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
+                <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
+            </ul>
+        </div>
+        <div class="menu-item">
+            <button class="menu-botao">Tipo de Evento</button>
+            <ul class="menu-lista" id="lista-tipos">
+                <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
+                <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+                <li onclick="filtrarEventos('tipo', 'Concerto')">Concerto</li>
+                <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+                <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+            </ul>
+        </div>
+    </nav>
 
     <main class="conteudo">
         <div class="conteudo-banners">
@@ -129,14 +174,14 @@
             eventosFiltrados.forEach(evento => {
                 const eventoElement = document.createElement('div');
                 eventoElement.classList.add('conteudo-secundario-item');
-                eventoElement.innerHTML = `
+                eventoElement.innerHTML = 
                     <a href="/detalhes/${evento.id}">
                         <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
                         <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
                         <p class="conteudo-secundario-paragrafo">${evento.data}</p>
                         <p class="conteudo-secundario-paragrafo">${evento.local}</p>
                     </a>
-                `;
+                ;
                 eventosLista.appendChild(eventoElement);
             });
         }
@@ -151,34 +196,9 @@
             exibirEventos(); // Atualiza a exibição após a seleção do filtro
         }
 
-        // Função para verificar a sessão do usuário e exibir o nome
-        async function verificarUsuario() {
-            try {
-                const response = await fetch("/api/verificarSessao", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    document.getElementById("usuario-saudacao").innerHTML = `Olá, ${data.username}!`;
-                } else {
-                    document.getElementById("usuario-saudacao").innerHTML = "Olá, visitante!";
-                }
-            } catch (error) {
-                console.error("Erro ao verificar sessão:", error);
-                document.getElementById("usuario-saudacao").innerHTML = "Erro ao verificar usuário!";
-            }
-        }
-
-        // Chama a função quando a página é carregada
-        window.onload = function() {
-            carregarEventos();
-            verificarUsuario();
-        }
+        // Chama a função para carregar os eventos quando a página é carregada
+        window.onload = carregarEventos;
     </script>
 </body>
+
 </html>
