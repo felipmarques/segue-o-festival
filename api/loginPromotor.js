@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import bcrypt from 'bcrypt';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -20,36 +19,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Buscar o usuário pelo email
+    // Consulta na tabela usuario_Promotor verificando email e senha
     const queryUsuarioPromotor = `
       SELECT * FROM usuario_Promotor 
-      WHERE email = $1
+      WHERE email = $1 AND senha = $2
     `;
-    const resultUsuarioPromotor = await pool.query(queryUsuarioPromotor, [email]);
+    
+    const resultUsuarioPromotor = await pool.query(queryUsuarioPromotor, [email, senha]);
 
-    // Verificar se o usuário existe
-    if (resultUsuarioPromotor.rowCount === 0) {
-      return res.status(401).json({ message: "Credenciais inválidas." });
+    if (resultUsuarioPromotor.rowCount > 0) {
+      return res.status(200).json({
+        message: "Login bem-sucedido",
+        usuario: resultUsuarioPromotor.rows[0], // Retorna id e email
+      });
     }
 
-    const usuario = resultUsuarioPromotor.rows[0];
-
-    // Comparar a senha informada com a senha hashada no banco
-    const senhaValida = await bcrypt.compare(senha, usuario.senha);
-
-    if (!senhaValida) {
-      return res.status(401).json({ message: "Credenciais inválidas." });
-    }
-
-    return res.status(200).json({
-      message: "Login bem-sucedido",
-      usuario: { id: usuario.id, email: usuario.email }, // Retornando apenas dados essenciais
-    });
+    return res.status(401).json({ message: "Credenciais inválidas." });
 
   } catch (err) {
     console.error("Erro durante o login:", err);
     return res.status(500).json({ message: "Erro no servidor." });
   }
 }
+
 
 
