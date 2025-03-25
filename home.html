@@ -81,33 +81,33 @@
         <div class="menu-item">
             <button class="menu-botao">Estado</button>
             <ul class="menu-lista" id="lista-estados">
-                <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
-                <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
-                <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
-                <li onclick="filtrarEventos('estado', 'Amazonas')">Amazonas</li>
-                <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
-                <li onclick="filtrarEventos('estado', 'Ceará')">Ceará</li>
-                <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
-                <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
-                <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
-                <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
-                <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
-                <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
-                <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
-                <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
-                <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
-                <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
-                <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
-                <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
-                <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
-                <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
-                <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
-                <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
-                <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
-                <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
-                <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
-                <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
-                <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
+                <li onclick="filtrarEventos('estado', 'AC')">Acre</li>
+                <li onclick="filtrarEventos('estado', 'AL')">Alagoas</li>
+                <li onclick="filtrarEventos('estado', 'AP')">Amapá</li>
+                <li onclick="filtrarEventos('estado', 'AM')">Amazonas</li>
+                <li onclick="filtrarEventos('estado', 'BA')">Bahia</li>
+                <li onclick="filtrarEventos('estado', 'CE')">Ceará</li>
+                <li onclick="filtrarEventos('estado', 'DF')">Distrito Federal</li>
+                <li onclick="filtrarEventos('estado', 'ES')">Espírito Santo</li>
+                <li onclick="filtrarEventos('estado', 'GO')">Goiás</li>
+                <li onclick="filtrarEventos('estado', 'MA')">Maranhão</li>
+                <li onclick="filtrarEventos('estado', 'MT')">Mato Grosso</li>
+                <li onclick="filtrarEventos('estado', 'MS')">Mato Grosso do Sul</li>
+                <li onclick="filtrarEventos('estado', 'MG')">Minas Gerais</li>
+                <li onclick="filtrarEventos('estado', 'PA')">Pará</li>
+                <li onclick="filtrarEventos('estado', 'PB')">Paraíba</li>
+                <li onclick="filtrarEventos('estado', 'PR')">Paraná</li>
+                <li onclick="filtrarEventos('estado', 'PE')">Pernambuco</li>
+                <li onclick="filtrarEventos('estado', 'PI')">Piauí</li>
+                <li onclick="filtrarEventos('estado', 'RJ')">Rio de Janeiro</li>
+                <li onclick="filtrarEventos('estado', 'RN')">Rio Grande do Norte</li>
+                <li onclick="filtrarEventos('estado', 'RS')">Rio Grande do Sul</li>
+                <li onclick="filtrarEventos('estado', 'RO')">Rondônia</li>
+                <li onclick="filtrarEventos('estado', 'RR')">Roraima</li>
+                <li onclick="filtrarEventos('estado', 'SC')">Santa Catarina</li>
+                <li onclick="filtrarEventos('estado', 'SP')">São Paulo</li>
+                <li onclick="filtrarEventos('estado', 'SE')">Sergipe</li>
+                <li onclick="filtrarEventos('estado', 'TO')">Tocantins</li>
             </ul>
         </div>
         <div class="menu-item">
@@ -185,7 +185,7 @@
         // Função para filtrar os eventos ao selecionar um estado ou tipo
         function filtrarEventos(tipo, valor) {
             if (tipo === 'estado') {
-                estadoSelecionado = valor;
+                estadoSelecionado = valor; // Salva a sigla do estado
             } else if (tipo === 'tipo') {
                 tipoSelecionado = valor;
             }
