@@ -162,8 +162,9 @@
 
             // Aplica os filtros se houverem seleções
             const eventosFiltrados = eventos.filter(evento => {
-                return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-                    (!tipoSelecionado || evento.tipo === tipoSelecionado);
+                const filtroEstado = !estadoSelecionado || evento.estado === estadoSelecionado;
+                const filtroTipo = !tipoSelecionado || evento.tipo === tipoSelecionado;
+                return filtroEstado && filtroTipo;
             });
 
             // Exibe os eventos filtrados
@@ -195,6 +196,10 @@
         // Chama a função para carregar os eventos quando a página é carregada
         window.onload = carregarEventos;
     </script>
+</body>
+
+</html>
+
 </body>
 
 </html>
