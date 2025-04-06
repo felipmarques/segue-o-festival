@@ -86,6 +86,16 @@
                     <span class="info-text">Formato: 12345678900</span>
                     <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
+                <form id="registrationForm" action="/api/register" method="post" enctype="multipart/form-data">
+              <div class="input-container">
+                <span class="icon">🖼️</span>
+                <input type="file" name="imagem" accept="image/*" required>
+                <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
+                <span class="info-text">Envie uma imagem para o evento</span>
+              </div>
+  <button class="register-button" type="submit">Cadastrar</button>
+</form>
+
                 <button class="register-button" type="submit">Cadastrar</button>
             </form>
         </div>
