@@ -1,30 +1,28 @@
 const { Pool } = require('pg');
 const multer = require('multer');
 
-// Configura o multer para armazenar arquivos em memória
-const upload = multer();
+// Armazenamento em memória
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Conexão com o banco Neon (PostgreSQL)
+// Conexão com o banco
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
-// Função principal exportada para lidar com a requisição
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).send('Método não permitido');
   }
 
-  // Processa o upload da imagem com multer
   upload.single('imagem')(req, res, async function (err) {
     if (err) {
-      console.error('Erro ao processar imagem:', err);
+      console.error('Erro no upload da imagem:', err);
       return res.status(500).send('Erro ao processar imagem.');
     }
 
     try {
-      // Extrai os dados do corpo da requisição
       const {
         nome,
         descricao,
@@ -36,6 +34,11 @@ module.exports = async (req, res) => {
         tipo_evento
       } = req.body;
 
+      // Validação do tipo de imagem
+      if (req.file && !req.file.mimetype.startsWith('image/')) {
+        return res.status(400).send('Arquivo enviado não é uma imagem válida.');
+      }
+
       const imagemBuffer = req.file?.buffer || null;
 
       // Verifica duplicidade
@@ -46,7 +49,7 @@ module.exports = async (req, res) => {
         return res.status(400).send('Erro: Evento já está registrado.');
       }
 
-      // Insere o evento no banco de dados, incluindo a imagem
+      // Insere evento no banco
       const query = `
         INSERT INTO eventos (
           nome, descricao, cep, endereco,
