@@ -12,7 +12,7 @@
         <!-- Formulário de Cadastro -->
         <div class="formulario">
             <h2>Cadastro de Evento</h2>
-            <form id="eventoForm" enctype="multipart/form-data">
+            <form id="eventoForm">
                 <label for="nome">Nome do Evento:</label>
                 <input type="text" id="nome" name="nome" required>
 
@@ -31,6 +31,7 @@
                 <label for="lineup">Line-Up:</label>
                 <textarea id="lineup" name="lineup" rows="3" required></textarea>
 
+                <!-- Lista suspensa para Estado -->
                 <label for="estado">Estado:</label>
                 <select id="estado" name="estado" required>
                     <option value="">Selecione o Estado</option>
@@ -63,6 +64,7 @@
                     <option value="TO">Tocantins</option>
                 </select>
 
+                <!-- Lista suspensa para Tipo de Evento -->
                 <label for="tipo_evento">Tipo de Evento:</label>
                 <select id="tipo_evento" name="tipo_evento" required>
                     <option value="">Selecione o Tipo de Evento</option>
@@ -72,10 +74,6 @@
                     <option value="Concerto">Concerto</option>
                     <option value="Religioso">Religioso</option>
                 </select>
-
-                <!-- Campo de imagem -->
-                <label for="imagem">Imagem do Evento:</label>
-                <input type="file" id="imagem" name="imagem" accept="image/*" required>
 
                 <button type="submit">Cadastrar Evento</button>
             </form>
@@ -91,26 +89,39 @@
         </div>
     </div>
 
-    <!-- Script -->
+    <!-- Script para enviar os dados para o backend -->
     <script>
         document.getElementById("eventoForm").addEventListener("submit", async function(event) {
             event.preventDefault(); // Impede o envio padrão do formulário
 
-            const form = event.target;
-            const formData = new FormData(form);
+            const formData = new FormData(event.target);
             const mensagemErro = document.getElementById("mensagemErro");
 
+            // Preparar dados para envio
+            const eventoData = {
+                nome: formData.get("nome"),
+                descricao: formData.get("descricao"),
+                cep: formData.get("cep"),
+                endereco: formData.get("endereco"),
+                link_ingresso: formData.get("link_ingresso"),
+                line_up: formData.get("lineup"),
+                estado: formData.get("estado"), // Novo campo com lista suspensa
+                tipo_evento: formData.get("tipo_evento") // Novo campo com lista suspensa
+            };
+
             try {
+                // Enviar os dados para o backend (API)
                 const response = await fetch('/api/eventos', {
                     method: "POST",
-                    body: formData // Envia todos os dados, incluindo a imagem
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(eventoData),
                 });
 
                 if (!response.ok) throw new Error("Erro ao cadastrar o evento!");
 
                 alert("🎉 Evento cadastrado com sucesso!");
-                form.reset(); // Limpa os campos
-                mensagemErro.textContent = "";
+                document.getElementById("eventoForm").reset(); // Limpa os campos do formulário
+                mensagemErro.textContent = ""; // Limpa a mensagem de erro
             } catch (error) {
                 console.error('Erro:', error);
                 mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento. Tente novamente.";
@@ -120,4 +131,3 @@
 
 </body>
 </html>
-
