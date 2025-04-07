@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false 
+    rejectUnauthorized: false
   }
 });
 
@@ -11,8 +11,17 @@ module.exports = async (req, res) => {
   console.log('Requisição recebida:', req.body);
 
   if (req.method === 'POST') {
-  
-    const { nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento } = req.body;
+    const {
+      nome,
+      descricao,
+      cep,
+      endereco,
+      link_ingresso,
+      line_up,
+      estado,
+      tipo_evento,
+      imagemBase64
+    } = req.body;
 
     console.log('Valores recebidos para inserção:', {
       nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento
@@ -20,42 +29,42 @@ module.exports = async (req, res) => {
 
     try {
       // Verifica se o evento já existe
-      const checkQuery = SELECT 1 FROM eventos WHERE nome = $1 AND cep = $2;
+      const checkQuery = `SELECT 1 FROM eventos WHERE nome = $1 AND cep = $2`;
       const checkResult = await pool.query(checkQuery, [nome, cep]);
 
       if (checkResult.rowCount > 0) {
-        console.warn(Evento já cadastrado: ${nome});
+        console.warn(`Evento já cadastrado: ${nome}`);
         return res.status(400).send('Erro: Evento já está registrado.');
       }
 
-      // Query corrigida com estado e tipo_evento
-      const query = 
-        INSERT INTO eventos (
-          nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      ;
+      // Converte base64 para buffer (necessário para bytea)
+      const imagemBuffer = imagemBase64 ? Buffer.from(imagemBase64, 'base64') : null;
 
-      // Adicionando os valores corretamente
+      const insertQuery = `
+        INSERT INTO eventos (
+          nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, imagem
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      `;
+
       const values = [
-        nome, 
-        descricao, 
-        cep, 
-        endereco, 
-        link_ingresso, 
+        nome,
+        descricao,
+        cep,
+        endereco,
+        link_ingresso,
         line_up,
-        estado,    
-        tipo_evento  
+        estado,
+        tipo_evento,
+        imagemBuffer
       ];
 
-      console.log('Executando query:', query);
-      console.log('Com valores:', values);
-
-      const result = await pool.query(query, values);
+      console.log('Executando query:', insertQuery);
+      const result = await pool.query(insertQuery, values);
       console.log('Resultado da query:', result);
 
       res.status(200).send('Evento registrado com sucesso!');
     } catch (err) {
-      if (err.code === '23505') { 
+      if (err.code === '23505') {
         console.error('Erro de duplicidade de chave primária:', err);
         res.status(400).send('Erro: Evento já está registrado.');
       } else {
