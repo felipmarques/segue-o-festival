@@ -75,6 +75,10 @@
                     <option value="Religioso">Religioso</option>
                 </select>
 
+                <!-- Campo de imagem -->
+                <label for="imagem">Imagem do Evento:</label>
+                <input type="file" id="imagem" name="imagem" accept="image/*" required>
+
                 <button type="submit">Cadastrar Evento</button>
             </form>
             <div id="mensagemErro" style="color: red; margin-top: 10px;"></div>
@@ -92,25 +96,39 @@
     <!-- Script para enviar os dados para o backend -->
     <script>
         document.getElementById("eventoForm").addEventListener("submit", async function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+            event.preventDefault();
 
-            const formData = new FormData(event.target);
+            const form = event.target;
+            const formData = new FormData(form);
             const mensagemErro = document.getElementById("mensagemErro");
 
-            // Preparar dados para envio
-            const eventoData = {
-                nome: formData.get("nome"),
-                descricao: formData.get("descricao"),
-                cep: formData.get("cep"),
-                endereco: formData.get("endereco"),
-                link_ingresso: formData.get("link_ingresso"),
-                line_up: formData.get("lineup"),
-                estado: formData.get("estado"), // Novo campo com lista suspensa
-                tipo_evento: formData.get("tipo_evento") // Novo campo com lista suspensa
-            };
+            const file = formData.get("imagem");
+
+            const toBase64 = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const base64String = reader.result.split(',')[1]; // remove o cabeçalho data:image/...
+                    resolve(base64String);
+                };
+                reader.onerror = reject;
+            });
 
             try {
-                // Enviar os dados para o backend (API)
+                const imagemBase64 = await toBase64(file);
+
+                const eventoData = {
+                    nome: formData.get("nome"),
+                    descricao: formData.get("descricao"),
+                    cep: formData.get("cep"),
+                    endereco: formData.get("endereco"),
+                    link_ingresso: formData.get("link_ingresso"),
+                    line_up: formData.get("lineup"),
+                    estado: formData.get("estado"),
+                    tipo_evento: formData.get("tipo_evento"),
+                    imagemBase64: imagemBase64
+                };
+
                 const response = await fetch('/api/eventos', {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -120,8 +138,8 @@
                 if (!response.ok) throw new Error("Erro ao cadastrar o evento!");
 
                 alert("🎉 Evento cadastrado com sucesso!");
-                document.getElementById("eventoForm").reset(); // Limpa os campos do formulário
-                mensagemErro.textContent = ""; // Limpa a mensagem de erro
+                form.reset();
+                mensagemErro.textContent = "";
             } catch (error) {
                 console.error('Erro:', error);
                 mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento. Tente novamente.";
