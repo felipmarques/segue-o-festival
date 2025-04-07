@@ -11,27 +11,47 @@ const pool = new Pool({
 module.exports = async (req, res) => {
   console.log('Requisição recebida:', req.method);
 
-  // Verificando se a requisição é do tipo GET (para buscar os eventos)
   if (req.method === 'GET') {
     try {
-      // Consulta para buscar todos os eventos da tabela 'eventos'
-      const query = 'SELECT nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento FROM eventos';
+      // Inclui a coluna "imagem" na query
+      const query = `
+        SELECT id, nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, imagem
+        FROM eventos
+      `;
 
       console.log('Executando query:', query);
 
-      // Executando a query para obter os dados dos eventos
       const result = await pool.query(query);
-      console.log('Resultado da query:', result.rows);
 
-      // Retorna a lista de eventos em formato JSON
-      res.status(200).json(result.rows);
+      // Converte o campo de imagem para base64, se existir
+      const eventos = result.rows.map(evento => {
+        let imagemBase64 = null;
+
+        if (evento.imagem) {
+          const base64 = evento.imagem.toString('base64');
+          imagemBase64 = `data:image/png;base64,${base64}`;
+        }
+
+        return {
+          id: evento.id,
+          nome: evento.nome,
+          descricao: evento.descricao,
+          cep: evento.cep,
+          endereco: evento.endereco,
+          link_ingresso: evento.link_ingresso,
+          line_up: evento.line_up,
+          estado: evento.estado,
+          tipo: evento.tipo_evento,
+          imagem: imagemBase64
+        };
+      });
+
+      res.status(200).json(eventos);
     } catch (err) {
-      // Tratamento de erro, se ocorrer algum problema na execução da query
       console.error('Erro ao executar query:', err);
       res.status(500).send('Erro ao buscar eventos.');
     }
   } else {
-    // Caso o método da requisição não seja GET, retorna erro 405
     res.status(405).send('Método não permitido');
   }
 };
