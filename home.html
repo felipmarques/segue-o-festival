@@ -139,47 +139,47 @@
         </section>
     </main>
 
-      <script>
-    async function buscarEventos() {
-      try {
-        const response = await fetch('/api/buscaeventos');
-        if (!response.ok) {
-          throw new Error(`Erro: ${response.status}`);
+    <script>
+        async function buscarEventos() {
+          try {
+            const response = await fetch('/api/buscaeventos');
+            if (!response.ok) {
+              throw new Error(`Erro: ${response.status}`);
+            }
+    
+            const eventos = await response.json();
+            const container = document.getElementById('eventos');
+            container.innerHTML = '';
+    
+            eventos.forEach(evento => {
+              const div = document.createElement('div');
+              div.className = 'evento';
+    
+              const imagem = document.createElement('img');
+              imagem.src = evento.imagem
+                ? `data:image/jpeg;base64,${evento.imagem}`
+                : '/img/default.jpg'; // imagem padrão caso não haja
+    
+              imagem.alt = evento.nome;
+    
+              const titulo = document.createElement('h3');
+              titulo.textContent = evento.nome;
+    
+              const descricao = document.createElement('p');
+              descricao.textContent = evento.descricao;
+    
+              div.appendChild(imagem);
+              div.appendChild(titulo);
+              div.appendChild(descricao);
+              container.appendChild(div);
+            });
+          } catch (error) {
+            document.getElementById('eventos').innerHTML = 'Erro ao carregar eventos.';
+            console.error(error);
+          }
         }
-
-        const eventos = await response.json();
-        const container = document.getElementById('eventos');
-        container.innerHTML = '';
-
-        eventos.forEach(evento => {
-          const div = document.createElement('div');
-          div.className = 'evento';
-
-          const imagem = document.createElement('img');
-          imagem.src = evento.imagem
-            ? `data:image/jpeg;base64,${evento.imagem}`
-            : '/img/default.jpg'; // imagem padrão caso não haja
-
-          imagem.alt = evento.nome;
-
-          const titulo = document.createElement('h3');
-          titulo.textContent = evento.nome;
-
-          const descricao = document.createElement('p');
-          descricao.textContent = evento.descricao;
-
-          div.appendChild(imagem);
-          div.appendChild(titulo);
-          div.appendChild(descricao);
-          container.appendChild(div);
-        });
-      } catch (error) {
-        document.getElementById('eventos').innerHTML = 'Erro ao carregar eventos.';
-        console.error(error);
-      }
-    }
-
-    buscarEventos();
+    
+        buscarEventos();
   </script>
 </body>
 
