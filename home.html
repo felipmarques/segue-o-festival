@@ -1,70 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Segue o Festival!</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segue o Festival!</title>
+    <link rel="stylesheet" type="text/css" href="css/stylehome.css">
+    <style>
+        .menu {
+            background-color: blue;
+            display: flex;
+            justify-content: left;
+            padding: 10px;
+        }
 
-    h1 {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 2rem;
-    }
+        .menu-item {
+            position: relative;
+            margin-right: 20px;
+        }
 
-    .highlight {
-      background-color: yellow;
-      display: inline-block;
-      padding: 0 5px;
-    }
+        .menu-botao {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
 
-    #eventos {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 40px;
-      gap: 20px;
-    }
+        .menu-lista {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: none;
+            z-index: 10;
+        }
 
-    .evento {
-      background-color: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      width: 250px;
-      text-align: center;
-    }
+        .menu-lista li {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
 
-    .evento img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      object-fit: cover;
-      margin-bottom: 10px;
-    }
+        .menu-lista li:hover {
+            background-color: #f0f0f0;
+        }
 
-    .evento h3 {
-      margin: 10px 0 5px;
-      font-size: 1.2rem;
-    }
+        .menu-item:hover .menu-lista {
+            display: block;
+        }
 
-    .evento p {
-      font-size: 0.95rem;
-      color: #333;
-    }
-  </style>
+        .conteudo-secundario-item {
+            display: inline-block;
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .conteudo-secundario-item img {
+            width: 200px;
+            height: auto;
+        }
+    </style>
 </head>
-<body>
-  <h1><span class="highlight">Destaques</span></h1>
-  <div id="eventos">Carregando eventos...</div>
 
-  <script>
+<body>
+    <header class="cabecalho">
+        <h3 class="cabecalho-titulo">
+            Segue<br>O Festival!
+        </h3>
+        <div class="cabecalho-botoes">
+            <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+        </div>
+    </header>
+
+    <nav class="menu">
+        <div class="menu-item">
+            <button class="menu-botao">Estado</button>
+            <ul class="menu-lista" id="lista-estados">
+                <li onclick="filtrarEventos('estado', 'AC')">Acre</li>
+                <li onclick="filtrarEventos('estado', 'AL')">Alagoas</li>
+                <li onclick="filtrarEventos('estado', 'AP')">Amapá</li>
+                <li onclick="filtrarEventos('estado', 'AM')">Amazonas</li>
+                <li onclick="filtrarEventos('estado', 'BA')">Bahia</li>
+                <li onclick="filtrarEventos('estado', 'CE')">Ceará</li>
+                <li onclick="filtrarEventos('estado', 'DF')">Distrito Federal</li>
+                <li onclick="filtrarEventos('estado', 'ES')">Espírito Santo</li>
+                <li onclick="filtrarEventos('estado', 'GO')">Goiás</li>
+                <li onclick="filtrarEventos('estado', 'MA')">Maranhão</li>
+                <li onclick="filtrarEventos('estado', 'MT')">Mato Grosso</li>
+                <li onclick="filtrarEventos('estado', 'MS')">Mato Grosso do Sul</li>
+                <li onclick="filtrarEventos('estado', 'MG')">Minas Gerais</li>
+                <li onclick="filtrarEventos('estado', 'PA')">Pará</li>
+                <li onclick="filtrarEventos('estado', 'PB')">Paraíba</li>
+                <li onclick="filtrarEventos('estado', 'PR')">Paraná</li>
+                <li onclick="filtrarEventos('estado', 'PE')">Pernambuco</li>
+                <li onclick="filtrarEventos('estado', 'PI')">Piauí</li>
+                <li onclick="filtrarEventos('estado', 'RJ')">Rio de Janeiro</li>
+                <li onclick="filtrarEventos('estado', 'RN')">Rio Grande do Norte</li>
+                <li onclick="filtrarEventos('estado', 'RS')">Rio Grande do Sul</li>
+                <li onclick="filtrarEventos('estado', 'RO')">Rondônia</li>
+                <li onclick="filtrarEventos('estado', 'RR')">Roraima</li>
+                <li onclick="filtrarEventos('estado', 'SC')">Santa Catarina</li>
+                <li onclick="filtrarEventos('estado', 'SP')">São Paulo</li>
+                <li onclick="filtrarEventos('estado', 'SE')">Sergipe</li>
+                <li onclick="filtrarEventos('estado', 'TO')">Tocantins</li>
+            </ul>
+        </div>
+        <div class="menu-item">
+            <button class="menu-botao">Tipo de Evento</button>
+            <ul class="menu-lista" id="lista-tipos">
+                <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
+                <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+                <li onclick="filtrarEventos('tipo', 'Concerto')">Concerto</li>
+                <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+                <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="conteudo">
+        <div class="conteudo-banners">
+            <a href="paginaevento.html">
+                <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
+            </a>
+        </div>
+
+        <section class="conteudo-secundario">
+            <div class="conteudo-secundario-destaque">
+                <h1>Destaques</h1>
+            </div>
+
+            <div class="conteudo-secundario-linha" id="eventos-lista">
+            </div>
+        </section>
+    </main>
+
+      <script>
     async function buscarEventos() {
       try {
         const response = await fetch('/api/buscaeventos');
@@ -103,6 +178,12 @@
         console.error(error);
       }
     }
+
+    buscarEventos();
+  </script>
+</body>
+
+</html>
 
     buscarEventos();
   </script>
