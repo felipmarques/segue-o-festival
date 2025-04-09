@@ -2,218 +2,212 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Segue o Festival!</title>
-    <link rel="stylesheet" type="text/css" href="css/stylehome.css">
-    <style>
-        .menu {
-            background-color: blue;
-            display: flex;
-            justify-content: left;
-            padding: 10px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segue o Festival!</title>
+  <link rel="stylesheet" type="text/css" href="css/stylehome.css">
+  <style>
+    .menu {
+      background-color: blue;
+      display: flex;
+      justify-content: left;
+      padding: 10px;
+    }
 
-        .menu-item {
-            position: relative;
-            margin-right: 20px;
-        }
+    .menu-item {
+      position: relative;
+      margin-right: 20px;
+    }
 
-        .menu-botao {
-            background-color: white;
-            color: black;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-        }
+    .menu-botao {
+      background-color: white;
+      color: black;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+    }
 
-        .menu-lista {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            display: none;
-            z-index: 10;
-        }
+    .menu-lista {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      border: 1px solid #ccc;
+      display: none;
+      z-index: 10;
+    }
 
-        .menu-lista li {
-            padding: 8px 15px;
-            cursor: pointer;
-        }
+    .menu-lista li {
+      padding: 8px 15px;
+      cursor: pointer;
+    }
 
-        .menu-lista li:hover {
-            background-color: #f0f0f0;
-        }
+    .menu-lista li:hover {
+      background-color: #f0f0f0;
+    }
 
-        .menu-item:hover .menu-lista {
-            display: block;
-        }
+    .menu-item:hover .menu-lista {
+      display: block;
+    }
 
-        .conteudo-secundario-item {
-            display: inline-block;
-            margin: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
+    .conteudo-secundario-item {
+      display: inline-block;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: white;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .conteudo-secundario-item img {
-            width: 200px;
-            height: auto;
-        }
+    .conteudo-secundario-item img {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
 
-        .botao-limpar {
-            margin: 15px;
-            padding: 8px 16px;
-            background-color: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+    .conteudo-secundario-item h3 {
+      margin: 10px 0 5px;
+      font-size: 1.2rem;
+    }
+
+    .conteudo-secundario-item p {
+      font-size: 0.95rem;
+      color: #333;
+    }
+  </style>
 </head>
 
 <body>
-    <header class="cabecalho">
-        <h3 class="cabecalho-titulo">
-            Segue<br>O Festival!
-        </h3>
-        <div class="cabecalho-botoes">
-            <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
-            <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
-        </div>
-    </header>
+  <header class="cabecalho">
+    <h3 class="cabecalho-titulo">
+      Segue<br>O Festival!
+    </h3>
+    <div class="cabecalho-botoes">
+      <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+    </div>
+  </header>
 
-    <nav class="menu">
-        <div class="menu-item">
-            <button class="menu-botao">Estado</button>
-            <ul class="menu-lista" id="lista-estados">
-                <!-- Estados mantidos -->
-                <li onclick="filtrarEventos('estado', null)">Todos os Estados</li>
-                <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
-                <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
-                <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
-                <li onclick="filtrarEventos('estado', 'Amazonas')">Amazonas</li>
-                <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
-                <li onclick="filtrarEventos('estado', 'Ceará')">Ceará</li>
-                <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
-                <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
-                <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
-                <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
-                <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
-                <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
-                <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
-                <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
-                <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
-                <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
-                <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
-                <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
-                <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
-                <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
-                <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
-                <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
-                <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
-                <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
-                <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
-                <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
-                <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
-            </ul>
-        </div>
+  <nav class="menu">
+    <div class="menu-item">
+      <button class="menu-botao">Estado</button>
+      <ul class="menu-lista" id="lista-estados">
+        <li onclick="filtrarEventos('estado', null)">Todos</li>
+        <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+        <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+        <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+        <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+        <!-- Adicione mais estados conforme necessário -->
+      </ul>
+    </div>
+    <div class="menu-item">
+      <button class="menu-botao">Tipo de Evento</button>
+      <ul class="menu-lista" id="lista-tipos">
+        <li onclick="filtrarEventos('tipo', null)">Todos</li>
+        <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+        <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
+        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+      </ul>
+    </div>
+  </nav>
 
-        <div class="menu-item">
-            <button class="menu-botao">Tipo de Evento</button>
-            <ul class="menu-lista" id="lista-tipos">
-                <li onclick="filtrarEventos('tipo', null)">Todos os Tipos</li>
-                <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
-                <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
-                <li onclick="filtrarEventos('tipo', 'Concerto')">Concerto</li>
-                <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
-                <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
-            </ul>
-        </div>
-    </nav>
+  <main class="conteudo">
+    <div class="conteudo-banners">
+      <a href="paginaevento.html">
+        <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
+      </a>
+    </div>
 
-    <button class="botao-limpar" onclick="limparFiltros()">Limpar Filtros</button>
+    <section class="conteudo-secundario">
+      <div class="conteudo-secundario-destaque">
+        <h1>Destaques</h1>
+      </div>
 
-    <main class="conteudo">
-        <div class="conteudo-banners">
-            <a href="paginaevento.html">
-                <img src="imagens/periclão.png" alt="Banner Pagode do Pericão" />
-            </a>
-        </div>
+      <div class="conteudo-secundario-linha" id="eventos-lista">
+        <!-- Eventos serão carregados aqui -->
+      </div>
+    </section>
+  </main>
 
-        <section class="conteudo-secundario">
-            <div class="conteudo-secundario-destaque">
-                <h1>Destaques</h1>
-            </div>
+  <script>
+    let todosEventos = [];
+    let estadoSelecionado = null;
+    let tipoSelecionado = null;
 
-            <div class="conteudo-secundario-linha" id="eventos-lista">
-                <!-- Eventos serão inseridos aqui -->
-            </div>
-        </section>
-    </main>
+    async function buscarEventos() {
+      try {
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
 
-    <script>
-        let eventos = [];
-        let estadoSelecionado = null;
-        let tipoSelecionado = null;
-
-        async function carregarEventos() {
-            try {
-                const response = await fetch('/api/buscaeventos');
-                eventos = await response.json();
-                exibirEventos();
-            } catch (err) {
-                console.error('Erro ao carregar eventos:', err);
-            }
-        }
-
-        function exibirEventos() {
-            const eventosLista = document.getElementById('eventos-lista');
-            eventosLista.innerHTML = ''; // Limpa a lista antes de adicionar os eventos filtrados
-        
-            // Aplica os filtros se houverem seleções
-            const eventosFiltrados = eventos.filter(evento => {
-                return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-                    (!tipoSelecionado || evento.tipo === tipoSelecionado);
-            });
-        
-            // Exibe os eventos filtrados
-            eventosFiltrados.forEach(evento => {
-                const eventoElement = document.createElement('div');
-                eventoElement.classList.add('conteudo-secundario-item');
-                eventoElement.innerHTML = `
-                    <a href="/detalhes/${evento.id}">
-                        <img class="conteudo-secundario-imagem" src="imagens/${evento.imagem}" alt="${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
-                        <p class="conteudo-secundario-paragrafo">${evento.local}</p>
-                    </a>
-                `;
-                eventosLista.appendChild(eventoElement);
-            });
+        todosEventos = await response.json();
+        exibirEventosFiltrados();
+      } catch (error) {
+        document.getElementById('eventos-lista').innerHTML = 'Erro ao carregar eventos.';
+        console.error(error);
+      }
     }
 
-        function filtrarEventos(tipo, valor) {
-            if (tipo === 'estado') {
-                estadoSelecionado = valor;
-            } else if (tipo === 'tipo') {
-                tipoSelecionado = valor;
-            }
-            exibirEventos();
-        }
+    function filtrarEventos(tipo, valor) {
+      if (tipo === 'estado') {
+        estadoSelecionado = valor;
+      } else if (tipo === 'tipo') {
+        tipoSelecionado = valor;
+      }
+      exibirEventosFiltrados();
+    }
 
-        function limparFiltros() {
-            estadoSelecionado = null;
-            tipoSelecionado = null;
-            exibirEventos();
-        }
+    function exibirEventosFiltrados() {
+      const container = document.getElementById('eventos-lista');
+      container.innerHTML = '';
 
-        window.onload = carregarEventos;
-    </script>
+      const eventosFiltrados = todosEventos.filter(evento => {
+        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+      });
+
+      if (eventosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+        return;
+      }
+
+      eventosFiltrados.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'conteudo-secundario-item';
+
+        const imagem = document.createElement('img');
+        imagem.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        imagem.alt = evento.nome;
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = evento.nome;
+
+        const data = document.createElement('p');
+        data.textContent = evento.data || 'Data não informada';
+
+        const local = document.createElement('p');
+        local.textContent = evento.local || 'Local não informado';
+
+        div.appendChild(imagem);
+        div.appendChild(titulo);
+        div.appendChild(data);
+        div.appendChild(local);
+        container.appendChild(div);
+      });
+    }
+
+    buscarEventos();
+  </script>
 </body>
 
 </html>
+
