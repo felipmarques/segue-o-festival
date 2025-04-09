@@ -316,24 +316,6 @@
   font-style: normal;
 }
 
-
-/* Adicionando o ícone de localização ao lado do endereço 
-p:last-of-type {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-p:last-of-type:before {
-  content: url('path-to-location-icon.png'); /* Substitua pelo caminho correto do ícone 
-  margin-right: 5px;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-}
-
-*/
-
 /* Estilo responsivo para telas menores */
 @media (max-width: 1024px) {
   .conteudo-secundario-primeiralinha div,
