@@ -173,13 +173,15 @@
 
         function exibirEventos() {
             const eventosLista = document.getElementById('eventos-lista');
-            eventosLista.innerHTML = '';
-
+            eventosLista.innerHTML = ''; // Limpa a lista antes de adicionar os eventos filtrados
+        
+            // Aplica os filtros se houverem seleções
             const eventosFiltrados = eventos.filter(evento => {
                 return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
                     (!tipoSelecionado || evento.tipo === tipoSelecionado);
             });
-
+        
+            // Exibe os eventos filtrados
             eventosFiltrados.forEach(evento => {
                 const eventoElement = document.createElement('div');
                 eventoElement.classList.add('conteudo-secundario-item');
@@ -193,7 +195,7 @@
                 `;
                 eventosLista.appendChild(eventoElement);
             });
-        }
+    }
 
         function filtrarEventos(tipo, valor) {
             if (tipo === 'estado') {
