@@ -356,110 +356,110 @@
     transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
 }
 
-.lista-eventos a:hover {
-    background-color: #08C2FF; /* Cor de fundo quando passar o mouse */
-    color: #fff; /* Cor do texto em branco quando hover */
-}
+    .lista-eventos a:hover {
+        background-color: #08C2FF; /* Cor de fundo quando passar o mouse */
+        color: #fff; /* Cor do texto em branco quando hover */
+    }
+    
+    /* Estilo do menu */
+    .menu {
+        background-color: blue;
+        display: flex;
+        justify-content: left;
+        padding: 10px;
+    }
+    
+    /* Estilo de cada item do menu */
+    .menu-item {
+        position: relative;
+        margin-right: 20px;
+    }
+    
+    /* Estilo do botão do menu */
+    .menu-botao {
+        background-color: white;
+        color: black;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+    }
+    
+    /* Estilo da lista de opções do menu */
+    .menu-lista {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: white;
+        border: 1px solid #ccc;
+        display: none;
+        z-index: 10;
+        opacity: 0; /* Adicionando opacidade 0 inicialmente */
+        visibility: hidden; /* Tornando invisível inicialmente */
+        transition: opacity 0.3s ease, visibility 0s 0.3s; /* Transição suave */
+    }
+    
+    .menu-lista li {
+        padding: 8px 15px;
+        cursor: pointer;
+    }
+    
+    .menu-lista li:hover {
+        background-color: #f0f0f0;
+    }
+    
+    /* Mostrando a lista do menu ao passar o mouse */
+    .menu-item:hover .menu-lista {
+        display: block;
+        opacity: 1; /* Torna visível a lista */
+        visibility: visible; /* Torna visível a lista */
+        transition: opacity 0.3s ease, visibility 0s 0s; /* Suaviza a transição */
+    }
 
-/* Estilo do menu */
-.menu {
-    background-color: blue;
-    display: flex;
-    justify-content: left;
-    padding: 10px;
-}
-
-/* Estilo de cada item do menu */
-.menu-item {
-    position: relative;
-    margin-right: 20px;
-}
-
-/* Estilo do botão do menu */
-.menu-botao {
-    background-color: white;
-    color: black;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-}
-
-/* Estilo da lista de opções do menu */
-.menu-lista {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    display: none;
-    z-index: 10;
-    opacity: 0; /* Adicionando opacidade 0 inicialmente */
-    visibility: hidden; /* Tornando invisível inicialmente */
-    transition: opacity 0.3s ease, visibility 0s 0.3s; /* Transição suave */
-}
-
-.menu-lista li {
-    padding: 8px 15px;
-    cursor: pointer;
-}
-
-.menu-lista li:hover {
-    background-color: #f0f0f0;
-}
-
-/* Mostrando a lista do menu ao passar o mouse */
-.menu-item:hover .menu-lista {
-    display: block;
-    opacity: 1; /* Torna visível a lista */
-    visibility: visible; /* Torna visível a lista */
-    transition: opacity 0.3s ease, visibility 0s 0s; /* Suaviza a transição */
-}
-
-.carrossel-container {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  margin: 20px auto;
-  overflow: hidden;
-  border-radius: 20px;
-}
-
-.carrossel {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.carrossel img {
-  width: 100%;
-  max-width: 1000px; /* máximo do container */
-  height: 400px;
-  object-fit: cover;
-  flex-shrink: 0;
-  border-radius: 20px;
-}
-
-.botao {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  font-size: 2rem;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  z-index: 1;
-}
-
-.botao:first-of-type {
-  left: 10px;
-}
-
-.botao:last-of-type {
-  right: 10px;
-}
+    .carrossel-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+    
+    .carrossel {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    
+    .carrossel img {
+      width: 100%;
+      max-width: 1000px; /* máximo do container */
+      height: 400px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border-radius: 20px;
+    }
+    
+    .botao {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      font-size: 2rem;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      z-index: 1;
+    }
+    
+    .botao:first-of-type {
+      left: 10px;
+    }
+    
+    .botao:last-of-type {
+      right: 10px;
+    }
  
 }
