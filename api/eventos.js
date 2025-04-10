@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     } = req.body;
 
     console.log('Valores recebidos para inserção:', {
-      nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento
+      nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, data
     });
 
     try {
@@ -42,8 +42,8 @@ module.exports = async (req, res) => {
 
       const insertQuery = `
         INSERT INTO eventos (
-          nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, imagem
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, imagem, data
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       `;
 
       const values = [
@@ -55,7 +55,8 @@ module.exports = async (req, res) => {
         line_up,
         estado,
         tipo_evento,
-        imagemBuffer
+        imagemBuffer,
+        data
       ];
 
       console.log('Executando query:', insertQuery);
