@@ -1,4 +1,39 @@
 @import url("https://use.typekit.net/qrb0jox.css");
+
+    .carrossel {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    
+    .carrossel img {
+      width: 100%;
+      max-width: 1000px; /* máximo do container */
+      height: 400px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border-radius: 20px;
+    }
+    
+    .botao {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      font-size: 2rem;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      z-index: 1;
+    }
+    
+    .botao:first-of-type {
+      left: 10px;
+    }
+    
+    .botao:last-of-type {
+      right: 10px;
+    }
     .menu {
       background-color: blue;
       display: flex;
@@ -427,39 +462,6 @@
       border-radius: 20px;
     }
     
-    .carrossel {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-    
-    .carrossel img {
-      width: 100%;
-      max-width: 1000px; /* máximo do container */
-      height: 400px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border-radius: 20px;
-    }
-    
-    .botao {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      font-size: 2rem;
-      border: none;
-      cursor: pointer;
-      padding: 10px;
-      z-index: 1;
-    }
-    
-    .botao:first-of-type {
-      left: 10px;
-    }
-    
-    .botao:last-of-type {
-      right: 10px;
-    }
+
  
 }
