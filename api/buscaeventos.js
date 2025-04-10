@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'GET') {
     try {
-      const query = 'SELECT nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, imagem FROM eventos';
+      const query = 'SELECT nome, descricao, cep, endereco, link_ingresso, line_up, estado, tipo_evento, imagem, data FROM eventos';
       console.log('Executando query:', query);
 
       const result = await pool.query(query);
