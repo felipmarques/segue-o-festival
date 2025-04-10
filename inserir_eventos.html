@@ -79,6 +79,9 @@
                 <label for="imagem">Imagem do Evento:</label>
                 <input type="file" id="imagem" name="imagem" accept="image/*" required>
 
+                <label for="data">Data do Evento:</label>
+                <input type="date" id="data" name="data" required>    
+
                 <button type="submit">Cadastrar Evento</button>
             </form>
             <div id="mensagemErro" style="color: red; margin-top: 10px;"></div>
@@ -126,7 +129,8 @@
                     line_up: formData.get("lineup"),
                     estado: formData.get("estado"),
                     tipo_evento: formData.get("tipo_evento"),
-                    imagemBase64: imagemBase64
+                    imagemBase64: imagemBase64,
+                    data: formData.get("data")
                 };
 
                 const response = await fetch('/api/eventos', {
