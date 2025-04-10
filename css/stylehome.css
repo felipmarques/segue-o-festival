@@ -1,5 +1,25 @@
 @import url("https://use.typekit.net/qrb0jox.css");
 
+    .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .search-bar input,
+    .search-bar button {
+        border: 1px solid #f5f284; /* moldura amarela */
+        padding: 8px 15px;
+        background-color: white;
+        color: #333;
+        font-size: 14px;
+        width: 160px; /* mesma largura para todos */
+        box-sizing: border-box;
+}
+
+.search-bar input::placeholder {
+    color: #888;
+}
     .swiper {
       width: 100%;
       padding-top: 50px;
