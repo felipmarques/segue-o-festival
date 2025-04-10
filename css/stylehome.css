@@ -434,6 +434,7 @@
 
 .carrossel img {
   width: 100%;
+  max-width: 1000px; /* máximo do container */
   height: 400px;
   object-fit: cover;
   flex-shrink: 0;
