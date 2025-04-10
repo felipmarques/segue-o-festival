@@ -20,7 +20,8 @@ module.exports = async (req, res) => {
       line_up,
       estado,
       tipo_evento,
-      imagemBase64
+      imagemBase64,
+      data
     } = req.body;
 
     console.log('Valores recebidos para inserção:', {
