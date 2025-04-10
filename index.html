@@ -141,7 +141,16 @@
         titulo.textContent = evento.nome;
 
         const data = document.createElement('p');
-        data.textContent = evento.data || 'Data não informada';
+        if (evento.data) {
+          const dataEvento = new Date(evento.data);
+          data.textContent = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+       });
+      } else {
+        data.textContent = 'Data não informada';
+      }
 
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
