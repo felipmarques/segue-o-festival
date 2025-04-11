@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <title>Detalhes do Evento</title>
   <style>
     body {
@@ -108,10 +110,35 @@
         document.getElementById('descricao').textContent = evento.descricao;
         document.getElementById('link_ingresso').href = evento.link_ingresso;
       })
+
+      const cep = evento.cep;
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cep}, Brasil`)
+      .then(res => res.json())
+      .then(locations => {
+        if (locations.length > 0) {
+          const lat = locations[0].lat;
+          const lon = locations[0].lon;
+  
+          const map = L.map('map').setView([lat, lon], 15);
+  
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
+  
+          L.marker([lat, lon]).addTo(map)
+            .bindPopup(evento.nome)
+            .openPopup();
+        } else {
+          console.error("Localização não encontrada para o CEP:", cep);
+        }
+      })
+      .catch(error => console.error("Erro ao buscar localização:", error));
+  })
       .catch(error => {
         console.error('Erro ao carregar evento:', error);
         document.getElementById('titulo').textContent = "Evento não encontrado";
       });
   </script>
+  <div id="map" style="height: 400px; margin: 2rem auto; border-radius: 12px;"></div>
 </body>
 </html>
