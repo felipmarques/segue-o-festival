@@ -68,11 +68,6 @@
       background: #003366;
       border-color: #FFA500;
     }
-    #map {
-      height: 400px;
-      margin: 2rem auto;
-      border-radius: 12px;
-    }
   </style>
 </head>
 <body>
@@ -84,6 +79,7 @@
         <p><strong>Line-up:</strong> <span id="lineup"></span></p>
         <p><strong>Data:</strong> <span id="data"></span></p>
         <p><strong>Endereço:</strong> <span id="endereco"></span></p>
+        <div class="badge">Parcele em até 12x</div>
       </div>
     </div>
 
@@ -97,17 +93,27 @@
       <p>Garanta já o seu ingresso clicando no botão abaixo:</p>
       <a id="link_ingresso" href="#" target="_blank">Comprar ingresso</a>
     </div>
-  </div>
 
-  <div id="map"></div>
+    <div style="margin-top: 2rem;">
+      <label for="endereco_usuario">Digite seu endereço ou CEP:</label><br>
+      <input type="text" id="endereco_usuario" placeholder="Ex: 01001-000 ou Av. Paulista, SP" style="padding: 0.5rem; border-radius: 6px; width: 300px;" />
+      <button onclick="calcularDistancia()" style="padding: 0.5rem 1rem; border-radius: 6px; background: #004080; color: white; border: none;">Calcular distância</button>
+    </div>
+    <p id="resultado_distancia" style="margin-top: 1rem;"></p>
+
+    <div id="map" style="height: 400px; margin: 2rem auto; border-radius: 12px;"></div>
+  </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const id_evento = params.get("id");
+    let coordenadasEvento = null;
+    let nomeEvento = "";
 
     fetch(`/api/pagina_evento?id_evento=${id_evento}`)
       .then(res => res.json())
       .then(evento => {
+        nomeEvento = evento.nome;
         document.getElementById('imagem').src = `data:image/jpeg;base64,${evento.imagem}`;
         document.getElementById('titulo').textContent = evento.nome;
         document.getElementById('lineup').textContent = evento.line_up;
@@ -116,34 +122,75 @@
         document.getElementById('descricao').textContent = evento.descricao;
         document.getElementById('link_ingresso').href = evento.link_ingresso;
 
-        // 🔍 Busca localização do evento a partir do CEP
-        const cep = evento.cep;
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cep}, Brasil`)
-          .then(res => res.json())
-          .then(locations => {
-            if (locations.length > 0) {
-              const lat = locations[0].lat;
-              const lon = locations[0].lon;
+        // Geocodifica o CEP do evento para coordenadas
+        return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${evento.cep}, Brasil`);
+      })
+      .then(res => res.json())
+      .then(locations => {
+        if (locations.length > 0) {
+          const lat = parseFloat(locations[0].lat);
+          const lon = parseFloat(locations[0].lon);
+          coordenadasEvento = { lat, lon };
 
-              const map = L.map('map').setView([lat, lon], 15);
+          const map = L.map('map').setView([lat, lon], 15);
 
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-              }).addTo(map);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
 
-              L.marker([lat, lon]).addTo(map)
-                .bindPopup(evento.nome)
-                .openPopup();
-            } else {
-              console.error("Localização não encontrada para o CEP:", cep);
-            }
-          })
-          .catch(error => console.error("Erro ao buscar localização:", error));
+          L.marker([lat, lon]).addTo(map)
+            .bindPopup(nomeEvento)
+            .openPopup();
+        } else {
+          console.error("Localização do evento não encontrada.");
+        }
       })
       .catch(error => {
-        console.error('Erro ao carregar evento:', error);
+        console.error('Erro ao carregar evento ou mapa:', error);
         document.getElementById('titulo').textContent = "Evento não encontrado";
       });
+
+    function calcularDistancia() {
+      const endereco = document.getElementById("endereco_usuario").value;
+      if (!endereco || !coordenadasEvento) return;
+
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}, Brasil`)
+        .then(res => res.json())
+        .then(result => {
+          if (result.length === 0) {
+            document.getElementById("resultado_distancia").textContent = "Endereço não encontrado.";
+            return;
+          }
+
+          const latUsuario = parseFloat(result[0].lat);
+          const lonUsuario = parseFloat(result[0].lon);
+
+          const distancia = calcularDistanciaEmKm(
+            latUsuario, lonUsuario,
+            coordenadasEvento.lat, coordenadasEvento.lon
+          );
+
+          document.getElementById("resultado_distancia").textContent = `Você está a aproximadamente ${distancia.toFixed(2)} km do evento.`;
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("resultado_distancia").textContent = "Erro ao buscar endereço.";
+        });
+    }
+
+    function calcularDistanciaEmKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Raio da Terra em km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
   </script>
 </body>
 </html>
+
