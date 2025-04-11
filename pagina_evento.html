@@ -97,7 +97,7 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const id_evento = params.get("id_evento");
+    const id_evento = params.get("id");
 
     fetch(`/api/pagina_evento?id_evento=${id_evento}`)
       .then(res => res.json())
