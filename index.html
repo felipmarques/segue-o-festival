@@ -136,9 +136,12 @@
       }
 
       eventosFiltrados.forEach(evento => {
-        const div = document.createElement('div');
-        div.className = 'conteudo-secundario-item';
-
+        const link = document.createElement('a');
+        link.href = `pagina_evento.html?id=${evento.id}`;
+        link.className = 'conteudo-secundario-item';
+        link.style.textDecoration = 'none';
+        link.style.color = 'inherit';
+        
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
           ? `data:image/jpeg;base64,${evento.imagem}`
@@ -170,11 +173,11 @@
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
 
-        div.appendChild(imagem);
-        div.appendChild(titulo);
-        div.appendChild(data);
-        div.appendChild(local);
-        container.appendChild(div);
+        link.appendChild(imagem);
+        link.appendChild(titulo);
+        link.appendChild(data);
+        link.appendChild(local);
+        container.appendChild(link);
       });
     }
 
