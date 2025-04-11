@@ -53,22 +53,26 @@
       padding: 2rem;
       margin-top: 2rem;
     }
-   .ingresso-box a {
+    .ingresso-box a {
       display: inline-block;
-      background: #001f3f; /* azul marinho */
+      background: #001f3f;
       color: #fff;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
       text-decoration: none;
       margin-top: 1rem;
-      border: 2px solid #FFD700; /* borda amarela (dourado) */
+      border: 2px solid #FFD700;
       transition: background 0.3s ease, border 0.3s ease;
-  }
-
-  .ingresso-box a:hover {
-    background: #003366;
-    border-color: #FFA500; /* laranja dourado ao passar o mouse */
-  }
+    }
+    .ingresso-box a:hover {
+      background: #003366;
+      border-color: #FFA500;
+    }
+    #map {
+      height: 400px;
+      margin: 2rem auto;
+      border-radius: 12px;
+    }
   </style>
 </head>
 <body>
@@ -95,6 +99,8 @@
     </div>
   </div>
 
+  <div id="map"></div>
+
   <script>
     const params = new URLSearchParams(window.location.search);
     const id_evento = params.get("id");
@@ -109,36 +115,35 @@
         document.getElementById('endereco').textContent = evento.endereco;
         document.getElementById('descricao').textContent = evento.descricao;
         document.getElementById('link_ingresso').href = evento.link_ingresso;
-      })
 
-      const cep = evento.cep;
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cep}, Brasil`)
-      .then(res => res.json())
-      .then(locations => {
-        if (locations.length > 0) {
-          const lat = locations[0].lat;
-          const lon = locations[0].lon;
-  
-          const map = L.map('map').setView([lat, lon], 15);
-  
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
-  
-          L.marker([lat, lon]).addTo(map)
-            .bindPopup(evento.nome)
-            .openPopup();
-        } else {
-          console.error("Localização não encontrada para o CEP:", cep);
-        }
+        // 🔍 Busca localização do evento a partir do CEP
+        const cep = evento.cep;
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cep}, Brasil`)
+          .then(res => res.json())
+          .then(locations => {
+            if (locations.length > 0) {
+              const lat = locations[0].lat;
+              const lon = locations[0].lon;
+
+              const map = L.map('map').setView([lat, lon], 15);
+
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+              }).addTo(map);
+
+              L.marker([lat, lon]).addTo(map)
+                .bindPopup(evento.nome)
+                .openPopup();
+            } else {
+              console.error("Localização não encontrada para o CEP:", cep);
+            }
+          })
+          .catch(error => console.error("Erro ao buscar localização:", error));
       })
-      .catch(error => console.error("Erro ao buscar localização:", error));
-  })
       .catch(error => {
         console.error('Erro ao carregar evento:', error);
         document.getElementById('titulo').textContent = "Evento não encontrado";
       });
   </script>
-  <div id="map" style="height: 400px; margin: 2rem auto; border-radius: 12px;"></div>
 </body>
 </html>
