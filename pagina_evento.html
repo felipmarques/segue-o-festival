@@ -51,23 +51,22 @@
       padding: 2rem;
       margin-top: 2rem;
     }
-    .ingresso-box {
-      background: #fff;
-      color: #000;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-top: 2rem;
-      max-width: 400px;
-    }
-    .ingresso-box a {
+   .ingresso-box a {
       display: inline-block;
-      background: #005C53;
+      background: #001f3f; /* azul marinho */
       color: #fff;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
       text-decoration: none;
       margin-top: 1rem;
-    }
+      border: 2px solid #FFD700; /* borda amarela (dourado) */
+      transition: background 0.3s ease, border 0.3s ease;
+  }
+
+  .ingresso-box a:hover {
+    background: #003366;
+    border-color: #FFA500; /* laranja dourado ao passar o mouse */
+  }
   </style>
 </head>
 <body>
