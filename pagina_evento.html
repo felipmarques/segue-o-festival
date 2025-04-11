@@ -37,15 +37,6 @@
     .evento-info p {
       margin: 0.5rem 0;
     }
-    .badge {
-      display: inline-block;
-      background: #7FEFBD;
-      color: #000;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: bold;
-      margin-top: 1rem;
-    }
     .descricao {
       background: #fff;
       color: #000;
@@ -68,6 +59,38 @@
       background: #003366;
       border-color: #FFA500;
     }
+    #map {
+      height: 400px;
+      margin: 2rem auto;
+      border-radius: 12px;
+    }
+    .links-section {
+      margin-top: 2rem;
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .links-section h3 {
+      margin-top: 0;
+    }
+    .links-grid {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .links-grid a {
+      text-align: center;
+      text-decoration: none;
+      color: #000;
+    }
+    .links-grid img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -79,7 +102,6 @@
         <p><strong>Line-up:</strong> <span id="lineup"></span></p>
         <p><strong>Data:</strong> <span id="data"></span></p>
         <p><strong>Endereço:</strong> <span id="endereco"></span></p>
-        <div class="badge">Parcele em até 12x</div>
       </div>
     </div>
 
@@ -94,26 +116,38 @@
       <a id="link_ingresso" href="#" target="_blank">Comprar ingresso</a>
     </div>
 
-    <div style="margin-top: 2rem;">
-      <label for="endereco_usuario">Digite seu endereço ou CEP:</label><br>
-      <input type="text" id="endereco_usuario" placeholder="Ex: 01001-000 ou Av. Paulista, SP" style="padding: 0.5rem; border-radius: 6px; width: 300px;" />
-      <button onclick="calcularDistancia()" style="padding: 0.5rem 1rem; border-radius: 6px; background: #004080; color: white; border: none;">Calcular distância</button>
-    </div>
-    <p id="resultado_distancia" style="margin-top: 1rem;"></p>
+    <div id="map"></div>
 
-    <div id="map" style="height: 400px; margin: 2rem auto; border-radius: 12px;"></div>
+    <div class="links-section">
+      <h3>Faça já a sua corrida até o evento</h3>
+      <div class="links-grid">
+        <a id="link_uber" href="https://www.uber.com/br/pt-br/" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber">
+          <div>Uber</div>
+        </a>
+        <a id="link_99" href="https://99app.com/" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/99_logo.png/600px-99_logo.png" alt="99">
+          <div>99 Táxi</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top: 2rem;">Veja acomodações próximas ao evento</h3>
+      <div class="links-grid">
+        <a id="link_airbnb" href="https://www.airbnb.com.br/" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Airbnb_Logo_B%C3%A9lo.svg/512px-Airbnb_Logo_B%C3%A9lo.svg.png" alt="Airbnb">
+          <div>Airbnb</div>
+        </a>
+      </div>
+    </div>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const id_evento = params.get("id");
-    let coordenadasEvento = null;
-    let nomeEvento = "";
 
     fetch(`/api/pagina_evento?id_evento=${id_evento}`)
       .then(res => res.json())
       .then(evento => {
-        nomeEvento = evento.nome;
         document.getElementById('imagem').src = `data:image/jpeg;base64,${evento.imagem}`;
         document.getElementById('titulo').textContent = evento.nome;
         document.getElementById('lineup').textContent = evento.line_up;
@@ -122,74 +156,38 @@
         document.getElementById('descricao').textContent = evento.descricao;
         document.getElementById('link_ingresso').href = evento.link_ingresso;
 
-        // Geocodifica o CEP do evento para coordenadas
-        return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${evento.cep}, Brasil`);
-      })
-      .then(res => res.json())
-      .then(locations => {
-        if (locations.length > 0) {
-          const lat = parseFloat(locations[0].lat);
-          const lon = parseFloat(locations[0].lon);
-          coordenadasEvento = { lat, lon };
+        // Mapa baseado no CEP
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${evento.cep}, Brasil`)
+          .then(res => res.json())
+          .then(locations => {
+            if (locations.length > 0) {
+              const lat = locations[0].lat;
+              const lon = locations[0].lon;
 
-          const map = L.map('map').setView([lat, lon], 15);
+              // Mapa
+              const map = L.map('map').setView([lat, lon], 15);
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+              }).addTo(map);
 
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
+              L.marker([lat, lon]).addTo(map)
+                .bindPopup(evento.nome)
+                .openPopup();
 
-          L.marker([lat, lon]).addTo(map)
-            .bindPopup(nomeEvento)
-            .openPopup();
-        } else {
-          console.error("Localização do evento não encontrada.");
-        }
+              // Links dinâmicos
+              document.getElementById("link_uber").href = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${lat}&dropoff[longitude]=${lon}`;
+              document.getElementById("link_99").href = `https://99app.com/`;
+              document.getElementById("link_airbnb").href = `https://www.airbnb.com.br/s/homes?lat=${lat}&lng=${lon}`;
+            } else {
+              console.error("Localização não encontrada para o CEP:", evento.cep);
+            }
+          })
+          .catch(error => console.error("Erro ao buscar localização:", error));
       })
       .catch(error => {
-        console.error('Erro ao carregar evento ou mapa:', error);
+        console.error('Erro ao carregar evento:', error);
         document.getElementById('titulo').textContent = "Evento não encontrado";
       });
-
-    function calcularDistancia() {
-      const endereco = document.getElementById("endereco_usuario").value;
-      if (!endereco || !coordenadasEvento) return;
-
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}, Brasil`)
-        .then(res => res.json())
-        .then(result => {
-          if (result.length === 0) {
-            document.getElementById("resultado_distancia").textContent = "Endereço não encontrado.";
-            return;
-          }
-
-          const latUsuario = parseFloat(result[0].lat);
-          const lonUsuario = parseFloat(result[0].lon);
-
-          const distancia = calcularDistanciaEmKm(
-            latUsuario, lonUsuario,
-            coordenadasEvento.lat, coordenadasEvento.lon
-          );
-
-          document.getElementById("resultado_distancia").textContent = `Você está a aproximadamente ${distancia.toFixed(2)} km do evento.`;
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById("resultado_distancia").textContent = "Erro ao buscar endereço.";
-        });
-    }
-
-    function calcularDistanciaEmKm(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Raio da Terra em km
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a =
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return R * c;
-    }
   </script>
 </body>
 </html>
