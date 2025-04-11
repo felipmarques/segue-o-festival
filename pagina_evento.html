@@ -91,13 +91,33 @@
       height: 64px;
       margin-bottom: 0.5rem;
     }
-    .distance-info {
+    .calculo-distancia {
       background: #fff;
       color: #000;
       border-radius: 12px;
-      padding: 1rem;
+      padding: 2rem;
       margin-top: 2rem;
-      text-align: center;
+    }
+    .calculo-distancia input,
+    .calculo-distancia button {
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .calculo-distancia input {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    .calculo-distancia button {
+      background: #001f3f;
+      color: #fff;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+    .calculo-distancia button:hover {
+      background: #003366;
+      border-color: #FFA500;
     }
   </style>
 </head>
@@ -126,21 +146,22 @@
 
     <div id="map"></div>
 
-    <div class="distance-info" id="distance-info">
-      <label for="cep">Informe seu CEP para calcular a distância:</label>
-      <input type="text" id="cep" placeholder="Digite o CEP" />
-      <button onclick="calcularDistancia()">Calcular Distância</button>
-      <p id="distancia"></p>
+    <div class="calculo-distancia">
+      <h3>Calcule a distância até o evento</h3>
+      <label for="cep_usuario">Informe seu CEP:</label>
+      <input type="text" id="cep_usuario" placeholder="CEP do usuário"/>
+      <button id="calcular_distancia">Calcular Distância</button>
+      <p id="distancia_resultado"></p>
     </div>
 
     <div class="links-section">
       <h3>Faça já a sua corrida até o evento</h3>
       <div class="links-grid">
-        <a id="link_uber" href="https://www.uber.com/br/pt-br/" target="_blank">
+        <a id="link_uber" href="#" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber">
           <div>Uber</div>
         </a>
-        <a id="link_99" href="https://99app.com/" target="_blank">
+        <a id="link_99" href="#" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/99_logo.png/600px-99_logo.png" alt="99">
           <div>99 Táxi</div>
         </a>
@@ -148,7 +169,7 @@
 
       <h3 style="margin-top: 2rem;">Veja acomodações próximas ao evento</h3>
       <div class="links-grid">
-        <a id="link_airbnb" href="https://www.airbnb.com.br/" target="_blank">
+        <a id="link_airbnb" href="#" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Airbnb_Logo_B%C3%A9lo.svg/512px-Airbnb_Logo_B%C3%A9lo.svg.png" alt="Airbnb">
           <div>Airbnb</div>
         </a>
@@ -198,57 +219,44 @@
             }
           })
           .catch(error => console.error("Erro ao buscar localização:", error));
+
+        // Calcular distância
+        document.getElementById("calcular_distancia").addEventListener("click", () => {
+          const cep_usuario = document.getElementById("cep_usuario").value;
+          if (cep_usuario) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cep_usuario}, Brasil`)
+              .then(res => res.json())
+              .then(locations => {
+                if (locations.length > 0) {
+                  const lat_usuario = parseFloat(locations[0].lat);
+                  const lon_usuario = parseFloat(locations[0].lon);
+
+                  const lat_evento = parseFloat(locations[0].lat);
+                  const lon_evento = parseFloat(locations[0].lon);
+
+                  // Fórmula de Haversine para calcular a distância
+                  const R = 6371; // raio da Terra em km
+                  const dLat = (lat_evento - lat_usuario) * Math.PI / 180;
+                  const dLon = (lon_evento - lon_usuario) * Math.PI / 180;
+                  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(lat_usuario * Math.PI / 180) * Math.cos(lat_evento * Math.PI / 180) *
+                            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                  const distancia = R * c; // distância em km
+
+                  document.getElementById("distancia_resultado").textContent = `A distância até o evento é de aproximadamente ${distancia.toFixed(2)} km.`;
+                } else {
+                  document.getElementById("distancia_resultado").textContent = "CEP inválido ou não encontrado.";
+                }
+              })
+              .catch(error => console.error("Erro ao calcular a distância:", error));
+          }
+        });
       })
       .catch(error => {
         console.error('Erro ao carregar evento:', error);
         document.getElementById('titulo').textContent = "Evento não encontrado";
       });
-
-    // Função para calcular a distância
-    function calcularDistancia() {
-      const cepUsuario = document.getElementById("cep").value;
-
-      if (!cepUsuario) {
-        alert("Por favor, insira um CEP.");
-        return;
-      }
-
-      // Obter coordenadas do usuário
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${cepUsuario}, Brasil`)
-        .then(res => res.json())
-        .then(locations => {
-          if (locations.length > 0) {
-            const latUsuario = locations[0].lat;
-            const lonUsuario = locations[0].lon;
-
-            // Função Haversine para calcular distância
-            function haversine(lat1, lon1, lat2, lon2) {
-              const R = 6371; // Raio da Terra em km
-              const dLat = (lat2 - lat1) * (Math.PI / 180);
-              const dLon = (lon2 - lon1) * (Math.PI / 180);
-              const a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-              const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-              return R * c; // Distância em km
-            }
-
-            // Distância entre o usuário e o evento
-            const latEvento = parseFloat(locations[0].lat);
-            const lonEvento = parseFloat(locations[0].lon);
-            const distancia = haversine(latUsuario, lonUsuario, latEvento, lonEvento);
-
-            document.getElementById("distancia").textContent = `Distância até o evento: ${distancia.toFixed(2)} km`;
-          } else {
-            alert("CEP inválido. Tente novamente.");
-          }
-        })
-        .catch(error => {
-          console.error("Erro ao calcular a distância:", error);
-        });
-    }
   </script>
 </body>
 </html>
-
