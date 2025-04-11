@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes do Evento</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #042940, #005C53);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+    }
+    .evento-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+    }
+    .evento-header img {
+      max-width: 100%;
+      border-radius: 12px;
+      max-height: 400px;
+    }
+    .evento-info h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    .evento-info p {
+      margin: 0.5rem 0;
+    }
+    .badge {
+      display: inline-block;
+      background: #7FEFBD;
+      color: #000;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+    .descricao {
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .ingresso-box {
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 2rem;
+      max-width: 400px;
+    }
+    .ingresso-box a {
+      display: inline-block;
+      background: #005C53;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="evento-header">
+      <img id="imagem" alt="Imagem do evento"/>
+      <div class="evento-info">
+        <h1 id="titulo">Nome do Evento</h1>
+        <p><strong>Line-up:</strong> <span id="lineup"></span></p>
+        <p><strong>Data:</strong> <span id="data"></span></p>
+        <p><strong>Endereço:</strong> <span id="endereco"></span></p>
+        <div class="badge">Parcele em até 12x</div>
+      </div>
+    </div>
+
+    <div class="descricao">
+      <h2>Descrição do evento</h2>
+      <p id="descricao">...</p>
+    </div>
+
+    <div class="ingresso-box">
+      <h3>Ingressos</h3>
+      <p>Garanta já o seu ingresso clicando no botão abaixo:</p>
+      <a id="link_ingresso" href="#" target="_blank">Comprar ingresso</a>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id_evento = params.get("id_evento");
+
+    fetch(`/api/pagina_evento?id_evento=${id_evento}`)
+      .then(res => res.json())
+      .then(evento => {
+        document.getElementById('imagem').src = `data:image/jpeg;base64,${evento.imagem}`;
+        document.getElementById('titulo').textContent = evento.nome;
+        document.getElementById('lineup').textContent = evento.line_up;
+        document.getElementById('data').textContent = new Date(evento.data).toLocaleString('pt-BR');
+        document.getElementById('endereco').textContent = evento.endereco;
+        document.getElementById('descricao').textContent = evento.descricao;
+        document.getElementById('link_ingresso').href = evento.link_ingresso;
+      })
+      .catch(error => {
+        console.error('Erro ao carregar evento:', error);
+        document.getElementById('titulo').textContent = "Evento não encontrado";
+      });
+  </script>
+</body>
+</html>
