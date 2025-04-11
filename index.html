@@ -127,7 +127,7 @@
 
       const eventosFiltrados = todosEventos.filter(evento => {
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+               (!tipoSelecionado || evento.tipo_evento === tipoSelecionado);
       });
 
       if (eventosFiltrados.length === 0) {
