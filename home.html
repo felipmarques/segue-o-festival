@@ -7,7 +7,71 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+  <style>
+      .flatpickr-calendar {
+        font-family: 'Segoe UI', sans-serif;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+    
+      .flatpickr-day.event-day {
+        background-color: #00bfff !important;
+        color: white !important;
+        border-radius: 50% !important;
+        font-weight: bold;
+        position: relative;
+      }
+    
+      .flatpickr-day.event-day::after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    
+      .flatpickr-day.selected,
+      .flatpickr-day:hover {
+        background-color: #1e90ff !important;
+      }
+    
+      /* Suaviza hover nos dias */
+      .flatpickr-day:hover {
+        border-radius: 50% !important;
+      }
+      .flatpickr-calendar {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.25s ease-in-out;
+        border-radius: 12px !important;
+        overflow: hidden;
+      }
+    
+      .flatpickr-calendar.open {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    
+      /* Input estilizado opcional */
+      .flatpickr-input {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 16px;
+        transition: border 0.2s ease;
+      }
+    
+      .flatpickr-input:focus {
+        border-color: #1e90ff;
+        outline: none;
+      }
+  </style>
+
 </head>
 <body>
   <header class="cabecalho">
@@ -108,14 +172,12 @@
 
       flatpickr("#input-data", {
         dateFormat: "d/m/Y",
-        onDayCreate: function(dObj, dStr, fp, dayElem) {
-          const dataAtual = dayElem.dateObj.toISOString().split("T")[0];
-          if (datasComEvento.includes(dataAtual)) {
-            dayElem.style.backgroundColor = "#00bfff";
-            dayElem.style.color = "white";
-            dayElem.style.borderRadius = "50%";
-          }
-        },
+       onDayCreate: function(dObj, dStr, fp, dayElem) {
+        const dataAtual = dayElem.dateObj.toISOString().split("T")[0];
+        if (datasComEvento.includes(dataAtual)) {
+          dayElem.classList.add("event-day");
+        }
+      };
         onChange: function(selectedDates) {
           if (selectedDates.length > 0) {
             const dataSelecionada = selectedDates[0].toISOString().split("T")[0];
