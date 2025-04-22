@@ -7,6 +7,7 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
   <header class="cabecalho">
@@ -71,7 +72,7 @@
     <div class="search-bar">
       <input type="text" placeholder="🔎Pesquise seus eventos favoritos..." />
       <input type="text" placeholder="📌Buscar por local" />
-      <input type="text" placeholder="📅Buscar por data" />
+      <input type="text" id="input-data" placeholder="📅Buscar por data" />
     </div>
   </nav>
 
@@ -94,6 +95,91 @@
   </main>
 
   <script>
+  let datasComEvento = [];
+
+  async function inicializarFlatpickr() {
+    try {
+      const response = await fetch('/api/buscaeventos');
+      if (!response.ok) throw new Error(`Erro: ${response.status}`);
+      const eventos = await response.json();
+
+      // Armazena datas com eventos
+      datasComEvento = eventos.map(e => e.data.split("T")[0]); // formato "yyyy-mm-dd"
+
+      flatpickr("#input-data", {
+        dateFormat: "d/m/Y",
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+          const dataAtual = dayElem.dateObj.toISOString().split("T")[0];
+          if (datasComEvento.includes(dataAtual)) {
+            dayElem.style.backgroundColor = "#00bfff";
+            dayElem.style.color = "white";
+            dayElem.style.borderRadius = "50%";
+          }
+        },
+        onChange: function(selectedDates) {
+          if (selectedDates.length > 0) {
+            const dataSelecionada = selectedDates[0].toISOString().split("T")[0];
+            filtrarEventosPorData(dataSelecionada);
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error('Erro ao inicializar Flatpickr:', error);
+    }
+  }
+
+  function filtrarEventosPorData(dataIso) {
+    const container = document.getElementById('eventos-lista');
+    container.innerHTML = '';
+
+    const eventosFiltrados = todosEventos.filter(evento => {
+      return evento.data && evento.data.startsWith(dataIso);
+    });
+
+    if (eventosFiltrados.length === 0) {
+      container.innerHTML = '<p>Nenhum evento para esta data.</p>';
+      return;
+    }
+
+    eventosFiltrados.forEach(evento => {
+      const div = document.createElement('div');
+      div.className = 'conteudo-secundario-item';
+
+      const imagem = document.createElement('img');
+      imagem.src = evento.imagem
+        ? `data:image/jpeg;base64,${evento.imagem}`
+        : '/img/default.jpg';
+      imagem.alt = evento.nome;
+
+      const titulo = document.createElement('h3');
+      titulo.textContent = evento.nome;
+
+      const data = document.createElement('p');
+      const dataEvento = new Date(evento.data);
+      const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      });
+      const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+        weekday: 'long'
+      });
+      data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+
+      const local = document.createElement('p');
+      local.textContent = evento.endereco || 'Local não informado';
+
+      div.appendChild(imagem);
+      div.appendChild(titulo);
+      div.appendChild(data);
+      div.appendChild(local);
+      container.appendChild(div);
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    inicializarFlatpickr();
+  });
+    
     let todosEventos = [];
     let estadoSelecionado = null;
     let tipoSelecionado = null;
@@ -216,6 +302,7 @@
       atualizarCarrossel();
     }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 
 </html>
