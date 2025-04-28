@@ -83,6 +83,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    localStorage.setItem("cnpjUsuario", dados.usuario.cnpj);
+                    console.log("CNPJ salvo no localStorage:", localStorage.getItem("cnpjUsuario"));
+
                     window.location.href = "homePromotor.html";
                 } else {
                     // Se as credenciais forem inválidas
