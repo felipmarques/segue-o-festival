@@ -83,7 +83,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem("cnpjUsuario", dados.usuario.cnpj);
+                    localStorage.setItem("cnpjUsuario", data.usuario.cnpj);
                     console.log("CNPJ salvo no localStorage:", localStorage.getItem("cnpjUsuario"));
 
                     window.location.href = "homePromotor.html";
