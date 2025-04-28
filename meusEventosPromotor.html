@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Eventos</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .evento { border: 1px solid #ddd; padding: 10px; margin: 10px; border-radius: 5px; }
+    </style>
+    <script>
+        async function carregarEventos() {
+            const cnpj = "27456123000191";
+            const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpj}`);
+            
+            if (!resposta.ok) {
+                document.getElementById("eventos").innerHTML = "Erro ao carregar eventos.";
+                return;
+            }
+
+            const eventos = await resposta.json();
+            const listaEventos = document.getElementById("eventos");
+
+            if (eventos.length === 0) {
+                listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
+                return;
+            }
+
+            listaEventos.innerHTML = eventos.map(evento =>
+                `<div class="evento">
+                    <h2>${evento.nome}</h2>
+                    <p><strong>Data:</strong> ${evento.data}</p>
+                    <p><strong>Local:</strong> ${evento.endereco}</p>
+                    <p><strong>Descrição:</strong> ${evento.descricao}</p>
+                </div>`
+            ).join('');
+        }
+    </script>
+</head>
+<body onload="carregarEventos()">
+    <h1>Meus Eventos</h1>
+    <div id="eventos"></div>
+</body>
+</html>
