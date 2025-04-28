@@ -28,11 +28,17 @@ export default async function handler(req, res) {
     const resultUsuarioPromotor = await pool.query(queryUsuarioPromotor, [email, senha]);
 
     if (resultUsuarioPromotor.rowCount > 0) {
-      return res.status(200).json({
-        message: "Login bem-sucedido",
-        usuario: resultUsuarioPromotor.rows[0], // Retorna id e email
-      });
+  const usuario = resultUsuarioPromotor.rows[0];
+
+  return res.status(200).json({
+    message: "Login bem-sucedido",
+    usuario: {
+      id: usuario.id,
+      email: usuario.email,
+      cnpj: usuario.cnpj // Adicionando CNPJ na resposta
     }
+  });
+}
 
     return res.status(401).json({ message: "Credenciais inválidas." });
 
