@@ -7,72 +7,6 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
-
-  <style>
-      .flatpickr-calendar {
-        font-family: 'Segoe UI', sans-serif;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      }
-    
-      .flatpickr-day.event-day {
-        background-color: #00bfff !important;
-        color: white !important;
-        border-radius: 50% !important;
-        font-weight: bold;
-        position: relative;
-      }
-    
-      .flatpickr-day.event-day::after {
-        content: "";
-        width: 6px;
-        height: 6px;
-        background: #fff;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 4px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-    
-      .flatpickr-day.selected,
-      .flatpickr-day:hover {
-        background-color: #1e90ff !important;
-      }
-    
-      /* Suaviza hover nos dias */
-      .flatpickr-day:hover {
-        border-radius: 50% !important;
-      }
-      .flatpickr-calendar {
-        opacity: 0;
-        transform: translateY(-10px);
-        transition: all 0.25s ease-in-out;
-        border-radius: 12px !important;
-        overflow: hidden;
-      }
-    
-      .flatpickr-calendar.open {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    
-      /* Input estilizado opcional */
-      .flatpickr-input {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-size: 16px;
-        transition: border 0.2s ease;
-      }
-    
-      .flatpickr-input:focus {
-        border-color: #1e90ff;
-        outline: none;
-      }
-  </style>
-
 </head>
 <body>
   <header class="cabecalho">
@@ -160,92 +94,6 @@
   </main>
 
   <script>
-    <script>
-  let datasComEvento = [];
-
-  async function inicializarFlatpickr() {
-    try {
-      const response = await fetch('/api/buscaeventos');
-      if (!response.ok) throw new Error(`Erro: ${response.status}`);
-      const eventos = await response.json();
-
-      // Armazena datas com eventos
-      datasComEvento = eventos.map(e => e.data.split("T")[0]); // formato "yyyy-mm-dd"
-
-      flatpickr("#input-data", {
-        dateFormat: "d/m/Y",
-       onDayCreate: function(dObj, dStr, fp, dayElem) {
-        const dataAtual = dayElem.dateObj.toISOString().split("T")[0];
-        if (datasComEvento.includes(dataAtual)) {
-          dayElem.classList.add("event-day");
-        }
-      };
-        onChange: function(selectedDates) {
-          if (selectedDates.length > 0) {
-            const dataSelecionada = selectedDates[0].toISOString().split("T")[0];
-            filtrarEventosPorData(dataSelecionada);
-          }
-        }
-      });
-
-    } catch (error) {
-      console.error('Erro ao inicializar Flatpickr:', error);
-    }
-  }
-
-  function filtrarEventosPorData(dataIso) {
-    const container = document.getElementById('eventos-lista');
-    container.innerHTML = '';
-
-    const eventosFiltrados = todosEventos.filter(evento => {
-      return evento.data && evento.data.startsWith(dataIso);
-    });
-
-    if (eventosFiltrados.length === 0) {
-      container.innerHTML = '<p>Nenhum evento para esta data.</p>';
-      return;
-    }
-
-    eventosFiltrados.forEach(evento => {
-      const div = document.createElement('div');
-      div.className = 'conteudo-secundario-item';
-
-      const imagem = document.createElement('img');
-      imagem.src = evento.imagem
-        ? `data:image/jpeg;base64,${evento.imagem}`
-        : '/img/default.jpg';
-      imagem.alt = evento.nome;
-
-      const titulo = document.createElement('h3');
-      titulo.textContent = evento.nome;
-
-      const data = document.createElement('p');
-      const dataEvento = new Date(evento.data);
-      const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-        day: '2-digit', month: '2-digit', year: 'numeric'
-      });
-      const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
-        weekday: 'long'
-      });
-      data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
-
-      const local = document.createElement('p');
-      local.textContent = evento.endereco || 'Local não informado';
-
-      div.appendChild(imagem);
-      div.appendChild(titulo);
-      div.appendChild(data);
-      div.appendChild(local);
-      container.appendChild(div);
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    inicializarFlatpickr();
-  });
-  
-
-    
     let todosEventos = [];
     let estadoSelecionado = null;
     let tipoSelecionado = null;
@@ -374,4 +222,3 @@
 </body>
 
 </html>
-
