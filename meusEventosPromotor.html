@@ -10,35 +10,56 @@
     </style>
     <script>
         async function carregarEventos() {
-            const cnpj = "27456123000191";
-            const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpj}`);
-            
-            if (!resposta.ok) {
-                document.getElementById("eventos").innerHTML = "Erro ao carregar eventos.";
+            // Recupera o CNPJ do usuário logado
+            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+
+            // Verifica se o CNPJ está disponível
+            if (!cnpjUsuario) {
+                document.getElementById("eventos").innerHTML = "<p>Erro: Usuário não identificado.</p>";
+                console.error("Erro: CNPJ não encontrado no LocalStorage.");
                 return;
             }
 
-            const eventos = await resposta.json();
-            const listaEventos = document.getElementById("eventos");
+            try {
+                // Faz requisição para buscar os eventos do usuário logado
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}`);
 
-            if (eventos.length === 0) {
-                listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
-                return;
+                if (!resposta.ok) {
+                    throw new Error("Erro ao carregar eventos. Código: " + resposta.status);
+                }
+
+                const eventos = await resposta.json();
+                const listaEventos = document.getElementById("eventos");
+
+                // Caso nenhum evento seja encontrado
+                if (eventos.length === 0) {
+                    listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
+                    return;
+                }
+
+                // Renderiza os eventos na tela
+                listaEventos.innerHTML = eventos.map(evento =>
+                    `<div class="evento">
+                        <h2>${evento.nome}</h2>
+                        <p><strong>Data:</strong> ${evento.data}</p>
+                        <p><strong>Local:</strong> ${evento.endereco}</p>
+                        <p><strong>Descrição:</strong> ${evento.descricao}</p>
+                    </div>`
+                ).join('');
+
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                document.getElementById("eventos").innerHTML = "<p>Erro ao carregar eventos.</p>";
             }
-
-            listaEventos.innerHTML = eventos.map(evento =>
-                `<div class="evento">
-                    <h2>${evento.nome}</h2>
-                    <p><strong>Data:</strong> ${evento.data}</p>
-                    <p><strong>Local:</strong> ${evento.endereco}</p>
-                    <p><strong>Descrição:</strong> ${evento.descricao}</p>
-                </div>`
-            ).join('');
         }
+
+        // Executa a função ao carregar a página
+        document.addEventListener("DOMContentLoaded", carregarEventos);
     </script>
 </head>
-<body onload="carregarEventos()">
+<body>
     <h1>Meus Eventos</h1>
     <div id="eventos"></div>
 </body>
 </html>
+
