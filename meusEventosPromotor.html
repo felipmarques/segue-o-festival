@@ -1,19 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Eventos</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .evento { border: 1px solid #ddd; padding: 10px; margin: 10px; border-radius: 5px; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/meusEventosPromotor.css">
+    <title>Segue o Festival</title>
     <script>
         async function carregarEventos() {
             // Recupera o CNPJ do usuário logado
             const cnpjUsuario = localStorage.getItem("cnpjUsuario");
 
-            // Verifica se o CNPJ está disponível
             if (!cnpjUsuario) {
                 document.getElementById("eventos").innerHTML = "<p>Erro: Usuário não identificado.</p>";
                 console.error("Erro: CNPJ não encontrado no LocalStorage.");
@@ -29,23 +26,27 @@
                 }
 
                 const eventos = await resposta.json();
-                const listaEventos = document.getElementById("eventos");
+                const listaEventos = document.querySelector(".conteudo-secundario-primeiralinha");
 
-                // Caso nenhum evento seja encontrado
+                // Limpa os eventos fixos antes de adicionar os dinâmicos
+                listaEventos.innerHTML = "";
+
                 if (eventos.length === 0) {
                     listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
                     return;
                 }
 
-                // Renderiza os eventos na tela
-                listaEventos.innerHTML = eventos.map(evento =>
-                    `<div class="evento">
-                        <h2>${evento.nome}</h2>
-                        <p><strong>Data:</strong> ${evento.data}</p>
-                        <p><strong>Local:</strong> ${evento.endereco}</p>
-                        <p><strong>Descrição:</strong> ${evento.descricao}</p>
-                    </div>`
-                ).join('');
+                // Renderiza os eventos mantendo a estrutura original do HTML
+                eventos.forEach(evento => {
+                    const eventoDiv = document.createElement("div");
+                    eventoDiv.innerHTML = `
+                        <img class="conteudo-secundario-imagem" src="${evento.imagem}" alt="Banner ${evento.nome}">
+                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
+                        <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
+                    `;
+                    listaEventos.appendChild(eventoDiv);
+                });
 
             } catch (error) {
                 console.error("Erro na requisição:", error);
@@ -53,13 +54,34 @@
             }
         }
 
-        // Executa a função ao carregar a página
         document.addEventListener("DOMContentLoaded", carregarEventos);
     </script>
 </head>
 <body>
-    <h1>Meus Eventos</h1>
-    <div id="eventos"></div>
+    <main>        
+        <h1 class="cabecalho-titulo">Segue<br>O Festival</h1>
+
+        <section class="conteudo-secundario">
+            <div class="conteudo-secundario-destaque">
+                <h1>Meus Eventos</h1>
+            </div>
+    
+            <div class="conteudo-secundario-primeiralinha">
+                <!-- Eventos dinâmicos serão inseridos aqui -->
+            </div>
+        </section>
+
+        <div class="paginacao">
+            <a href="pagina1.html" class="ativo">1</a>
+            <a href="pagina2.html">2</a>
+        </div>
+
+        <footer class="rodape">
+            <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                     
+            <div class="direitos-reservados">
+              &copy; 2025 Segue o Festival. Todos os direitos reservados.
+            </div>            
+        </footer>
+    </main>
 </body>
 </html>
-
