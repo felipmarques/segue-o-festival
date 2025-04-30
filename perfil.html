@@ -28,7 +28,7 @@
         <div class="dados-pessoais-baixo">
           <div class="dados-pessoais-telefone">
             <p>CPF</p>
-            <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF">
+            <input class="dados-pessoais-telefone-formulario" type="text" id="txtCPF" placeholder="Insira seu CPF" readonly>
           </div>
 
           <div class="dados-pessoais-datanascimento">
@@ -38,7 +38,7 @@
 
           <div class="dados-pessoais-sexo">
             <p>Sexo</p>
-            <select class="dados-pessoais-sexo-formulario" id="sexo" name="sexo">
+            <select class="dados-pessoais-sexo-formulario" id="sexo">
               <option value="feminino">Feminino</option>
               <option value="masculino">Masculino</option>
               <option value="nao_informar">Prefiro não informar</option>
@@ -47,19 +47,15 @@
         </div>
       </div>
 
-      <div class="dados-pessoais-morada">
-        <!-- Endereço omitido por não estar no banco ainda -->
-      </div>
-
       <div class="dados-pessoais-usuario">
         <div class="dados-pessoais-email">
           <p>E-mail</p>
-          <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail"/>
+          <input class="dados-pessoais-email-formulario" type="email" id="emailUsuario" placeholder="E-mail"/>
         </div>
 
         <div class="dados-pessoais-senha">
           <p>Trocar de Senha</p>
-          <input class="dados-pessoais-senha-formulario" type="password" id="passwordSen" placeholder="Trocar de Senha"/>
+          <input class="dados-pessoais-senha-formulario" type="password" id="senhaUsuario" placeholder="Trocar de Senha"/>
         </div>
       </div>
     </section>
@@ -69,24 +65,32 @@
 
   <script>
     async function carregarDadosUsuario() {
-      const cpf = '12345678900'; // <-- Aqui você pode pegar de uma variável global, sessão ou localStorage
+      // Pegando CPF salvo em localStorage (ajuste conforme seu fluxo de login)
+      const cpf = localStorage.getItem('cpf'); 
+      if (!cpf) {
+        console.error('CPF do usuário não encontrado.');
+        return;
+      }
 
       try {
         const response = await fetch(`/api/dados_usuario.js?cpf=${cpf}`);
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados do usuário');
-        }
+        if (!response.ok) throw new Error('Erro ao buscar dados do usuário');
 
         const dados = await response.json();
 
         document.getElementById('txtNome').value = dados.nome || '';
-        document.getElementById('telCPF').value = dados.cpf || '';
+        document.getElementById('txtCPF').value = dados.cpf || '';
         document.getElementById('dateNascimento').value = dados.data_nascimento || '';
-        document.getElementById('emailEm').value = dados.email_usuario || '';
-        document.getElementById('passwordSen').value = dados.senha_usuario || '';
-        // Campos como sexo e endereço podem ser preenchidos futuramente
-      } catch (error) {
-        console.error('Erro ao carregar dados do usuário:', error);
+        document.getElementById('emailUsuario').value = dados.email_usuario || '';
+        document.getElementById('senhaUsuario').value = dados.senha_usuario || '';
+
+        // Ajustar valor do select de sexo se houver
+        if (dados.sexo) {
+          document.getElementById('sexo').value = dados.sexo.toLowerCase();
+        }
+
+      } catch (erro) {
+        console.error('Erro ao carregar dados:', erro);
       }
     }
 
