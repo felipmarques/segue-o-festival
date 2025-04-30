@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     return res.status(405).send('Método não permitido');
   }
 
-  const { cnpj } = req.query; // Obtendo o CNPJ do usuário promotor da requisição
+  const { cnpj } = req.query; // Obtendo o CNPJ do usuário promotor
 
   if (!cnpj) {
     return res.status(400).send('Erro: CNPJ do usuário não fornecido.');
@@ -33,7 +33,13 @@ module.exports = async (req, res) => {
       return res.status(404).send('Nenhum evento encontrado para este usuário.');
     }
 
-    res.status(200).json(result.rows);
+    // Convertendo buffer da imagem para Base64 com prefixo correto
+    const eventosComImagem = result.rows.map(evento => ({
+      ...evento,
+      imagem: evento.imagem ? `data:image/jpeg;base64,${evento.imagem.toString('base64')}` : null
+    }));
+
+    res.status(200).json(eventosComImagem);
   } catch (error) {
     console.error('Erro ao buscar eventos:', error);
     res.status(500).send('Erro ao recuperar eventos.');
