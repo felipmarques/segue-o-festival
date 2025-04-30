@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="css/meusEventosPromotor.css">
     <title>Segue o Festival</title>
     <script>
+        // Função para formatar a data no padrão dd/MM/yyyy
+        function formatarData(dataISO) {
+            const data = new Date(dataISO);
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+            const ano = data.getFullYear();
+            return `${dia}/${mes}/${ano}`;
+            }
         async function carregarEventos() {
             // Recupera o CNPJ do usuário logado
             const cnpjUsuario = localStorage.getItem("cnpjUsuario");
