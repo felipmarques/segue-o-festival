@@ -38,15 +38,16 @@
 
                 // Renderiza os eventos mantendo a estrutura original do HTML
                 eventos.forEach(evento => {
-                    const eventoDiv = document.createElement("div");
-                    eventoDiv.innerHTML = `
-                        <img class="conteudo-secundario-imagem" src="${evento.imagem}" alt="Banner ${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
-                        <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
-                    `;
-                    listaEventos.appendChild(eventoDiv);
-                });
+    const eventoDiv = document.createElement("div");
+
+    eventoDiv.innerHTML = `
+        <img class="conteudo-secundario-imagem" src="${evento.imagem}" alt="Banner ${evento.nome}">
+        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+        <p class="conteudo-secundario-paragrafo">${evento.data}</p>
+        <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
+    `;
+    document.querySelector(".conteudo-secundario-primeiralinha").appendChild(eventoDiv);
+});
 
             } catch (error) {
                 console.error("Erro na requisição:", error);
