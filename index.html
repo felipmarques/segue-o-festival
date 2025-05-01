@@ -1,212 +1,220 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Segue o Festival</title>
-  <link rel="stylesheet" href="estilo.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segue o Festival!</title>
+  <link rel="stylesheet" type="text/css" href="css/stylehome.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/png">
 </head>
-
 <body>
-  <header class="header">
-    <div class="logo">Segue o Festival</div>
-    <div class="nav-buttons">
-      <a href="/faq.html" class="nav-button">FAQ</a>
-      <a href="/perfil.html" class="nav-button">Perfil</a>
+  <header class="cabecalho">
+    <h3 class="cabecalho-titulo">
+      Segue<br>O Festival!
+    </h3>
+    <div class="cabecalho-botoes">
+        <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+        <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
     </div>
   </header>
 
-  <section class="filtros">
-    <div class="filtro-bar">
-      <div class="filtro-estado">
-        <label>Estado:</label>
-        <div class="estado-scroll" id="estadoContainer"></div>
-      </div>
-
-      <div class="filtro">
-        <label for="tipoEvento">Tipo de Evento:</label>
-        <select id="tipoEvento"></select>
-      </div>
-
-      <div class="filtro">
-        <label for="nomeEvento">Pesquise seus eventos:</label>
-        <input type="text" id="nomeEvento" placeholder="Nome do evento" />
-      </div>
-
-      <div class="filtro">
-        <label for="localEvento">Busca por local:</label>
-        <input type="text" id="localEvento" placeholder="Cidade ou local do evento" />
-      </div>
-
-      <div class="filtro">
-        <label for="dataEvento">Data:</label>
-        <input type="date" id="dataEvento" />
-        <div id="calendar"></div>
-      </div>
-
-      <button id="clearFilters" class="btn-limpar">Limpar</button>
+  <nav class="menu">
+    <div class="menu-item">
+      <button class="menu-botao">📍Estado</button>
+      <ul class="menu-lista" id="lista-estados">
+        <li onclick="filtrarEventos('estado', null)">Todos</li>
+        <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+        <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+        <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+        <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+        <li onclick="filtrarEventos('estado', null)">Todos os Estados</li>
+        <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
+        <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
+        <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
+        <li onclick="filtrarEventos('estado', 'Amazonas')">Amazonas</li>
+        <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+        <li onclick="filtrarEventos('estado', 'Ceará')">Ceará</li>
+        <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
+        <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
+        <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
+        <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
+        <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
+        <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
+        <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+        <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
+        <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
+        <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
+        <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
+        <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
+        <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+        <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
+        <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
+        <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
+        <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
+        <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
+        <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+        <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
+        <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
+      </ul>
     </div>
-  </section>
-
-  <section class="carrossel">
-    <!-- Carrossel de eventos principais - permanece fixo -->
-    <div class="carrossel-container">
-      <!-- conteúdo do carrossel permanece inalterado -->
+    <div class="menu-item">
+      <button class="menu-botao">🎫Tipo de Evento</button>
+      <ul class="menu-lista" id="lista-tipos">
+        <li onclick="filtrarEventos('tipo', null)">Todos</li>
+        <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+        <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
+        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+      </ul>
     </div>
-  </section>
-
-  <section class="eventos-filtrados">
-    <div id="eventCards" class="eventos-cards">
-      <!-- Cards de eventos renderizados dinamicamente -->
+    <div class="search-bar">
+      <input type="text" placeholder="🔎Pesquise seus eventos favoritos..." />
+      <input type="text" placeholder="📌Buscar por local" />
+      <input type="text" placeholder="📅Buscar por data" />
     </div>
-  </section>
+  </nav>
+
+  <main class="conteudo">
+    <section class="carrossel-container">
+      <div class="carrossel" id="carrossel"></div>
+      <button class="botao" onclick="voltar()">‹</button>
+      <button class="botao" onclick="avancar()">›</button>
+    </section>
+
+    <section class="conteudo-secundario">
+      <div class="conteudo-secundario-destaque">
+        <h1>Destaques</h1>
+      </div>
+
+      <div class="conteudo-secundario-linha" id="eventos-lista">
+        <!-- Eventos serão carregados aqui -->
+      </div>
+    </section>
+  </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const estadoContainer = document.getElementById('estadoContainer');
-      const tipoEventoSelect = document.getElementById('tipoEvento');
-      const nomeInput = document.getElementById('nomeEvento');
-      const localInput = document.getElementById('localEvento');
-      const dataInput = document.getElementById('dataEvento');
-      const clearBtn = document.getElementById('clearFilters');
-      const eventCards = document.getElementById('eventCards');
+    let todosEventos = [];
+    let estadoSelecionado = null;
+    let tipoSelecionado = null;
 
-      let eventos = [];
+    async function buscarEventos() {
+      try {
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error(Erro: ${response.status});
 
-      async function carregarEventos() {
-        try {
-          const response = await fetch('/api/buscaeventos');
-          const data = await response.json();
-          eventos = data;
-          preencherEstados();
-          preencherTipos();
-          renderizarCards(eventos);
-          marcarDatasComEventos();
-        } catch (error) {
-          console.error('Erro ao carregar eventos:', error);
-        }
+        todosEventos = await response.json();
+        exibirEventosFiltrados();
+        exibirCarrossel(todosEventos);
+      } catch (error) {
+        document.getElementById('eventos-lista').innerHTML = 'Erro ao carregar eventos.';
+        console.error(error);
       }
+    }
 
-      function preencherEstados() {
-        const estadosUnicos = [...new Set(eventos.map(e => e.estado))].sort();
-        estadoContainer.innerHTML = '';
-        estadosUnicos.forEach(estado => {
-          const btn = document.createElement('button');
-          btn.className = 'estado-option';
-          btn.textContent = estado;
-          btn.addEventListener('click', () => {
-            btn.classList.toggle('active');
-            aplicarFiltros();
-          });
-          estadoContainer.appendChild(btn);
-        });
+    function filtrarEventos(tipo, valor) {
+      if (tipo === 'estado') {
+        estadoSelecionado = valor;
+      } else if (tipo === 'tipo') {
+        tipoSelecionado = valor;
       }
+      exibirEventosFiltrados();
+    }
 
-      function preencherTipos() {
-        const tiposUnicos = [...new Set(eventos.map(e => e.tipo_evento))].sort();
-        tipoEventoSelect.innerHTML = '<option value="">Todos os tipos</option>';
-        tiposUnicos.forEach(tipo => {
-          const option = document.createElement('option');
-          option.value = tipo;
-          option.textContent = tipo;
-          tipoEventoSelect.appendChild(option);
-        });
-      }
+    function exibirEventosFiltrados() {
+      const container = document.getElementById('eventos-lista');
+      container.innerHTML = '';
 
-      function aplicarFiltros() {
-        const estadosSelecionados = Array.from(document.querySelectorAll('.estado-option.active')).map(btn => btn.textContent);
-        const tipoSelecionado = tipoEventoSelect.value.toLowerCase();
-        const nomeBusca = nomeInput.value.toLowerCase();
-        const localBusca = localInput.value.toLowerCase();
-        const dataSelecionada = dataInput.value;
-
-        const eventosFiltrados = eventos.filter(evento => {
-          const estadoMatch = estadosSelecionados.length === 0 || estadosSelecionados.includes(evento.estado);
-          const tipoMatch = !tipoSelecionado || evento.tipo_evento.toLowerCase() === tipoSelecionado;
-          const nomeMatch = !nomeBusca || evento.nome.toLowerCase().includes(nomeBusca);
-          const localMatch = !localBusca || evento.endereco.toLowerCase().includes(localBusca);
-          const dataMatch = !dataSelecionada || evento.data === dataSelecionada;
-          return estadoMatch && tipoMatch && nomeMatch && localMatch && dataMatch;
-        });
-
-        renderizarCards(eventosFiltrados);
-      }
-
-      function renderizarCards(listaEventos) {
-        eventCards.innerHTML = '';
-        if (listaEventos.length === 0) {
-          eventCards.innerHTML = '<p>Nenhum evento encontrado.</p>';
-          return;
-        }
-
-        listaEventos.forEach(evento => {
-          const card = document.createElement('div');
-          card.className = 'event-card';
-
-          const img = document.createElement('img');
-          img.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : 'caminho/para/imagem_padrao.jpg';
-          img.alt = evento.nome;
-
-          const detalhes = document.createElement('div');
-          detalhes.className = 'event-details';
-
-          const titulo = document.createElement('h3');
-          titulo.textContent = evento.nome;
-
-          const descricao = document.createElement('p');
-          descricao.textContent = evento.descricao;
-
-          const data = document.createElement('p');
-          data.textContent = `Data: ${evento.data}`;
-
-          const endereco = document.createElement('p');
-          endereco.textContent = `Local: ${evento.endereco}`;
-
-          detalhes.appendChild(titulo);
-          detalhes.appendChild(descricao);
-          detalhes.appendChild(data);
-          detalhes.appendChild(endereco);
-
-          card.appendChild(img);
-          card.appendChild(detalhes);
-          eventCards.appendChild(card);
-        });
-      }
-
-      function marcarDatasComEventos() {
-        const datasComEventos = [...new Set(eventos.map(e => e.data))];
-        const calendar = document.getElementById('calendar');
-        calendar.innerHTML = '';
-
-        datasComEventos.forEach(data => {
-          const dataElement = document.createElement('div');
-          dataElement.className = 'calendar-date';
-          dataElement.textContent = data;
-          dataElement.addEventListener('click', () => {
-            dataInput.value = data;
-            aplicarFiltros();
-          });
-          calendar.appendChild(dataElement);
-        });
-      }
-
-      clearBtn.addEventListener('click', () => {
-        document.querySelectorAll('.estado-option.active').forEach(btn => btn.classList.remove('active'));
-        tipoEventoSelect.value = '';
-        nomeInput.value = '';
-        localInput.value = '';
-        dataInput.value = '';
-        aplicarFiltros();
+      const eventosFiltrados = todosEventos.filter(evento => {
+        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+               (!tipoSelecionado || evento.tipo === tipoSelecionado);
       });
 
-      tipoEventoSelect.addEventListener('change', aplicarFiltros);
-      nomeInput.addEventListener('input', aplicarFiltros);
-      localInput.addEventListener('input', aplicarFiltros);
-      dataInput.addEventListener('change', aplicarFiltros);
+      if (eventosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+        return;
+      }
 
-      carregarEventos();
-    });
+      eventosFiltrados.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'conteudo-secundario-item';
+
+        const imagem = document.createElement('img');
+        imagem.src = evento.imagem
+          ? data:image/jpeg;base64,${evento.imagem}
+          : '/img/default.jpg';
+        imagem.alt = evento.nome;
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = evento.nome;
+
+        const data = document.createElement('p');
+        if (evento.data) {
+          const dataEvento = new Date(evento.data);
+  
+        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+      });
+
+        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          weekday: 'long'
+        });
+
+        data.textContent = ${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)};
+        } else {
+        data.textContent = 'Data não informada';
+        }
+
+        const local = document.createElement('p');
+        local.textContent = evento.endereco || 'Local não informado';
+
+        div.appendChild(imagem);
+        div.appendChild(titulo);
+        div.appendChild(data);
+        div.appendChild(local);
+        container.appendChild(div);
+      });
+    }
+
+    buscarEventos();
+
+    let index = 0;
+
+    function exibirCarrossel(eventos) {
+      const carrossel = document.getElementById("carrossel");
+      carrossel.innerHTML = '';
+
+      eventos.forEach(evento => {
+        const img = document.createElement("img");
+        img.src = evento.imagem
+          ? data:image/jpeg;base64,${evento.imagem}
+          : '/img/default.jpg';
+        img.alt = evento.nome;
+        carrossel.appendChild(img);
+      });
+  
+      index = 0;
+      atualizarCarrossel();
+    }
+  
+    function atualizarCarrossel() {
+      const carrossel = document.getElementById("carrossel");
+      carrossel.style.transform = translateX(-${index * 100}%);
+    }
+  
+    function avancar() {
+      const total = document.querySelectorAll('#carrossel img').length;
+      index = (index + 1) % total;
+      atualizarCarrossel();
+    }
+  
+    function voltar() {
+      const total = document.querySelectorAll('#carrossel img').length;
+      index = (index - 1 + total) % total;
+      atualizarCarrossel();
+    }
   </script>
 </body>
 
