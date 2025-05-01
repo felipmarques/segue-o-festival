@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -101,7 +102,7 @@
     async function buscarEventos() {
       try {
         const response = await fetch('/api/buscaeventos');
-        if (!response.ok) throw new Error(Erro: ${response.status});
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
 
         todosEventos = await response.json();
         exibirEventosFiltrados();
@@ -141,7 +142,7 @@
 
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
-          ? data:image/jpeg;base64,${evento.imagem}
+          ? `data:image/jpeg;base64,${evento.imagem}`
           : '/img/default.jpg';
         imagem.alt = evento.nome;
 
@@ -162,7 +163,7 @@
           weekday: 'long'
         });
 
-        data.textContent = ${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)};
+        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
         } else {
         data.textContent = 'Data não informada';
         }
@@ -189,7 +190,7 @@
       eventos.forEach(evento => {
         const img = document.createElement("img");
         img.src = evento.imagem
-          ? data:image/jpeg;base64,${evento.imagem}
+          ? `data:image/jpeg;base64,${evento.imagem}`
           : '/img/default.jpg';
         img.alt = evento.nome;
         carrossel.appendChild(img);
@@ -201,7 +202,7 @@
   
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
-      carrossel.style.transform = translateX(-${index * 100}%);
+      carrossel.style.transform = `translateX(-${index * 100}%)`;
     }
   
     function avancar() {
