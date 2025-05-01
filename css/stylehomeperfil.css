@@ -1,256 +1,179 @@
-@import url("https://use.typekit.net/qrb0jox.css");
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-  }
-
-
-  body {
-    font-size: 100%;
-    background-color: whitesmoke;
-  }
-
-  .cabecalho {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #f9f9f9;
+/* Estilo base do site */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
 }
 
-
-.cabecalho-titulo {
-    font-family: 'Droog', sans-serif;
-    font-size: 27px;
-    color: #00bfff;
-    text-align: left;
-    line-height: 1.2;
-    margin: 0; 
-}
-
-.cabecalho-imagem {
-    width: 70px; 
-    height: 70px;
-    border-radius: 50%; 
-    object-fit: cover; 
-    margin-right: 30px;
-}
-
-.cabecalho-menu {
-    font-family: 'Raleway', sans-serif;
-    font-style: normal;
-    font-weight: 400; 
-    font-size: 15px; 
-    color: #000; 
-    position: relative;
-}
-
-
-
-
-/*Menu*/
-
-.conteudo-menu {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    padding: 10px;
-    background: linear-gradient(90deg, #08C2FF 0%, #A0DEFF 100%);
-    font-family: 'Raleway', sans-serif;
-    font-style: normal;
-    font-weight: 100;
-    font-size: 25px;
-}
-
-
-.conteudo-banners {
-    position: relative; 
-    width: 100%; 
-    max-width: 1200px; 
-    height: 390px; 
-    margin: 25px auto; 
-    border-radius: 10px; 
-    
-    /* Propriedades da imagem de fundo */
-    background: url('periclão.png') no-repeat center center;
-    background-size: cover; /* Faz a imagem preencher o banner */
-    overflow: hidden; /* Garante que o conteúdo dentro do elemento siga o border-radius */
-}
-.conteudo-banners img {
-    width: 100%; /* Ajuste a largura da imagem para 100% do contêiner */
-    height: auto; /* Mantém a proporção da imagem */
-    display: block; /* Remove qualquer espaço extra abaixo da imagem */
-    object-fit: cover; /* Faz a imagem cobrir o contêiner, sem distorção */
-    object-position: center; /* Centraliza a imagem no contêiner */
-}
-
-
-.pesquisa {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%; /* Ocupa toda a largura do container */
-    max-width: 1300px;
-    height: 60px;
-    margin: 25px auto;
-    border: 2px solid #FFF100; /* Cor da borda */
-    padding: 10px;
-    background-color: #F5F5F5; /* Fundo leve para o container */
-    box-sizing: border-box;
-}
-
-.pesquisa-busca-evento, .pesquisa-busca-local, .pesquisa-busca-data {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding: 0 15px;
-}
-
-.pesquisa-busca-evento {
-    flex: 1;
-    border-right: 1px solid #FFF100; /* Separador entre os campos */
-}
-
-.pesquisa-busca-local {
-    flex: 1;
-    border-right: 1px solid #FFF100;
-}
-
-.pesquisa-busca-data {
-    flex: 1;
-}
-
-.pesquisa input {
-    border: none;
-    outline: none;
-    font-size: 16px;
-    color: #666; /* Cor do texto */
-    background: none; /* Remove o fundo branco */
-    width: 100%;
-    padding-left: 10px;
-}
-
-.pesquisa input::placeholder {
-    color: #AAA; /* Placeholder com cor mais suave */
-}
-
-.pesquisa img {
-    width: 24px; /* Tamanho do ícone */
-    height: 24px;
-    margin-left: 10px;
-    align-self: center; /* Centraliza o ícone verticalmente */
-}
-
-
-
-/* Estilo do título "Destaques" */
-.conteudo-secundario-destaque {
-    font-family: 'Raleway', sans-serif;
-    font-style: normal;
-    font-weight: 500; 
-    font-size: 15px; 
-    color: #000; 
-    position: relative;
-    display: inline-block;
-    margin: 25px auto;
-    margin-left: 60px; 
-}
-
-.conteudo-secundario-destaque::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -9px; /* Alinhamento abaixo do texto */
-    width: 55px; /* Largura da linha amarela */
-    height: 8px; /* Altura da linha amarela */
-    background-color: #FFF100; /* Cor amarela */
-}
-
-
-.conteudo-secundario-primeiralinha,
-.conteudo-secundario-segundalinha,
-.conteudo-secundario-terceiralinha {
+/* Cabeçalho */
+header {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-  padding: 0 50px; 
+  justify-content: space-between;
+  align-items: center;
+  background-color: #121212;
+  color: white;
+  padding: 10px 30px;
 }
 
-
-.conteudo-secundario-primeiralinha div,
-.conteudo-secundario-segundalinha div,
-.conteudo-secundario-terceiralinha div {
-
-  text-align: center;
-  width: 20%; 
-  border-top: 0.5px solid #FFF100; 
-  border-right: 0.5px solid #FFF100; 
-  border-bottom: 0.5px solid #FFF100; 
-  border-left: 1px solid #FFF100; 
-  box-sizing: border-box;
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff3c38;
 }
 
-/* Estilos das imagens */
-.conteudo-secundario-imagem {
+.nav-buttons button {
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav-buttons button:hover {
+  text-decoration: underline;
+}
+
+/* Barra de filtros */
+.filter-bar {
+  background-color: white;
+  padding: 15px 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+/* Estado com scroll horizontal */
+.filter-estado {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  max-width: 100%;
+  padding-bottom: 5px;
+}
+
+.filter-estado::-webkit-scrollbar {
+  height: 6px;
+}
+
+.filter-estado::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.filter-estado::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.estado-option {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.estado-option.active {
+  background-color: #ff3c38;
+  color: white;
+  font-weight: bold;
+}
+
+/* Outros filtros */
+.filter-bar select,
+.filter-bar input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Botão limpar filtros */
+#clearFilters {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: none;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#clearFilters:hover {
+  background-color: #f0f0f0;
+}
+
+/* Calendário (popup flutuante) */
+.date-picker-wrapper {
+  position: relative;
+}
+
+#calendar {
+  position: absolute;
+  top: 40px;
+  z-index: 10;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  display: none;
+}
+
+/* Carrossel */
+.carousel-container {
+  margin: 20px auto;
+  max-width: 90%;
+}
+
+/* Cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px 30px;
+}
+
+.event-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: 0.2s ease;
+}
+
+.event-card:hover {
+  transform: scale(1.01);
+}
+
+.event-card img {
   width: 100%;
-  height: 70%;
+  height: 160px;
+  object-fit: cover;
 }
 
-/* Estilos dos títulos (h3) */
-.conteudo-secundario-titulo {
-  font-size: 1.1em;
-  margin: 7px 0 5px;
-  color: #000000;
-  font-family: 'Raleway', sans-serif;
-  font-style: normal;
+.event-card .event-details {
+  padding: 10px 15px;
 }
 
-/* Estilos dos parágrafos */
-.conteudo-secundario-paragrafo {
-  font-size: 0.9em;
-  color: #000000;
-  margin: 5px 0;
-  font-family: 'Raleway', sans-serif;
-  font-style: normal;
+.event-card h3 {
+  font-size: 16px;
+  margin: 0 0 5px;
+  color: #333;
 }
 
-
-/* Adicionando o ícone de localização ao lado do endereço 
-p:last-of-type {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-p:last-of-type:before {
-  content: url('path-to-location-icon.png'); /* Substitua pelo caminho correto do ícone 
-  margin-right: 5px;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-}
-
-*/
-
-/* Estilo responsivo para telas menores */
-@media (max-width: 1024px) {
-  .conteudo-secundario-primeiralinha div,
-  .conteudo-secundario-segundalinha div,
-  .conteudo-secundario-terceiralinha div {
-    width: 48%; /* Ajuste para 2 itens por linha em telas menores */
-  }
-}
-
-@media (max-width: 768px) {
-  .conteudo-secundario-primeiralinha div,
-  .conteudo-secundario-segundalinha div,
-  .conteudo-secundario-terceiralinha div {
-    width: 100%; /* 1 item por linha em dispositivos menores */
-    margin-bottom: 20px;
-  }
+.event-card p {
+  font-size: 14px;
+  margin: 0;
+  color: #555;
 }
