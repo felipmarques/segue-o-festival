@@ -8,20 +8,14 @@
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
 </head>
-
 <body>
   <header class="cabecalho">
     <h3 class="cabecalho-titulo">
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
-      <!-- Exibição do Olá e do Email do Usuário Logado -->
-      <div id="usuario-logado">
-        <span id="olá">Olá!</span>
-        <span id="email-usuario"></span>
-      </div>
-      <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
-      <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+        <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+        <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
     </div>
   </header>
 
@@ -157,20 +151,20 @@
         const data = document.createElement('p');
         if (evento.data) {
           const dataEvento = new Date(evento.data);
+  
+        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+      });
 
-          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          });
+        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          weekday: 'long'
+        });
 
-          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
-            weekday: 'long'
-          });
-
-          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
         } else {
-          data.textContent = 'Data não informada';
+        data.textContent = 'Data não informada';
         }
 
         const local = document.createElement('p');
@@ -184,23 +178,7 @@
       });
     }
 
-    // Exibindo o email do usuário logado
-    function exibirUsuarioLogado() {
-      const emailUsuario = localStorage.getItem('usuarioEmail');
-      const olá = document.getElementById('olá');
-      const emailElemento = document.getElementById('email-usuario');
-
-      if (emailUsuario) {
-        olá.textContent = `Olá,`;
-        emailElemento.textContent = emailUsuario;
-      } else {
-        olá.textContent = 'Olá! Faça o login';
-        emailElemento.textContent = '';
-      }
-    }
-
     buscarEventos();
-    exibirUsuarioLogado();  // Atualiza a exibição do usuário logado
 
     let index = 0;
 
@@ -216,22 +194,22 @@
         img.alt = evento.nome;
         carrossel.appendChild(img);
       });
-
+  
       index = 0;
       atualizarCarrossel();
     }
-
+  
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
       carrossel.style.transform = `translateX(-${index * 100}%)`;
     }
-
+  
     function avancar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index + 1) % total;
       atualizarCarrossel();
     }
-
+  
     function voltar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index - 1 + total) % total;
