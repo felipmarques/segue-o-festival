@@ -316,32 +316,25 @@
             return;
         }
     
-        try {
-            const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-            if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
-    
-            const dados = await response.json();
-    
-            // Preenchendo os campos com os dados do usuário
-            document.getElementById("txtNome").value = dados.nome || "";
-            document.getElementById("telCPF").value = dados.cpf || "";
-            document.getElementById("dateNascimento").value = dados.data_nascimento || "";
-            document.getElementById("sexo").value = dados.sexo || "nao_informar";
-            document.getElementById("txtEndereço").value = dados.endereco || "";
-            document.getElementById("telCEP").value = dados.cep || "";
-            document.getElementById("telNum").value = dados.numero || "";
-            document.getElementById("telCom").value = dados.complemento || "";
-            document.getElementById("municipio").value = dados.municipio || "";
-            document.getElementById("uf").value = dados.uf || "";
-    
-            // Atualiza saudação
-            document.getElementById("user_infos").querySelector("span").innerText = `Olá, ${dados.nome?.split(" ")[0] || "usuário"}!`;
-    
-        } catch (error) {
-            console.error(error);
-            alert("Erro ao carregar dados do usuário.");
+        // Preenche o campo com o nome da pessoa no menu lateral
+        const nomeUsuario = document.querySelector("#user_infos .item-description");
+        if (nomeUsuario) {
+            nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
         }
-});
-</script>
+    
+        // Preenche os campos do formulário
+        document.getElementById("txtNome").value = usuarioLogado.nome || "";
+        document.getElementById("telCPF").value = usuarioLogado.cpf || "";
+        document.getElementById("dateNascimento").value = usuarioLogado.dataNascimento || "";
+        document.getElementById("sexo").value = usuarioLogado.sexo || "nao_informar";
+        document.getElementById("txtEndereço").value = usuarioLogado.endereco || "";
+        document.getElementById("telCEP").value = usuarioLogado.cep || "";
+        document.getElementById("telNum").value = usuarioLogado.numero || "";
+        document.getElementById("telCom").value = usuarioLogado.complemento || "";
+        document.getElementById("municipio").value = usuarioLogado.municipio || "sao_paulo";
+        document.getElementById("uf").value = usuarioLogado.uf || "SP";
+        document.getElementById("emailEm").value = usuarioLogado.email || "";
+    });
+    </script>
 </body>
 </html>
