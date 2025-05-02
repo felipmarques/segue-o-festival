@@ -9,6 +9,7 @@
         .input-container {
             position: relative;
         }
+
         .toggle-password {
             position: absolute;
             right: 10px;
@@ -48,29 +49,23 @@
 
     <script>
         function togglePassword() {
-            var passwordField = document.getElementById("password");
-            var passwordFieldType = passwordField.getAttribute("type");
-            if (passwordFieldType === "password") {
-                passwordField.setAttribute("type", "text");
-            } else {
-                passwordField.setAttribute("type", "password");
-            }
+            const passwordField = document.getElementById("password");
+            const type = passwordField.getAttribute("type");
+            passwordField.setAttribute("type", type === "password" ? "text" : "password");
         }
 
         // Envio do formulário para a API
         document.getElementById("loginForm").addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            // Coletando dados do formulário
             const identificador = document.getElementById("identificador").value;
             const senha = document.getElementById("password").value;
 
             const loginData = {
-                identificador: identificador,
-                senha: senha
+                identificador,
+                senha
             };
 
-            // Enviar os dados para a API
             try {
                 const response = await fetch("/api/login", {
                     method: "POST",
@@ -83,21 +78,22 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem("usuarioLogado", JSON.stringify(data.usuario));
+                    // Salvando apenas o email padronizado no localStorage
+                    const usuario = {
+                        email: data.usuario.email_usuario
+                    };
+                    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
                     window.location.href = "home.html";
-                }
-                else {
-                    // Se as credenciais forem inválidas
-                    alert(data.message || "Erro no login");  // Exibindo pop-up de erro
+                } else {
+                    alert(data.message || "Erro no login");
                 }
             } catch (error) {
                 console.error("Erro de rede:", error);
-                alert("Houve um erro na requisição. Tente novamente mais tarde.");  // Exibindo erro de rede
+                alert("Houve um erro na requisição. Tente novamente mais tarde.");
             }
         });
     </script>
 </body>
 </html>
-
 
 
