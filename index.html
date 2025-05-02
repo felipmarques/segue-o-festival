@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -15,7 +14,7 @@
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
-        <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+        <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
         <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
     </div>
   </header>
@@ -29,7 +28,6 @@
         <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
         <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
         <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
-        <li onclick="filtrarEventos('estado', null)">Todos os Estados</li>
         <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
         <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
         <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
@@ -67,6 +65,7 @@
         <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
         <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
         <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+        <li onclick="filtrarEventos('tipo', 'Palestra')">Música</li>
       </ul>
     </div>
     <div class="search-bar">
@@ -128,7 +127,7 @@
 
       const eventosFiltrados = todosEventos.filter(evento => {
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+               (!tipoSelecionado || evento.tipo_evento === tipoSelecionado);
       });
 
       if (eventosFiltrados.length === 0) {
@@ -137,9 +136,12 @@
       }
 
       eventosFiltrados.forEach(evento => {
-        const div = document.createElement('div');
-        div.className = 'conteudo-secundario-item';
-
+        const link = document.createElement('a');
+        link.href = `pagina_evento.html?id=${evento.id_evento}`;
+        link.className = 'conteudo-secundario-item';
+        link.style.textDecoration = 'none';
+        link.style.color = 'inherit';
+        
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
           ? `data:image/jpeg;base64,${evento.imagem}`
@@ -171,11 +173,11 @@
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
 
-        div.appendChild(imagem);
-        div.appendChild(titulo);
-        div.appendChild(data);
-        div.appendChild(local);
-        container.appendChild(div);
+        link.appendChild(imagem);
+        link.appendChild(titulo);
+        link.appendChild(data);
+        link.appendChild(local);
+        container.appendChild(link);
       });
     }
 
@@ -219,4 +221,3 @@
   </script>
 </body>
 
-</html>
