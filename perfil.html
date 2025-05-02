@@ -306,6 +306,42 @@
           
     </main>
 
-    <script src="src/javascript/paginaperfiledicao.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    
+        if (!usuarioLogado || !usuarioLogado.email) {
+            alert("Usuário não autenticado.");
+            window.location.href = "index.html"; // redireciona para login
+            return;
+        }
+    
+        try {
+            const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
+            if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
+    
+            const dados = await response.json();
+    
+            // Preenchendo os campos com os dados do usuário
+            document.getElementById("txtNome").value = dados.nome || "";
+            document.getElementById("telCPF").value = dados.cpf || "";
+            document.getElementById("dateNascimento").value = dados.data_nascimento || "";
+            document.getElementById("sexo").value = dados.sexo || "nao_informar";
+            document.getElementById("txtEndereço").value = dados.endereco || "";
+            document.getElementById("telCEP").value = dados.cep || "";
+            document.getElementById("telNum").value = dados.numero || "";
+            document.getElementById("telCom").value = dados.complemento || "";
+            document.getElementById("municipio").value = dados.municipio || "";
+            document.getElementById("uf").value = dados.uf || "";
+    
+            // Atualiza saudação
+            document.getElementById("user_infos").querySelector("span").innerText = `Olá, ${dados.nome?.split(" ")[0] || "usuário"}!`;
+    
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao carregar dados do usuário.");
+        }
+});
+</script>
 </body>
 </html>
