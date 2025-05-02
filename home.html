@@ -215,6 +215,20 @@
       index = (index - 1 + total) % total;
       atualizarCarrossel();
     }
+
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+
+  if (usuarioLogado) {
+    console.log("Usuário logado:", usuarioLogado.nome);
+    
+    // Exemplo de exibir o nome no header
+    const header = document.querySelector(".cabecalho");
+    const saudacao = document.createElement("p");
+    saudacao.textContent = `Olá, ${usuarioLogado.nome}!`;
+    saudacao.style.marginLeft = "1rem";
+    saudacao.style.fontWeight = "bold";
+    header.appendChild(saudacao);
+  }
   </script>
 </body>
 
