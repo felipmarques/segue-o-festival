@@ -78,9 +78,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Salvando apenas o email padronizado no localStorage
+                    // Salvando o identificador (email digitado) diretamente no localStorage
                     const usuario = {
-                        email: data.usuario.email_usuario
+                        email: identificador
                     };
                     localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
                     window.location.href = "home.html";
