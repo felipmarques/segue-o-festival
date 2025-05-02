@@ -8,15 +8,31 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
+  <style>
+    .usuario-info {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+    .usuario-info p {
+      margin: 0;
+    }
+  </style>
 </head>
+
 <body>
   <header class="cabecalho">
     <h3 class="cabecalho-titulo">
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
-        <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
-        <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+    </div>
+    <!-- Novo elemento para exibir o usuário logado -->
+    <div class="usuario-info" id="usuario-info">
+      <p id="ola">Olá!</p>
+      <p id="usuario-email"></p>
     </div>
   </header>
 
@@ -216,6 +232,20 @@
       index = (index - 1 + total) % total;
       atualizarCarrossel();
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const emailUsuario = localStorage.getItem('usuarioEmail');
+      const ola = document.getElementById('ola');
+      const usuarioEmail = document.getElementById('usuario-email');
+
+      if (emailUsuario) {
+        ola.textContent = `Olá!`;
+        usuarioEmail.textContent = emailUsuario;
+      } else {
+        ola.textContent = 'Olá! Faça o login';
+        usuarioEmail.textContent = '';
+      }
+    });
   </script>
 </body>
 
