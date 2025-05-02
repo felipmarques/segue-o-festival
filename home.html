@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -8,16 +7,6 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
-  <style>
-    .usuario-info {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #333;
-    }
-    .usuario-info p {
-      margin: 0;
-    }
-  </style>
 </head>
 
 <body>
@@ -26,13 +15,13 @@
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
+      <!-- Exibição do Olá e do Email do Usuário Logado -->
+      <div id="usuario-logado">
+        <span id="olá">Olá!</span>
+        <span id="email-usuario"></span>
+      </div>
       <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
       <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
-    </div>
-    <!-- Novo elemento para exibir o usuário logado -->
-    <div class="usuario-info" id="usuario-info">
-      <p id="ola">Olá!</p>
-      <p id="usuario-email"></p>
     </div>
   </header>
 
@@ -168,20 +157,20 @@
         const data = document.createElement('p');
         if (evento.data) {
           const dataEvento = new Date(evento.data);
-  
-        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-      });
 
-        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
-          weekday: 'long'
-        });
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
 
-        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+            weekday: 'long'
+          });
+
+          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
         } else {
-        data.textContent = 'Data não informada';
+          data.textContent = 'Data não informada';
         }
 
         const local = document.createElement('p');
@@ -195,7 +184,23 @@
       });
     }
 
+    // Exibindo o email do usuário logado
+    function exibirUsuarioLogado() {
+      const emailUsuario = localStorage.getItem('usuarioEmail');
+      const olá = document.getElementById('olá');
+      const emailElemento = document.getElementById('email-usuario');
+
+      if (emailUsuario) {
+        olá.textContent = `Olá,`;
+        emailElemento.textContent = emailUsuario;
+      } else {
+        olá.textContent = 'Olá! Faça o login';
+        emailElemento.textContent = '';
+      }
+    }
+
     buscarEventos();
+    exibirUsuarioLogado();  // Atualiza a exibição do usuário logado
 
     let index = 0;
 
@@ -211,41 +216,27 @@
         img.alt = evento.nome;
         carrossel.appendChild(img);
       });
-  
+
       index = 0;
       atualizarCarrossel();
     }
-  
+
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
       carrossel.style.transform = `translateX(-${index * 100}%)`;
     }
-  
+
     function avancar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index + 1) % total;
       atualizarCarrossel();
     }
-  
+
     function voltar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index - 1 + total) % total;
       atualizarCarrossel();
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const emailUsuario = localStorage.getItem('usuarioEmail');
-      const ola = document.getElementById('ola');
-      const usuarioEmail = document.getElementById('usuario-email');
-
-      if (emailUsuario) {
-        ola.textContent = `Olá!`;
-        usuarioEmail.textContent = emailUsuario;
-      } else {
-        ola.textContent = 'Olá! Faça o login';
-        usuarioEmail.textContent = '';
-      }
-    });
   </script>
 </body>
 
