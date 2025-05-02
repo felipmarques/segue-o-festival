@@ -83,9 +83,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Se o login for bem-sucedido, redirecionar para a página home.html
-                    window.location.href = "home.html";
                     localStorage.setItem("usuarioLogado", JSON.stringify(data.usuario));
+                    window.location.href = "home.html";
+                }
                 } else {
                     // Se as credenciais forem inválidas
                     alert(data.message || "Erro no login");  // Exibindo pop-up de erro
