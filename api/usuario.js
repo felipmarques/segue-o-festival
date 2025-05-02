@@ -36,4 +36,5 @@ module.exports = async (req, res) => {
   } else {
     res.status(405).send('Método não permitido');
   }
+  console.log('Email recebido:', email);
 };
