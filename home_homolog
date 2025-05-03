@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segue o Festival!</title>
+  <link rel="stylesheet" type="text/css" href="css/stylehome.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/png">
+</head>
+<body>
+  <header class="cabecalho">
+    <h3 class="cabecalho-titulo">
+      Segue<br>O Festival!
+    </h3>
+    <div class="cabecalho-botoes">
+        <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+        <button class="cabecalho-botao-entrar" onclick="location.href='eventossalvos.html'">Meus Eventos</button>
+        <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <div class="menu-item">
+      <button class="menu-botao">📍Estado</button>
+      <ul class="menu-lista" id="lista-estados">
+        <li onclick="filtrarEventos('estado', null)">Todos</li>
+        <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+        <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+        <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+        <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+        <li onclick="filtrarEventos('estado', null)">Todos os Estados</li>
+        <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
+        <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
+        <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
+        <li onclick="filtrarEventos('estado', 'Amazonas')">Amazonas</li>
+        <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
+        <li onclick="filtrarEventos('estado', 'Ceará')">Ceará</li>
+        <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
+        <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
+        <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
+        <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
+        <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
+        <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
+        <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
+        <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
+        <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
+        <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
+        <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
+        <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
+        <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
+        <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
+        <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
+        <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
+        <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
+        <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
+        <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
+        <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
+        <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
+      </ul>
+    </div>
+    <div class="menu-item">
+      <button class="menu-botao">🎫Tipo de Evento</button>
+      <ul class="menu-lista" id="lista-tipos">
+        <li onclick="filtrarEventos('tipo', null)">Todos</li>
+        <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+        <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
+        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+      </ul>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="🔎Pesquise seus eventos favoritos..." />
+      <input type="text" placeholder="📌Buscar por local" />
+      <input type="text" placeholder="📅Buscar por data" />
+    </div>
+  </nav>
+
+  <main class="conteudo">
+    <section class="carrossel-container">
+      <div class="carrossel" id="carrossel"></div>
+      <button class="botao" onclick="voltar()">‹</button>
+      <button class="botao" onclick="avancar()">›</button>
+    </section>
+
+    <section class="conteudo-secundario">
+      <div class="conteudo-secundario-destaque">
+        <h1>Destaques</h1>
+      </div>
+
+      <div class="conteudo-secundario-linha" id="eventos-lista">
+        <!-- Eventos serão carregados aqui -->
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let todosEventos = [];
+    let estadoSelecionado = null;
+    let tipoSelecionado = null;
+
+    async function buscarEventos() {
+      try {
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+
+        todosEventos = await response.json();
+        exibirEventosFiltrados();
+        exibirCarrossel(todosEventos);
+      } catch (error) {
+        document.getElementById('eventos-lista').innerHTML = 'Erro ao carregar eventos.';
+        console.error(error);
+      }
+    }
+
+    function filtrarEventos(tipo, valor) {
+      if (tipo === 'estado') {
+        estadoSelecionado = valor;
+      } else if (tipo === 'tipo') {
+        tipoSelecionado = valor;
+      }
+      exibirEventosFiltrados();
+    }
+
+    function exibirEventosFiltrados() {
+      const container = document.getElementById('eventos-lista');
+      container.innerHTML = '';
+
+      const eventosFiltrados = todosEventos.filter(evento => {
+        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+      });
+
+      if (eventosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+        return;
+      }
+
+      eventosFiltrados.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'conteudo-secundario-item';
+
+        const imagem = document.createElement('img');
+        imagem.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        imagem.alt = evento.nome;
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = evento.nome;
+
+        const data = document.createElement('p');
+        if (evento.data) {
+          const dataEvento = new Date(evento.data);
+  
+        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+      });
+
+        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          weekday: 'long'
+        });
+
+        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+        } else {
+        data.textContent = 'Data não informada';
+        }
+
+        const local = document.createElement('p');
+        local.textContent = evento.endereco || 'Local não informado';
+
+        div.appendChild(imagem);
+        div.appendChild(titulo);
+        div.appendChild(data);
+        div.appendChild(local);
+        container.appendChild(div);
+      });
+    }
+
+    buscarEventos();
+
+    let index = 0;
+
+    function exibirCarrossel(eventos) {
+      const carrossel = document.getElementById("carrossel");
+      carrossel.innerHTML = '';
+
+      eventos.forEach(evento => {
+        const img = document.createElement("img");
+        img.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        img.alt = evento.nome;
+        carrossel.appendChild(img);
+      });
+  
+      index = 0;
+      atualizarCarrossel();
+    }
+  
+    function atualizarCarrossel() {
+      const carrossel = document.getElementById("carrossel");
+      carrossel.style.transform = `translateX(-${index * 100}%)`;
+    }
+  
+    function avancar() {
+      const total = document.querySelectorAll('#carrossel img').length;
+      index = (index + 1) % total;
+      atualizarCarrossel();
+    }
+  
+    function voltar() {
+      const total = document.querySelectorAll('#carrossel img').length;
+      index = (index - 1 + total) % total;
+      atualizarCarrossel();
+    }
+
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+
+    if (usuarioLogado?.email) {
+      fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Erro ao buscar nome do usuário');
+          return response.json();
+        })
+        .then(data => {
+          const nome = data.nome;
+          const header = document.querySelector(".cabecalho");
+          const saudacao = document.createElement("p");
+          saudacao.textContent = `Olá, ${nome}!`;
+          saudacao.style.marginLeft = "1rem";
+          saudacao.style.fontWeight = "bold";
+          header.appendChild(saudacao);
+        })
+        .catch(error => {
+          console.error("Erro ao buscar nome do usuário:", error);
+        });
+   }
+  </script>
+</body>
+
+</html>
