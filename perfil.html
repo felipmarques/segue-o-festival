@@ -335,6 +335,9 @@
         document.getElementById("uf").value = usuarioLogado.uf || "SP";
         document.getElementById("emailEm").value = usuarioLogado.email || "";
     });
+    if (!localStorage.getItem("usuarioLogado")) {
+        window.location.href = "index.html";
+    }
     </script>
 </body>
 </html>
