@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-<script>
   const dataInput = document.getElementById('dataInput');
   const calendarContainer = document.getElementById('calendar');
   const monthYearElement = document.getElementById('monthYear');
@@ -74,5 +73,4 @@ document.addEventListener('DOMContentLoaded', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     updateCalendar();
   });
-</script>
 });
