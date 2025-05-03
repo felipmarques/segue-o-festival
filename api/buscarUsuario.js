@@ -71,10 +71,10 @@ module.exports = async (req, res) => {
 
     try {
       const resultado = await pool.query(
-        SELECT e.id, e.nome, e.data, e.local, e.imagem 
+        `SELECT e.id, e.nome, e.data, e.local, e.imagem 
          FROM eventos_salvos es
          JOIN eventos e ON es.evento_id = e.id
-         WHERE es.usuario_cpf = $1,
+         WHERE es.usuario_cpf = $1`,  // Garantir que 'eventos' é o nome correto
         [cpf]
       );
 
