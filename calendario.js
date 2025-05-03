@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     datesElement.innerHTML = datesHTML;
 
-    // Evento para clicar e preencher o input
     document.querySelectorAll('.date:not(.inactive)').forEach(el => {
       el.addEventListener('click', () => {
         const selectedDate = new Date(currentYear, currentMonth, el.dataset.day);
