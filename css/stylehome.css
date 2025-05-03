@@ -548,6 +548,71 @@
     .botao-salvar:hover {
       background-color: #45a049;
     }
+.calendar-container {
+  width: 260px;
+  background: white;
+  border: 2px solid #FFF100; /* Borda amarela */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Raleway', sans-serif;
+  padding: 10px;
+}
 
- 
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #08C2FF;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #08C2FF;
+  transition: color 0.3s ease;
+}
+
+.calendar-header button:hover {
+  color: #A0DEFF;
+}
+
+.calendar-weekdays,
+.calendar-dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.calendar-weekdays div {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.calendar-dates .date {
+  padding: 8px 0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  color: #333;
+}
+
+.calendar-dates .date:hover {
+  background-color: #A0DEFF;
+  color: #000;
+}
+
+.calendar-dates .inactive {
+  color: #ccc;
+}
+
+.calendar-dates .active {
+  background-color: #FFF100;
+  color: #000;
+  font-weight: bold;
 }
