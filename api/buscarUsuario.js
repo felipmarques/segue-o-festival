@@ -1,11 +1,14 @@
 const { Pool } = require("pg");
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL // ou sua config local
+  connectionString: process.env.DATABASE_URL
 });
 
 module.exports = async (req, res) => {
-  if (req.method === "GET") {
-    const { email } = req.query;
+  const { method, query, body, url } = req;
+
+  // Rota: buscar nome e CPF do usuário por email
+  if (method === "GET" && url.startsWith("/api/buscarUsuario")) {
+    const { email } = query;
 
     if (!email) {
       return res.status(400).json({ erro: "E-mail é obrigatório" });
@@ -20,7 +23,7 @@ module.exports = async (req, res) => {
 
       return res.status(200).json({
         nome: resultado.rows[0].nome,
-        cpf: resultado.rows[0].cpf // agora retorna também o CPF
+        cpf: resultado.rows[0].cpf
       });
     } catch (error) {
       console.error("Erro ao buscar nome:", error);
@@ -28,16 +31,15 @@ module.exports = async (req, res) => {
     }
   }
 
-  // POST: salvar evento
-  if (req.method === "POST") {
-    const { cpf, evento_id } = req.body;
+  // Rota: salvar evento para o usuário
+  if (method === "POST" && url.startsWith("/api/eventos-salvos")) {
+    const { cpf, evento_id } = body;
 
     if (!cpf || !evento_id) {
       return res.status(400).json({ erro: "CPF e ID do evento são obrigatórios" });
     }
 
     try {
-      // Verifica se o evento já está salvo
       const existe = await pool.query(
         "SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2",
         [cpf, evento_id]
@@ -47,7 +49,6 @@ module.exports = async (req, res) => {
         return res.status(409).json({ erro: "Evento já salvo" });
       }
 
-      // Insere o novo evento salvo
       await pool.query(
         "INSERT INTO eventos_salvos (usuario_cpf, evento_id) VALUES ($1, $2)",
         [cpf, evento_id]
@@ -57,6 +58,30 @@ module.exports = async (req, res) => {
     } catch (error) {
       console.error("Erro ao salvar evento:", error);
       return res.status(500).json({ erro: "Erro ao salvar evento" });
+    }
+  }
+
+  // Rota: buscar eventos salvos por CPF
+  if (method === "GET" && url.startsWith("/api/eventos-salvos")) {
+    const { cpf } = query;
+
+    if (!cpf) {
+      return res.status(400).json({ erro: "CPF é obrigatório" });
+    }
+
+    try {
+      const resultado = await pool.query(
+        `SELECT e.id, e.nome, e.data, e.local, e.imagem 
+         FROM eventos_salvos es
+         JOIN eventos e ON es.evento_id = e.id
+         WHERE es.usuario_cpf = $1`,
+        [cpf]
+      );
+
+      return res.status(200).json(resultado.rows);
+    } catch (error) {
+      console.error("Erro ao buscar eventos salvos:", error);
+      return res.status(500).json({ erro: "Erro ao buscar eventos salvos" });
     }
   }
 
