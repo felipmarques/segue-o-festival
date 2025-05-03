@@ -171,6 +171,13 @@
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
 
+        const botaoSalvar = document.createElement('button');
+        botaoSalvar.textContent = 'Salvar Evento';
+        botaoSalvar.className = 'botao-salvar';
+        botaoSalvar.onclick = () => salvarEvento(evento.id_evento); // ou o nome correto do ID
+
+        div.appendChild(botaoSalvar);
+
         div.appendChild(imagem);
         div.appendChild(titulo);
         div.appendChild(data);
@@ -180,6 +187,37 @@
     }
 
     buscarEventos();
+
+    async function salvarEvento(eventoId) {
+      if (!usuarioLogado?.cpf) {
+        alert('Você precisa estar logado para salvar eventos.');
+        return;
+      }
+    
+      try {
+        const response = await fetch('/api/salvarevento', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            cpf: usuarioLogado.cpf,
+            evento_id: eventoId
+          })
+        });
+    
+        if (response.ok) {
+          alert('Evento salvo com sucesso!');
+        } else if (response.status === 409) {
+          alert('Este evento já foi salvo.');
+        } else {
+          throw new Error('Erro ao salvar evento');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao salvar evento.');
+      }
+    }
 
     let index = 0;
 
