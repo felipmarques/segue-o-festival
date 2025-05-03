@@ -143,3 +143,62 @@ main {
     color: #666;
     font-family: 'Poppins', sans-serif;
 }
+
+.cabecalho {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+
+.cabecalho-titulo {
+    font-family: 'Droog', sans-serif;
+    font-size: 27px;
+    color: #00bfff;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.cabecalho-botoes {
+    display: flex;
+    gap: 20px;
+}
+
+.cabecalho-botao-organizador, .cabecalho-botao-entrar {
+    position: relative;
+    width: 170px;
+    height: 50px;
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 28px;
+    text-align: center;
+    color: #FFFFFF;
+    background: linear-gradient(90deg, #08C2FF 48.5%, #A0DEFF 100%);
+    border: 2px solid #FFF100;
+    border-radius: 100px;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.cabecalho-botao-organizador:hover, .cabecalho-botao-entrar:hover {
+    background: linear-gradient(90deg, #A0DEFF 48.5%, #08C2FF 100%);
+}
+
+
+.cabecalho-botao-organizador {
+    margin-right: 10px;
+}
+
+.cabecalho-titulo-container {
+    display: flex;
+    align-items: center;
+}
