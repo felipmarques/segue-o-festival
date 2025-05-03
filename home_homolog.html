@@ -224,22 +224,24 @@
         })
         .then(data => {
           const nome = data.nome;
+          const cpf = data.cpf; // Adicione isso, assumindo que o backend retorna o CPF também
+    
+          // Atualiza o localStorage com o CPF
+          usuarioLogado.cpf = cpf;
+          localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+    
+          // Cria a saudação com o nome
           const header = document.querySelector(".cabecalho");
           const saudacao = document.createElement("p");
           saudacao.textContent = `Olá, ${nome}!`;
           saudacao.style.marginLeft = "1rem";
           saudacao.style.fontWeight = "bold";
           header.appendChild(saudacao);
-
-          // Salva o CPF também no localStorage, se ainda não estiver salvo
-          if (!usuarioLogado.cpf) {
-            localStorage.setItem("usuarioLogado", JSON.stringify({ ...usuarioLogado, cpf: data.cpf }));
-          }
         })
         .catch(error => {
           console.error("Erro ao buscar nome do usuário:", error);
         });
-    }
+  }
 
     let index = 0;
     buscarEventos();
