@@ -140,6 +140,10 @@
       eventosFiltrados.forEach(evento => {
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
+        div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
+        div.onclick = () => {
+        window.location.href = `evento.html?id=${evento.id_evento}`;
+      };
 
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
