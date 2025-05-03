@@ -195,7 +195,7 @@
       }
     
       try {
-        const response = await fetch('/api/salvarevento', {
+        const response = await fetch('/api/buscarUsuario', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -265,6 +265,13 @@
         })
         .then(data => {
           const nome = data.nome;
+          const cpf = data.cpf; 
+    
+          // Atualiza o localStorage com o CPF
+          usuarioLogado.cpf = cpf;
+          localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+    
+          // Cria a saudação com o nome
           const header = document.querySelector(".cabecalho");
           const saudacao = document.createElement("p");
           saudacao.textContent = `Olá, ${nome}!`;
@@ -275,7 +282,7 @@
         .catch(error => {
           console.error("Erro ao buscar nome do usuário:", error);
         });
-   }
+  }
   </script>
 </body>
 
