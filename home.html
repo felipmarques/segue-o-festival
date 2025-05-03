@@ -14,6 +14,7 @@
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
+        <button class="cabecalho-botao-entrar" onclick="logout()">Logout</button>
         <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
         <button class="cabecalho-botao-entrar" onclick="location.href='eventossalvos.html'">Meus Eventos</button>
         <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
@@ -238,6 +239,10 @@
           console.error("Erro ao buscar nome do usuário:", error);
         });
    }
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
   </script>
 </body>
 
