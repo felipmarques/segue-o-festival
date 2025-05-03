@@ -243,6 +243,9 @@
     localStorage.clear();
     window.location.href = "login.html";
   }
+  if (!localStorage.getItem("usuarioLogado")) {
+    window.location.href = "index.html";
+  }
   </script>
 </body>
 
