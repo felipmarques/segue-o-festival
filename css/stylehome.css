@@ -521,7 +521,20 @@
       overflow: hidden;
       border-radius: 20px;
     }
-    
+
+    .botao-salvar {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    .botao-salvar:hover {
+      background-color: #45a049;
+    }
 
  
 }
