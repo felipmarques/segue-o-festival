@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', () => {
 <script>
   const dataInput = document.getElementById('dataInput');
   const calendarContainer = document.getElementById('calendar');
@@ -74,3 +75,4 @@
     updateCalendar();
   });
 </script>
+});
