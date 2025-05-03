@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-      const resultado = await pool.query("SELECT nome, cpf FROM usuarios WHERE email = $1", [email]);
+      const resultado = await pool.query("SELECT nome, cpf FROM usuario WHERE email = $1", [email]);
 
       if (resultado.rows.length === 0) {
         return res.status(404).json({ erro: "Usuário não encontrado" });
