@@ -71,7 +71,7 @@
     <div class="search-bar">
       <input type="text" placeholder="🔎Pesquise seus eventos favoritos..." />
       <input type="text" placeholder="📌Buscar por local" />
-      <input type="text" placeholder="📅Buscar por data" />
+      <input type="text" id="dataInput" placeholder="📅Buscar por data" readonly />
     </div>
   </nav>
 
@@ -219,5 +219,17 @@
       atualizarCarrossel();
     }
   </script>
-</body>
+    <script src="calendario.js"></script>
 
+  <div id="calendar" class="calendar-container" style="display: none; position: absolute; z-index: 1000;">
+  <div class="calendar-header">
+    <button id="prevBtn">‹</button>
+    <div id="monthYear"></div>
+    <button id="nextBtn">›</button>
+  </div>
+  <div class="calendar-weekdays">
+    <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+  </div>
+  <div id="dates" class="calendar-dates"></div>
+</div>
+</body>
