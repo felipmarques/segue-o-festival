@@ -40,7 +40,6 @@ module.exports = async (req, res) => {
     }
 
     try {
-      // Verifica se o evento já está salvo
       const existe = await pool.query(
         "SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2",
         [cpf, evento_id]
@@ -50,7 +49,6 @@ module.exports = async (req, res) => {
         return res.status(409).json({ erro: "Evento já salvo" });
       }
 
-      // Insere o novo evento salvo
       await pool.query(
         "INSERT INTO eventos_salvos (usuario_cpf, evento_id) VALUES ($1, $2)",
         [cpf, evento_id]
@@ -73,10 +71,10 @@ module.exports = async (req, res) => {
 
     try {
       const resultado = await pool.query(
-        `SELECT e.id, e.nome, e.data, e.local, e.imagem 
+        SELECT e.id, e.nome, e.data, e.local, e.imagem 
          FROM eventos_salvos es
          JOIN eventos e ON es.evento_id = e.id
-         WHERE es.usuario_cpf = $1`,
+         WHERE es.usuario_cpf = $1,
         [cpf]
       );
 
