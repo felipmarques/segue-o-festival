@@ -1,26 +1,26 @@
 function createCalendar(container, inputElement) {
-  container.innerHTML = ''; // Limpa o calendário existente (se houver)
+  container.innerHTML = '';
 
   const calendar = document.createElement('div');
-  calendar.className = 'calendar-container'; // Classe do calendário
+  calendar.className = 'calendar-container';
 
   const header = document.createElement('div');
   header.className = 'calendar-header';
 
   const prevBtn = document.createElement('button');
-  prevBtn.textContent = '‹'; // Botão de navegação para o mês anterior
+  prevBtn.textContent = '‹';
   const nextBtn = document.createElement('button');
-  nextBtn.textContent = '›'; // Botão de navegação para o próximo mês
+  nextBtn.textContent = '›';
 
   const monthYear = document.createElement('div');
-  monthYear.className = 'calendar-month-year'; // Adiciona a data do mês e ano
+  monthYear.className = 'calendar-month-year';
 
   header.appendChild(prevBtn);
   header.appendChild(monthYear);
   header.appendChild(nextBtn);
 
   const weekdays = document.createElement('div');
-  weekdays.className = 'calendar-weekdays'; // Classe para os dias da semana
+  weekdays.className = 'calendar-weekdays';
   ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].forEach(dia => {
     const div = document.createElement('div');
     div.textContent = dia;
@@ -28,102 +28,97 @@ function createCalendar(container, inputElement) {
   });
 
   const dates = document.createElement('div');
-  dates.className = 'calendar-dates'; // Classe para os dias do mês
+  dates.className = 'calendar-dates';
 
   calendar.appendChild(header);
   calendar.appendChild(weekdays);
   calendar.appendChild(dates);
   container.appendChild(calendar);
 
-  let currentDate = new Date(); // Data atual
+  let currentDate = new Date();
 
-  // Função para atualizar o calendário
   function updateCalendar() {
-    dates.innerHTML = ''; // Limpa os dias atuais
+    dates.innerHTML = '';
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay(); // Dia da semana do 1º dia do mês
-    const totalDays = new Date(year, month + 1, 0).getDate(); // Total de dias no mês
-    const lastDay = new Date(year, month + 1, 0).getDay(); // Último dia do mês
+    const firstDay = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const lastDay = new Date(year, month + 1, 0).getDay();
 
-    // Exibe o mês e ano no cabeçalho
     monthYear.textContent = currentDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
-    // Preenche os dias do mês anterior
+    // Dias do mês anterior
     for (let i = firstDay; i > 0; i--) {
       const prevDate = new Date(year, month, 0 - i + 1);
-      const div = document.createElement('div');
-      div.className = 'date inactive';
-      div.textContent = prevDate.getDate();
-      dates.appendChild(div);
+      const btn = document.createElement('button');
+      btn.className = 'inactive';
+      btn.textContent = prevDate.getDate();
+      btn.disabled = true;
+      dates.appendChild(btn);
     }
 
-    // Preenche os dias do mês atual
+    // Dias do mês atual
     for (let i = 1; i <= totalDays; i++) {
       const date = new Date(year, month, i);
-      const div = document.createElement('div');
-      div.className = 'date';
+      const btn = document.createElement('button');
       if (date.toDateString() === new Date().toDateString()) {
-        div.classList.add('today'); // Marca o dia de hoje
+        btn.classList.add('today');
       }
-      div.textContent = i;
-      div.addEventListener('click', () => {
-        inputElement.value = date.toLocaleDateString('pt-BR'); // Preenche o campo de input com a data selecionada
-        container.remove(); // Remove o calendário
+      btn.textContent = i;
+      btn.addEventListener('click', () => {
+        inputElement.value = date.toLocaleDateString('pt-BR');
+        container.remove();
       });
-      dates.appendChild(div);
+      dates.appendChild(btn);
     }
 
-    // Preenche os dias do mês seguinte (caso haja espaços vazios no final)
+    // Dias do mês seguinte
     for (let i = 1; i <= 6 - lastDay; i++) {
       const nextDate = new Date(year, month + 1, i);
-      const div = document.createElement('div');
-      div.className = 'date inactive';
-      div.textContent = nextDate.getDate();
-      dates.appendChild(div);
+      const btn = document.createElement('button');
+      btn.className = 'inactive';
+      btn.textContent = nextDate.getDate();
+      btn.disabled = true;
+      dates.appendChild(btn);
     }
   }
 
-  // Botão de navegação para o mês anterior
   prevBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
-    updateCalendar(); // Atualiza o calendário
+    updateCalendar();
   });
 
-  // Botão de navegação para o próximo mês
   nextBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
-    updateCalendar(); // Atualiza o calendário
+    updateCalendar();
   });
 
-  updateCalendar(); // Inicializa o calendário
+  updateCalendar();
 
-  // Fecha o calendário quando clica fora dele
   document.addEventListener('click', (e) => {
     if (!container.contains(e.target) && e.target !== inputElement) {
-      container.remove(); // Remove o calendário se clicar fora
+      container.remove();
     }
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('dataInput'); // Identificando o campo de input
+  const input = document.getElementById('dataInput');
 
   input.addEventListener('focus', () => {
     const existing = document.querySelector('.calendar-container');
-    if (existing) existing.remove(); // Remove o calendário existente, se houver
+    if (existing) existing.remove();
 
-    // Criação do novo elemento de calendário
     const calendarDiv = document.createElement('div');
     calendarDiv.style.position = 'absolute';
     calendarDiv.style.zIndex = 1000;
 
-    const rect = input.getBoundingClientRect(); // Obtém as coordenadas do input
-    calendarDiv.style.top = `${rect.bottom + window.scrollY}px`; // Ajusta a posição do calendário
+    const rect = input.getBoundingClientRect();
+    calendarDiv.style.top = `${rect.bottom + window.scrollY}px`;
     calendarDiv.style.left = `${rect.left + window.scrollX}px`;
 
-    document.body.appendChild(calendarDiv); // Adiciona o calendário ao corpo da página
-    createCalendar(calendarDiv, input); // Chama a função que cria o calendário
+    document.body.appendChild(calendarDiv);
+    createCalendar(calendarDiv, input);
   });
 });
