@@ -548,88 +548,76 @@
     .botao-salvar:hover {
       background-color: #45a049;
     }
-    /* Calendário customizado - isolado para evitar conflitos */
-
-.calendar-container {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 260px;
-  background: white;
-  border: 2px solid #FFF100; /* Borda amarela */
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Raleway', sans-serif;
-  padding: 10px;
-  z-index: 1000;
-}
-
-/* Cabeçalho com mês/ano e setas */
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  color: #08C2FF;
-  margin-bottom: 10px;
-}
-
-.calendar-header button {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #08C2FF;
-  transition: color 0.2s;
-}
-
-.calendar-header button:hover {
-  color: #00A8E8;
-}
-
-/* Dias da semana */
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-size: 0.8em;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-/* Datas do mês */
-.calendar-dates {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
-}
-
-.calendar-dates div {
-  padding: 6px 0;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
-
-.calendar-dates div:hover {
-  background-color: #A0DEFF;
-  color: white;
-}
-
-.calendar-dates .active {
-  background-color: #08C2FF;
-  color: white;
-  font-weight: bold;
-}
-
-.calendar-dates .inactive {
-  color: #aaa;
-  pointer-events: none;
-}
-
-.calendar-dates .today {
-  border: 1px solid #FFF100;
-  background-color: #FFFDE7;
-  font-weight: bold;
-}
+    .calendar-container {
+      width: 260px;
+      background: white;
+      border: 2px solid #FFF100;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-family: 'Raleway', sans-serif;
+      padding: 10px;
+      position: absolute;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: #08C2FF;
+      font-weight: bold;
+    }
+    
+    .calendar-header button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #08C2FF;
+      transition: color 0.2s;
+    }
+    
+    .calendar-header button:hover {
+      color: #00A8E8;
+    }
+    
+    /* Aqui estava ".calendar-days" mas deve ser ".calendar-dates" */
+    .calendar-weekdays,
+    .calendar-dates {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+    
+    .calendar-weekdays {
+      margin-bottom: 8px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    
+    .calendar-dates div {
+      padding: 6px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.95em;
+      transition: background-color 0.2s;
+    }
+    
+    .calendar-dates div:hover {
+      background-color: #A0DEFF;
+      color: white;
+    }
+    
+    .calendar-dates div.active {
+      background-color: #08C2FF;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .calendar-dates div.inactive {
+      color: #ccc;
+      cursor: default;
+    }
