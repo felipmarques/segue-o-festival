@@ -556,6 +556,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: 'Raleway', sans-serif;
   padding: 10px;
+  z-index: 999;
+  position: absolute;
 }
 
 .calendar-header {
@@ -573,46 +575,53 @@
   font-size: 18px;
   cursor: pointer;
   color: #08C2FF;
-  transition: color 0.3s ease;
+  transition: color 0.2s;
 }
 
 .calendar-header button:hover {
-  color: #A0DEFF;
+  color: #00A8E8;
 }
 
-.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  color: #666;
+}
+
 .calendar-dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
   text-align: center;
 }
 
-.calendar-weekdays div {
-  font-size: 12px;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 4px;
-}
-
-.calendar-dates .date {
-  padding: 8px 0;
-  cursor: pointer;
+.calendar-dates button {
+  background-color: transparent;
+  border: none;
+  padding: 6px 0;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
-  color: #333;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background-color 0.2s;
 }
 
-.calendar-dates .date:hover {
-  background-color: #A0DEFF;
-  color: #000;
+.calendar-dates button:hover {
+  background-color: #A0DEFF; /* azul claro */
+  color: white;
 }
 
-.calendar-dates .inactive {
-  color: #ccc;
+.calendar-dates button.selected {
+  background-color: #08C2FF;
+  color: white;
+  font-weight: bold;
 }
 
-.calendar-dates .active {
-  background-color: #FFF100;
-  color: #000;
+.calendar-dates button.today {
+  border: 1px solid #FFF100;
+  background-color: #FFFDE7;
   font-weight: bold;
 }
