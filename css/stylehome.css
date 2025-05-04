@@ -554,11 +554,9 @@
       border: 2px solid #FFF100;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      font-family: 'Raleway', sans-serif;
       padding: 10px;
       position: absolute;
       z-index: 1000;
-      box-sizing: border-box;
     }
     
     .calendar-header {
@@ -566,8 +564,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
-      color: #08C2FF;
       font-weight: bold;
+      color: #08C2FF;
     }
     
     .calendar-header button {
@@ -576,16 +574,9 @@
       font-size: 18px;
       cursor: pointer;
       color: #08C2FF;
-      transition: color 0.2s;
     }
     
-    .calendar-header button:hover {
-      color: #00A8E8;
-    }
-    
-    /* Aqui estava ".calendar-days" mas deve ser ".calendar-dates" */
-    .calendar-weekdays,
-    .calendar-dates {
+    .calendar-weekdays, .calendar-dates {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 4px;
@@ -598,26 +589,27 @@
       color: #666;
     }
     
-    .calendar-dates div {
+    .calendar-dates button {
       padding: 6px 0;
-      cursor: pointer;
       border-radius: 4px;
+      cursor: pointer;
       font-size: 0.95em;
+      border: none;
+      background-color: transparent;
       transition: background-color 0.2s;
     }
     
-    .calendar-dates div:hover {
+    .calendar-dates button:hover:not(:disabled) {
       background-color: #A0DEFF;
       color: white;
     }
     
-    .calendar-dates div.active {
+    .calendar-dates button.today {
       background-color: #08C2FF;
       color: white;
       font-weight: bold;
     }
     
-    .calendar-dates div.inactive {
+    .calendar-dates button.inactive {
       color: #ccc;
-      cursor: default;
     }
