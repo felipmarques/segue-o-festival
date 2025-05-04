@@ -44,44 +44,42 @@ function createCalendar(container, inputElement) {
     const totalDays = new Date(year, month + 1, 0).getDate();
     const lastDay = new Date(year, month + 1, 0).getDay();
 
-    monthYear.textContent = currentDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+    monthYear.textContent = currentDate.toLocaleString('pt-BR', {
+      month: 'long',
+      year: 'numeric'
+    });
 
-    // Dias do mês anterior (inativos)
+    // Dias anteriores
     for (let i = firstDay; i > 0; i--) {
       const prevDate = new Date(year, month, 0 - i + 1);
-      const button = document.createElement('button');
-      button.textContent = prevDate.getDate();
-      button.className = 'inactive';
-      button.disabled = true;
-      dates.appendChild(button);
+      const div = document.createElement('div');
+      div.className = 'inactive';
+      div.textContent = prevDate.getDate();
+      dates.appendChild(div);
     }
 
-    // Dias do mês atual
+    // Dias atuais
     for (let i = 1; i <= totalDays; i++) {
       const date = new Date(year, month, i);
-      const button = document.createElement('button');
-      button.textContent = i;
-
+      const div = document.createElement('div');
       if (date.toDateString() === new Date().toDateString()) {
-        button.classList.add('today');
+        div.classList.add('active');
       }
-
-      button.addEventListener('click', () => {
+      div.textContent = i;
+      div.addEventListener('click', () => {
         inputElement.value = date.toLocaleDateString('pt-BR');
         container.remove();
       });
-
-      dates.appendChild(button);
+      dates.appendChild(div);
     }
 
-    // Dias do próximo mês (inativos)
+    // Dias posteriores
     for (let i = 1; i <= 6 - lastDay; i++) {
       const nextDate = new Date(year, month + 1, i);
-      const button = document.createElement('button');
-      button.textContent = nextDate.getDate();
-      button.className = 'inactive';
-      button.disabled = true;
-      dates.appendChild(button);
+      const div = document.createElement('div');
+      div.className = 'inactive';
+      div.textContent = nextDate.getDate();
+      dates.appendChild(div);
     }
   }
 
