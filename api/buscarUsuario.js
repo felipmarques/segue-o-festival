@@ -6,8 +6,14 @@ const pool = new Pool({
 module.exports = async (req, res) => {
   const { method, query, body, url } = req;
 
+  // Log inicial para debugging
+  console.log("Método recebido:", method);
+  console.log("URL recebida:", url);
+
+  const pathname = url.split('?')[0]; // Evita falhas se vierem parâmetros na URL
+
   // Rota: buscar nome e CPF do usuário por e-mail
-  if (method === "GET" && url.startsWith("/api/buscarUsuario")) {
+  if (method === "GET" && pathname === "/api/buscarUsuario") {
     const { email } = query;
 
     if (!email) {
@@ -17,7 +23,10 @@ module.exports = async (req, res) => {
 
     try {
       console.log('Buscando usuário com e-mail:', email);
-      const resultado = await pool.query("SELECT nome, cpf FROM usuario WHERE email_usuario = $1", [email]);
+      const resultado = await pool.query(
+        "SELECT nome, cpf FROM usuario WHERE email_usuario = $1",
+        [email]
+      );
 
       if (resultado.rows.length === 0) {
         console.log('Erro: Usuário não encontrado');
@@ -36,7 +45,7 @@ module.exports = async (req, res) => {
   }
 
   // Rota: salvar evento para o usuário
-  if (method === "POST" && url.startsWith("/api/eventos-salvos")) {
+  if (method === "POST" && pathname === "/api/eventos-salvos") {
     const { cpf, evento_id } = body;
 
     if (!cpf || !evento_id) {
@@ -71,7 +80,7 @@ module.exports = async (req, res) => {
   }
 
   // Rota: buscar eventos salvos por CPF
-  if (method === "GET" && url.startsWith("/api/eventos-salvos")) {
+  if (method === "GET" && pathname === "/api/eventos-salvos") {
     const { cpf } = query;
 
     if (!cpf) {
@@ -85,7 +94,7 @@ module.exports = async (req, res) => {
         `SELECT e.id_evento, e.nome, e.data, e.local, e.imagem 
          FROM eventos_salvos es
          JOIN eventos e ON es.evento_id = e.id_evento
-         WHERE es.usuario_cpf = $1`, // Corrigido erro de sintaxe SQL
+         WHERE es.usuario_cpf = $1`,
         [cpf]
       );
 
@@ -102,5 +111,6 @@ module.exports = async (req, res) => {
     }
   }
 
+  console.log("Rota não permitida:", method, pathname);
   return res.status(405).json({ erro: "Método não permitido" });
 };
