@@ -142,8 +142,8 @@
         div.className = 'conteudo-secundario-item';
         div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
         div.onclick = () => {
-        window.location.href = `pagina_evento.html?id=${id}`;
-      };
+          window.location.href = `pagina_evento.html?id=${evento.id}`;
+        };
 
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
