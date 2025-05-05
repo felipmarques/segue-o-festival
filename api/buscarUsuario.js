@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
 
     try {
       console.log('Buscando usuário com e-mail:', email);
-      const resultado = await pool.query("SELECT nome, cpf FROM usuario WHERE email_usuario = $1", [email]); // Corrigido para 'email_usuario'
+      const resultado = await pool.query("SELECT nome, cpf FROM usuario WHERE email_usuario = $1", [email]);
 
       if (resultado.rows.length === 0) {
         console.log('Erro: Usuário não encontrado');
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-      console.log(Buscando evento já salvo para o CPF ${cpf} e ID do evento ${evento_id});
+      console.log(`Buscando evento já salvo para o CPF ${cpf} e ID do evento ${evento_id}`);
       const existe = await pool.query(
         "SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2",
         [cpf, evento_id]
@@ -82,12 +82,17 @@ module.exports = async (req, res) => {
     try {
       console.log('Buscando eventos salvos para o CPF:', cpf);
       const resultado = await pool.query(
-        SELECT e.id_evento, e.nome, e.data, e.local, e.imagem 
+        `SELECT e.id_evento, e.nome, e.data, e.local, e.imagem 
          FROM eventos_salvos es
          JOIN eventos e ON es.evento_id = e.id_evento
-         WHERE es.usuario_cpf = $1, // Garantir que a tabela e os nomes de colunas estejam corretos
+         WHERE es.usuario_cpf = $1`, // Corrigido erro de sintaxe SQL
         [cpf]
       );
+
+      if (resultado.rows.length === 0) {
+        console.log('Erro: Nenhum evento salvo encontrado para o CPF', cpf);
+        return res.status(404).json({ erro: "Nenhum evento encontrado para este CPF" });
+      }
 
       console.log('Eventos encontrados:', resultado.rows);
       return res.status(200).json(resultado.rows);
