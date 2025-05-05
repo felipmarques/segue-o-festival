@@ -225,7 +225,7 @@
     // Exemplo de exibir o nome no header
     const header = document.querySelector(".cabecalho");
     const saudacao = document.createElement("p");
-    saudacao.textContent = `Olá, ${usuarioLogado.email || "usuário"}!`;
+    saudacao.textContent = `Olá, ${usuarioLogado.nome || "usuário"}!`;
     saudacao.style.marginLeft = "1rem";
     saudacao.style.fontWeight = "bold";
     header.appendChild(saudacao);
