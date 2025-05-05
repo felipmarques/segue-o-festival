@@ -139,10 +139,6 @@
       eventosFiltrados.forEach(evento => {
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
-        div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
-        div.onclick = () => {
-          window.location.href = `pagina_evento.html?id=${evento.id}`;
-        };
 
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
@@ -223,36 +219,18 @@
 
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-    if (usuarioLogado?.email) {
-      fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`)
-        .then(response => {
-          if (!response.ok) throw new Error('Erro ao buscar nome do usuário');
-          return response.json();
-        })
-        .then(data => {
-          const nome = data.nome;
-          const header = document.querySelector(".cabecalho");
-          const saudacao = document.createElement("p");
-          saudacao.textContent = `Olá, ${nome}!`;
-          saudacao.style.marginLeft = "1rem";
-          saudacao.style.fontWeight = "bold";
-          header.appendChild(saudacao);
-        })
-        .catch(error => {
-          console.error("Erro ao buscar nome do usuário:", error);
-        });
-   }
-  function logout() {
-    localStorage.clear();
-    window.location.href = "login.html";
-  }
-  if (!localStorage.getItem("usuarioLogado")) {
-    window.location.href = "index.html";
+  if (usuarioLogado) {
+    console.log("Usuário logado:", usuarioLogado.nome);
+    
+    // Exemplo de exibir o nome no header
+    const header = document.querySelector(".cabecalho");
+    const saudacao = document.createElement("p");
+    saudacao.textContent = `Olá, ${usuarioLogado.email || "usuário"}!`;
+    saudacao.style.marginLeft = "1rem";
+    saudacao.style.fontWeight = "bold";
+    header.appendChild(saudacao);
   }
   </script>
 </body>
-<footer>
-  <button class="cabecalho-botao-entrar" onclick="logout()">Logout</button>
-</footer>
 
 </html>
