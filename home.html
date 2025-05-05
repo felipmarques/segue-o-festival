@@ -180,6 +180,47 @@
         div.appendChild(data);
         div.appendChild(local);
         container.appendChild(div);
+
+        const botaoSalvar = document.createElement('button');
+        botaoSalvar.textContent = 'Salvar';
+        botaoSalvar.className = 'botao-salvar';
+        botaoSalvar.onclick = async (e) => {
+          e.stopPropagation(); // Evita que o clique redirecione
+        
+          const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+          if (!usuarioLogado?.email) {
+            alert("Você precisa estar logado para salvar eventos.");
+            return;
+          }
+        
+          try {
+            // Buscar CPF pelo e-mail
+            const resUsuario = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
+            if (!resUsuario.ok) throw new Error("Erro ao buscar usuário");
+            const { cpf } = await resUsuario.json();
+        
+            // Salvar evento
+            const resSalvar = await fetch("/api/eventos-salvos", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ cpf, evento_id: evento.id })
+            });
+        
+            const result = await resSalvar.json();
+            if (resSalvar.status === 201) {
+              alert("Evento salvo com sucesso!");
+            } else if (resSalvar.status === 409) {
+              alert("Evento já salvo anteriormente.");
+            } else {
+              alert("Erro ao salvar evento: " + result.erro);
+            }
+          } catch (error) {
+            console.error("Erro ao salvar evento:", error);
+            alert("Erro ao salvar evento.");
+          }
+        };
+        
+        div.appendChild(botaoSalvar);
       });
     }
 
