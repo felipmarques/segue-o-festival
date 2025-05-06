@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   function showFestivalOptions(style) {
     addMessage(`Festivais de ${style} disponíveis:`, "bot");
-    // Aqui você pode depois puxar da API
+    // Aqui depois puxar da API  do bando de dados
   }
   
   // SHOW
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // PALESTRA
   function handlePalestra() {
-    addMessage("Escolha o estado:", "bot");
+    addMessage("Escolha o estado", "bot");
   
     const selectContainer = document.createElement("div");
     selectContainer.className = "select-container";
@@ -135,8 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function selectCidadeDropdown(estadoId, estadoNome) {
-    addMessage(`Estado selecionado: ${estadoNome}`, "bot");
-    addMessage("Agora escolha a cidade:", "bot");
+    addMessage("Escolha a cidade", "bot");
   
     const selectContainer = document.createElement("div");
     selectContainer.className = "select-container";
@@ -170,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   
   function showPalestrasCidade(cidade, estado) {
-    addMessage(`📍 Palestras em ${cidade} - ${estado}:`, "bot");
+    addMessage(`Palestras em ${cidade} - ${estado}:`, "bot");
   }
   
   
@@ -190,6 +189,9 @@ document.addEventListener("DOMContentLoaded", function () {
     addMessage(`🎊 Eventos culturais de ${eventName}:`, "bot");
   }
   
+
+
+  //CALENDÁRIO
 
   function buyTicket() {
     addMessage("Escolha uma data:", "bot");
@@ -261,7 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {
   
   
 
-  // 🔹 NOVA VERSÃO: Estados reais via IBGE
+//EVENTO POR LOCAL
+
   async function searchByLocation() {
     addMessage("Selecione o estado:", "bot");
 
@@ -277,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
     setOptions(options);
   }
 
-  // 🔹 Buscar municípios do estado selecionado
   async function selectMunicipio(ufId, ufNome) {
     addMessage(`Municípios em ${ufNome}:`, "bot");
 
@@ -318,13 +320,109 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-const closeButton = document.getElementById("close-chat");
+//BOTÕES DE MINIMIZAR/FECHAR O CHATBOT
+
+const closeButton = document.getElementById("minimize-chat");
 
 closeButton.onclick = () => {
   document.getElementById("chatbot-window").style.display = "none";
   document.getElementById("chatbot-balloon").style.display = "block";
 
 };
+
+
+const minimizeButton = document.getElementById("minimize-chat");
+  minimizeButton.onclick = () => {
+    document.getElementById("chatbot-window").style.display = "none";
+    document.getElementById("chatbot-balloon").style.display = "block";
+  };
+
+
+
+
+  //MENSAGENS
+  document.addEventListener("DOMContentLoaded", function () {
+    const sendMessageButton = document.getElementById("send-message");
+    const messageInput = document.getElementById("message-input");
+    const chatbox = document.getElementById("chatbox");
+  
+   
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.className = `msg ${sender}`;
+      msg.textContent = text;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight; 
+    }
+  
+
+    sendMessageButton.onclick = () => {
+      const userMessage = messageInput.value;
+      if (userMessage.trim() !== "") {
+        addMessage(userMessage, "user"); 
+        messageInput.value = ""; 
+      }
+    };
+  
+
+    messageInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        sendMessageButton.click();
+      }
+    });
+  });
+
+  
+
+//IMAGEM
+  let pendingImage = null;
+
+document.getElementById('upload-button').addEventListener('click', () => {
+  document.getElementById('image-input').click();
+});
+
+document.getElementById('image-input').addEventListener('change', function () {
+  const file = this.files[0];
+  if (file) {
+    const maxSizeMB = 10;
+    const sizeMB = file.size / (1024 * 1024);
+
+    if (sizeMB > maxSizeMB) {
+      alert('Imagem muito grande. O limite é 10MB.');
+      this.value = '';
+    } else {
+      pendingImage = file; 
+    }
+  }
+});
+
+document.getElementById('send-message').addEventListener('click', () => {
+  const message = document.getElementById('message-input').value.trim();
+  const chatbox = document.getElementById('chatbox');
+
+  if (message) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'chat-message user';
+    msgDiv.textContent = message;
+    chatbox.appendChild(msgDiv);
+    document.getElementById('message-input').value = '';
+  }
+
+  if (pendingImage) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.className = 'chat-image';
+      chatbox.appendChild(img);
+    };
+    reader.readAsDataURL(pendingImage);
+    pendingImage = null;
+    document.getElementById('image-input').value = ''; 
+  }
+
+  chatbox.scrollTop = chatbox.scrollHeight;
+});
 
 
  
