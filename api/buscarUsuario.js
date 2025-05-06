@@ -71,7 +71,7 @@ module.exports = async (req, res) => {
   }
 
   // Rota: buscar eventos salvos por CPF
-  if (method === "GET" && url.startsWith("/api/eventos-salvos")) {
+  if (method === "GET" && url.startsWith("/api/eventossalvos")) {
     const { cpf } = query;
 
     if (!cpf) {
