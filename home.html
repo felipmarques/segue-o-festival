@@ -205,7 +205,7 @@
             const { cpf } = await resUsuario.json();
     
             // 3. Fazer a requisição para salvar o evento com o CPF
-            const resSalvar = await fetch("/api/eventos-salvos", {
+            const resSalvar = await fetch("/api/eventossalvos", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ cpf: cpf, evento_id: evento.id }) // Incluindo o CPF
