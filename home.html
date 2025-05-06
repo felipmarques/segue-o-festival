@@ -181,50 +181,42 @@
         div.appendChild(local);
 
         const botaoSalvar = document.createElement('button');
+      
         botaoSalvar.textContent = 'Salvar';
         botaoSalvar.className = 'botao-salvar';
         botaoSalvar.onclick = async (e) => {
-        e.stopPropagation(); // Evita que o clique redirecione
-    
-        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-        if (!usuarioLogado?.email) {
-            alert("Você precisa estar logado para salvar eventos.");
-            return;
-        }
-    
-        try {
-            // 1. Obter o e-mail
-            const email = usuarioLogado.email;
-    
-            // 2. Buscar o CPF usando o e-mail
-            const resUsuario = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(email)}`);
-            if (!resUsuario.ok) {
-                const errorDetails = await resUsuario.json();
-                throw new Error(`Erro ao buscar usuário: ${errorDetails?.erro || resUsuario.statusText}`);
+            e.stopPropagation();
+        
+            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+            if (!usuarioLogado?.email) {
+                alert("Você precisa estar logado para salvar eventos.");
+                return;
             }
-            const { cpf } = await resUsuario.json();
-    
-            // 3. Fazer a requisição para salvar o evento com o CPF
-            const resSalvar = await fetch("/api/eventossalvos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ cpf: cpf, evento_id: evento.id }) // Incluindo o CPF
-            });
-    
-            const resultSalvar = await resSalvar.json();
-            if (resSalvar.status === 201) {
-                alert("Evento salvo com sucesso!");
-            } else if (resSalvar.status === 409) {
-                alert("Evento já salvo anteriormente.");
-            } else {
-                alert("Erro ao salvar evento: " + resultSalvar.erro);
+        
+            try {
+                const email = usuarioLogado.email;
+        
+                const resSalvar = await fetch("/api/eventossalvos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, evento_id: evento.id }) // Enviando e-mail em vez de CPF
+                });
+        
+                const resultSalvar = await resSalvar.json();
+                if (resSalvar.status === 201) {
+                    alert("Evento salvo com sucesso!");
+                } else if (resSalvar.status === 409) {
+                    alert("Evento já salvo anteriormente.");
+                } else {
+                    alert("Erro ao salvar evento: " + resultSalvar.erro);
+                }
+        
+            } catch (error) {
+                console.error("Erro ao salvar evento:", error);
+                alert("Erro ao salvar evento.");
             }
-    
-        } catch (error) {
-            console.error("Erro ao salvar evento:", error);
-            alert("Erro ao salvar evento.");
-        }
-    };
+        };
+         
         
         div.appendChild(botaoSalvar);
         container.appendChild(div);
