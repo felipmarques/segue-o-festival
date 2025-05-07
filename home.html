@@ -196,7 +196,7 @@
             try {
                 const email = usuarioLogado.email;
         
-                const resSalvar = await fetch("/api/eventossalvos", {
+                const resSalvar = await fetch("/api/meusEventosPromotor", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, evento_id: evento.id }) // Enviando e-mail em vez de CPF
