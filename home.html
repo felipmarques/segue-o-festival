@@ -105,7 +105,6 @@
         if (!response.ok) throw new Error(`Erro: ${response.status}`);
 
         todosEventos = await response.json();
-        console.log("Todos os eventos carregados:", todosEventos); // Testando se os eventos estão sendo carregados.
         exibirEventosFiltrados();
         exibirCarrossel(todosEventos);
       } catch (error) {
@@ -157,7 +156,7 @@
         const data = document.createElement('p');
         if (evento.data) {
           const dataEvento = new Date(evento.data);
-  
+
         const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
           day: '2-digit',
           month: '2-digit',
@@ -181,49 +180,50 @@
         div.appendChild(data);
         div.appendChild(local);
 
-       const botaoSalvar = document.createElement('button');
+        const botaoSalvar = document.createElement('button');
 
-botaoSalvar.textContent = 'Salvar';
-botaoSalvar.className = 'botao-salvar';
+        botaoSalvar.textContent = 'Salvar';
+        botaoSalvar.className = 'botao-salvar';
+        botaoSalvar.onclick = async (e) => {
+            e.stopPropagation();
 
-botaoSalvar.onclick = async (e) => {
-    e.stopPropagation();
+            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+            if (!usuarioLogado?.email) {
+                alert("Você precisa estar logado para salvar eventos.");
+                return;
+            }
 
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    if (!usuarioLogado?.cpf) {
-        alert("Você precisa estar logado para salvar eventos.");
-        return;
+            try {
+                const email = usuarioLogado.email;
+
+                const resSalvar = await fetch("/api/meusEventosPromotor", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, evento_id: evento.id }) // Enviando e-mail em vez de CPF
+                });
+
+                const resultSalvar = await resSalvar.json();
+                if (resSalvar.status === 201) {
+                    alert("Evento salvo com sucesso!");
+                } else if (resSalvar.status === 409) {
+                    alert("Evento já salvo anteriormente.");
+                } else {
+                    alert("Erro ao salvar evento: " + resultSalvar.erro);
+                }
+
+            } catch (error) {
+                console.error("Erro ao salvar evento:", error);
+                alert("Erro ao salvar evento.");
+            }
+        };
+
+
+        div.appendChild(botaoSalvar);
+        container.appendChild(div);
+      });
     }
-
-    try {
-        const cpf = usuarioLogado.cpf;
-
-        console.log("Tentando salvar evento:", { cpf, evento_id: evento.id }); // ✅ Confirma os dados no console
-
-        const resSalvar = await fetch("/api/meusEventosPromotor", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cpf, evento_id: evento.id }) // ✅ Agora enviamos CPF corretamente
-        });
-
-        if (!resSalvar.ok) {
-            const erroTexto = await resSalvar.text(); // ✅ Lê o erro como texto para evitar problemas de JSON
-            throw new Error(`Erro ao salvar evento: ${erroTexto}`);
-        }
-
-        alert("Evento salvo com sucesso!");
-    } catch (error) {
-        console.error("Erro ao salvar evento:", error);
-        alert(error.message);
-    }
-};
-
-div.appendChild(botaoSalvar);
-container.appendChild(div);
-});
 
     buscarEventos();
-    }
 
     let index = 0;
 
@@ -239,22 +239,22 @@ container.appendChild(div);
         img.alt = evento.nome;
         carrossel.appendChild(img);
       });
-  
+
       index = 0;
       atualizarCarrossel();
     }
-  
+
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
       carrossel.style.transform = `translateX(-${index * 100}%)`;
     }
-  
+
     function avancar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index + 1) % total;
       atualizarCarrossel();
     }
-  
+
     function voltar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index - 1 + total) % total;
