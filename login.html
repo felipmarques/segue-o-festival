@@ -80,9 +80,13 @@
                 if (response.ok) {
                     // Salvando o identificador (email digitado) diretamente no localStorage
                     const usuario = {
-                        email: identificador
-                    };
-                    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+                email: identificador,
+                cpf: data.cpf // Pegamos o CPF retornado pela API
+            };
+
+            localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+            localStorage.setItem("usuarioCPF", usuario.cpf);
+                    
                     window.location.href = "home.html";
                 } else {
                     alert(data.message || "Erro no login");
