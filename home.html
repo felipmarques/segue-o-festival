@@ -187,39 +187,38 @@
         botaoSalvar.onclick = async (e) => {
             e.stopPropagation();
 
-            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-            if (!usuarioLogado?.email) {
-                alert("Você precisa estar logado para salvar eventos.");
-                return;
-            }
+            const usuarioCPF = localStorage.getItem("usuarioCPF");
+    if (!usuarioCPF) {
+        alert("Você precisa estar logado para salvar eventos.");
+        return;
+    }
 
-            try {
-                const email = usuarioLogado.email;
+    try {
+        console.log("Tentando salvar evento:", { cpf: usuarioCPF, evento_id: evento.id }); // ✅ Confirma os dados no console
 
-                const resSalvar = await fetch("/api/meusEventosPromotor", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, evento_id: evento.id }) // Enviando e-mail em vez de CPF
-                });
+        const resSalvar = await fetch("/api/meusEventosPromotor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cpf: usuarioCPF, evento_id: evento.id }) // ✅ Agora enviamos CPF corretamente
+        });
 
-                const resultSalvar = await resSalvar.json();
-                if (resSalvar.status === 201) {
-                    alert("Evento salvo com sucesso!");
-                } else if (resSalvar.status === 409) {
-                    alert("Evento já salvo anteriormente.");
-                } else {
-                    alert("Erro ao salvar evento: " + resultSalvar.erro);
-                }
+        const resultSalvar = await resSalvar.json();
+        if (resSalvar.status === 201) {
+            alert("Evento salvo com sucesso!");
+        } else if (resSalvar.status === 409) {
+            alert("Evento já salvo anteriormente.");
+        } else {
+            alert("Erro ao salvar evento: " + resultSalvar.erro);
+        }
 
-            } catch (error) {
-                console.error("Erro ao salvar evento:", error);
-                alert("Erro ao salvar evento.");
-            }
-        };
+    } catch (error) {
+        console.error("Erro ao salvar evento:", error);
+        alert("Erro ao salvar evento.");
+    }
+};
 
-
-        div.appendChild(botaoSalvar);
-        container.appendChild(div);
+div.appendChild(botaoSalvar);
+container.appendChild(div);
       });
     }
 
