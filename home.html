@@ -137,6 +137,9 @@
       }
 
       eventosFiltrados.forEach(evento => {
+        console.log("🚀 Evento dentro do loop:", evento); // ✅ Confirma se `evento` existe
+    console.log("📌 ID do evento dentro do loop:", evento?.id); // ✅ Confirma se `evento.id` está correto
+        
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
         div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
