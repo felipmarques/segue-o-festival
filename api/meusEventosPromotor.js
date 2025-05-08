@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
     const { cpf, evento_id } = body;
 
     if (!cpf || !evento_id) {
-      return res.status(400).send('Erro: CPF e ID do evento são obrigatórios.');
+      return res.status(400).send({ erro: 'Erro: CPF e ID do evento são obrigatórios.' });
     }
 
     try {
@@ -64,16 +64,16 @@ module.exports = async (req, res) => {
       const checkResult = await pool.query(checkQuery, [cpf, evento_id]);
 
       if (checkResult.rowCount > 0) {
-        return res.status(409).send('Evento já salvo anteriormente.');
+        return res.status(409).send({ erro: 'Evento já salvo anteriormente.' });
       }
 
       const insertQuery = `INSERT INTO eventos_salvos (cpf, evento_id) VALUES ($1, $2)`;
       await pool.query(insertQuery, [cpf, evento_id]);
 
-      res.status(201).send('Evento salvo com sucesso!');
+      res.status(201).send({ mensagem: 'Evento salvo com sucesso!' });
     } catch (error) {
       console.error('Erro ao salvar evento:', error);
-      res.status(500).send('Erro ao salvar evento.');
+      res.status(500).send({ erro: 'Erro ao salvar evento.' });
     }
 
   } else {
