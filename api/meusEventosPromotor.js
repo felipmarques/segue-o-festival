@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     const { cnpj } = req.query;
 
     if (!cnpj) {
-      return res.status(400).send('Erro: CNPJ do usuário não fornecido.');
+      return res.status(400).json({ erro: 'Erro: CNPJ do usuário não fornecido.' });
     }
 
     try {
@@ -27,18 +27,19 @@ module.exports = async (req, res) => {
       const result = await pool.query(query, [cnpj]);
 
       if (result.rows.length === 0) {
-        return res.status(404).send('Nenhum evento encontrado para este usuário.');
+        return res.status(404).json({ erro: 'Nenhum evento encontrado para este usuário.' });
       }
 
+      // Convertendo buffer da imagem para Base64 com prefixo correto
       const eventosComImagem = result.rows.map(evento => ({
         ...evento,
         imagem: evento.imagem ? `data:image/jpeg;base64,${evento.imagem.toString('base64')}` : null
       }));
 
-      res.status(200).json(eventosComImagem);
+      return res.status(200).json(eventosComImagem);
     } catch (error) {
       console.error('Erro ao buscar eventos:', error);
-      res.status(500).send('Erro ao recuperar eventos.');
+      return res.status(500).json({ erro: 'Erro ao recuperar eventos.' });
     }
 
   } else if (req.method === 'POST') {
@@ -49,14 +50,14 @@ module.exports = async (req, res) => {
       try {
         body = JSON.parse(body);
       } catch (err) {
-        return res.status(400).send('JSON inválido no corpo da requisição.');
+        return res.status(400).json({ erro: 'JSON inválido no corpo da requisição.' });
       }
     }
 
     const { cpf, evento_id } = body;
 
     if (!cpf || !evento_id) {
-      return res.status(400).send({ erro: 'Erro: CPF e ID do evento são obrigatórios.' });
+      return res.status(400).json({ erro: 'Erro: CPF e ID do evento são obrigatórios.' });
     }
 
     try {
@@ -64,19 +65,19 @@ module.exports = async (req, res) => {
       const checkResult = await pool.query(checkQuery, [cpf, evento_id]);
 
       if (checkResult.rowCount > 0) {
-        return res.status(409).send({ erro: 'Evento já salvo anteriormente.' });
+        return res.status(409).json({ erro: 'Evento já salvo anteriormente.' });
       }
 
       const insertQuery = `INSERT INTO eventos_salvos (cpf, evento_id) VALUES ($1, $2)`;
       await pool.query(insertQuery, [cpf, evento_id]);
 
-      res.status(201).send({ mensagem: 'Evento salvo com sucesso!' });
+      return res.status(201).json({ mensagem: 'Evento salvo com sucesso!' });
     } catch (error) {
       console.error('Erro ao salvar evento:', error);
-      res.status(500).send({ erro: 'Erro ao salvar evento.' });
+      return res.status(500).json({ erro: 'Erro ao salvar evento.' });
     }
 
   } else {
-    res.status(405).send('Método não permitido.');
+    return res.status(405).json({ erro: 'Método não permitido.' });
   }
 };
