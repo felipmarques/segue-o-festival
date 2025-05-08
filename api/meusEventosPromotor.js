@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
 
       res.status(201).send('Evento salvo com sucesso!');
     } catch (error) {
-      console.error('Erro ao salvar evento:', error);
+      console.error('Erro ao salvar evento:", error);
       res.status(500).send('Erro ao salvar evento.');
     }
   } else {
