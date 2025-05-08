@@ -192,7 +192,9 @@
         alert("Você precisa estar logado para salvar eventos.");
         return;
     }
-
+ console.log("🐍 CPF salvo no LocalStorage:", usuarioCPF);
+    console.log("🎯 CPF enviado para API:", usuarioCPF);
+    console.log("🔥 Evento que será salvo:", evento.id);
     try {
         console.log("Tentando salvar evento:", { cpf: usuarioCPF, evento_id: evento.id }); // ✅ Confirma os dados no console
 
