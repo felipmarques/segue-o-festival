@@ -26,9 +26,11 @@ export default async function handler(req, res) {
       const resultUsuario = await pool.query(queryUsuario, [identificador, senha]);
 
       if (resultUsuario.rowCount > 0) {
+        const usuario = resultUsuario.rows[0];
         return res.status(200).json({
           message: "Login bem-sucedido",
-          usuario: resultUsuario.rows[0],
+          email: usuario.email_usuario,
+          cpf: usuario.cpf
         });
       }
 
