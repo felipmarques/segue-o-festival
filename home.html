@@ -205,9 +205,7 @@
         alert("Erro ao salvar evento.");
         return;
     }
-
-    console.log("🎯 CPF antes da requisição:", usuarioCPF);
-    console.log("🔥 ID do evento antes da requisição:", eventoID);
+    
     try {
         console.log("Tentando salvar evento:", { cpf: usuarioCPF, evento_id: evento.id }); // ✅ Confirma os dados no console
 
