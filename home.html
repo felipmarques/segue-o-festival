@@ -137,8 +137,6 @@
       }
 
       eventosFiltrados.forEach(evento => {
-        console.log("🚀 Evento dentro do loop:", evento); // ✅ Confirma se `evento` existe
-    console.log("📌 ID do evento dentro do loop:", evento?.id); // ✅ Confirma se `evento.id` está correto
         
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
@@ -207,7 +205,7 @@
     }
     
     try {
-        console.log("Tentando salvar evento:", { cpf: usuarioCPF, evento_id: evento.id }); // ✅ Confirma os dados no console
+        console.log("Tentando salvar evento:", { cpf: usuarioCPF, evento_id: eventoID }); // ✅ Confirma os dados no console
 
         const resSalvar = await fetch("/api/meusEventosPromotor", {
             method: "POST",
@@ -217,12 +215,14 @@
 
         const resultSalvar = await resSalvar.json();
         if (resSalvar.status === 201) {
-            alert("Evento salvo com sucesso!");
-        } else if (resSalvar.status === 409) {
-            alert("Evento já salvo anteriormente.");
-        } else {
-            alert("Erro ao salvar evento: " + resultSalvar.erro);
-        }
+    alert(resultSalvar.mensagem);  // Exibindo a mensagem retornada pela API
+} else if (resSalvar.status === 409) {
+    alert(resultSalvar.mensagem);  // Exibindo a mensagem retornada pela API
+} else if (resSalvar.status === 400 || resSalvar.status === 500) {
+    alert("Erro ao salvar evento: " + resultSalvar.erro);  // Exibindo erro
+} else {
+    alert("Erro inesperado: " + resultSalvar.erro);  // Caso ocorra outro erro
+}
 
     } catch (error) {
         console.error("Erro ao salvar evento:", error);
