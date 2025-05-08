@@ -143,10 +143,10 @@
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
         div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
-        div.setAttribute("data-id", evento.id);
+        div.setAttribute("data-id", evento.id_evento);
         
         div.onclick = () => {
-          window.location.href = `pagina_evento.html?id=${evento.id}`;
+          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
         };
 
         const imagem = document.createElement('img');
@@ -214,7 +214,7 @@
         const resSalvar = await fetch("/api/meusEventosPromotor", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cpf: usuarioCPF, evento_id: evento.id }) // ✅ Agora enviamos CPF corretamente
+            body: JSON.stringify({ cpf: usuarioCPF, evento_id: eventoID }) // ✅ Agora enviamos CPF corretamente
         });
 
         const resultSalvar = await resSalvar.json();
