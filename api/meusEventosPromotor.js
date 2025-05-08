@@ -53,7 +53,8 @@ module.exports = async (req, res) => {
     if (!cpf || !evento_id) {
       return res.status(400).send('Erro: CPF e ID do evento são obrigatórios.');
     }
-
+  console.log("🚀 CPF recebido pela API:", cpf);
+    console.log("🔥 Evento recebido pela API:", evento_id);
     try {
       const checkQuery = `SELECT 1 FROM eventos_salvos WHERE cpf = $1 AND evento_id = $2`;
       const checkResult = await pool.query(checkQuery, [cpf, evento_id]);
