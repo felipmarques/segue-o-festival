@@ -17,6 +17,10 @@ module.exports = async (req, res) => {
   if (!cnpj) {
     return res.status(400).send('Erro: CNPJ do usuário não fornecido.');
   }
+// Segunda funcionalidade de teste — retorna apenas o CNPJ enviado
+if (req.query.teste === 'cnpj') {
+  return res.status(200).json({ mensagem: `CNPJ recebido: ${cnpj}` });
+}
 
   try {
     console.log(`Buscando eventos para o CNPJ: ${cnpj}`);
