@@ -19,7 +19,10 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const query = `
+    console.log(`Buscando eventos para o CNPJ: ${cnpj}`);
+
+    // Primeira funcionalidade - Consulta dos eventos
+    const queryEventos = `
       SELECT e.* 
       FROM eventos e
       JOIN usuario_promotor u ON e.id_promotor = u.cnpj
@@ -27,18 +30,23 @@ module.exports = async (req, res) => {
       ORDER BY e.data DESC;
     `;
 
-    const result = await pool.query(query, [cnpj]);
+    const resultEventos = await pool.query(queryEventos, [cnpj]);
 
-    if (result.rows.length === 0) {
+    if (resultEventos.rows.length === 0) {
       return res.status(404).send('Nenhum evento encontrado para este usuário.');
     }
 
     // Convertendo buffer da imagem para Base64 com prefixo correto
-    const eventosComImagem = result.rows.map(evento => ({
+    const eventosComImagem = resultEventos.rows.map(evento => ({
       ...evento,
       imagem: evento.imagem ? `data:image/jpeg;base64,${evento.imagem.toString('base64')}` : null
     }));
 
+    // Segunda funcionalidade simples - Exibindo o CNPJ do usuário
+    console.log(`CNPJ do usuário: ${cnpj}`);
+    res.setHeader('CNPJ', cnpj);  // Adiciona o CNPJ no cabeçalho da resposta
+
+    // Retorna os eventos com as imagens convertidas
     res.status(200).json(eventosComImagem);
   } catch (error) {
     console.error('Erro ao buscar eventos:', error);
