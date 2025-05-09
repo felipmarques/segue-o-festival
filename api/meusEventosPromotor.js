@@ -83,38 +83,4 @@ module.exports = async (req, res) => {
         console.error("Erro ao atualizar evento:", error);
         return res.status(500).json({ erro: "Erro ao atualizar evento." });
     }
-} else if (req.method === 'POST') {
-    let body = req.body;
-  
-    // Garante que seja um objeto (em ambientes onde req.body pode vir como string)
-    if (typeof body === 'string') {
-      try {
-        body = JSON.parse(body);
-      } catch (err) {
-        return res.status(400).json({ erro: 'JSON inválido no corpo da requisição.' });
-      }
-    }
-  
-    const { cpf, evento_id } = body;
-  
-    if (!cpf || !evento_id) {
-      return res.status(400).json({ erro: 'Erro: CPF e ID do evento são obrigatórios.' });
-    }
-  
-    try {
-      const checkQuery = `SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2`;
-      const checkResult = await pool.query(checkQuery, [cpf, evento_id]);
-  
-      if (checkResult.rowCount > 0) {
-        return res.status(409).json({ mensagem: 'Evento já salvo anteriormente.' });
-      }
-  
-      const insertQuery = `INSERT INTO eventos_salvos (usuario_cpf, evento_id) VALUES ($1, $2)`;
-      await pool.query(insertQuery, [cpf, evento_id]);
-  
-      return res.status(201).json({ mensagem: 'Evento salvo com sucesso!' });
-    } catch (error) {
-      console.error('Erro ao salvar evento:', error);
-      return res.status(500).json({ erro: 'Erro ao salvar evento.' });
-    }
-}
+} 
