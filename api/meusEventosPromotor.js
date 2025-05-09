@@ -57,18 +57,4 @@ if (req.query.teste === 'cnpj') {
     res.status(500).send('Erro ao recuperar eventos.');
   }
 
-  if (teste === 'usuarios') {
-    try {
-      const resultado = await pool.query('SELECT nome FROM usuario_promotor LIMIT 5;');
-      const nomes = resultado.rows.map(row => row.nome);
-      return res.status(200).json({ usuarios: nomes });
-    } catch (error) {
-      console.error('Erro ao buscar nomes:', error);
-      return res.status(500).send('Erro ao recuperar nomes de usuários.');
-    }
-  }
-
-  // Se nenhum parâmetro válido for enviado
-  return res.status(400).send('Parâmetro inválido. Envie "cnpj" ou "teste=usuarios".');
-};
 };
