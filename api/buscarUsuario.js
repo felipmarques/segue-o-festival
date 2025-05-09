@@ -71,8 +71,8 @@ module.exports = async (req, res) => {
 
     // Salva o evento
     await pool.query(
-      "INSERT INTO eventos_salvos (usuario_cpf, evento_id) VALUES ($1, $2)",
-      [cpf, evento_id]
+    "INSERT INTO eventos_salvos (usuario_cpf, evento_id, criado_em) VALUES ($1, $2, NOW())",
+    [cpf, evento_id]
     );
 
     console.log("Evento salvo com sucesso");
