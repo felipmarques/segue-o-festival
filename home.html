@@ -199,7 +199,7 @@
         
           try {
             // Busca o CPF pelo e-mail
-            const usuarioResponse = await fetch(`/api/usuarios?email=${emailUsuario}`);
+            const usuarioResponse = await fetch(`/api/buscarUsuario?email=${emailUsuario}`);
             if (!usuarioResponse.ok) {
               const errorText = await usuarioResponse.text();
               throw new Error(`Erro ao buscar CPF do usuário: ${errorText}`);
@@ -208,7 +208,7 @@
             const cpf = usuario.cpf;
         
             // Envia os dados para salvar o evento
-            const response = await fetch('/api/eventos', {
+            const response = await fetch('/api/eventossalvos', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ cpf, evento_id: eventoId })
