@@ -36,54 +36,41 @@ module.exports = async (req, res) => {
   }
 
   // Rota: salvar evento para o usuário
- if (method === "POST" && url.startsWith("/api/eventossalvos")) {
-  const { email, evento_id } = body;
+     if (method === "POST" && url.startsWith("/api/eventossalvos")) {
+        const { cpf, evento_id } = body; // <--- MODIFICADO PARA ESPERAR 'cpf'
 
-  if (!email || !evento_id) {
-    console.log('Erro: E-mail ou ID do evento não fornecido');
-    return res.status(400).json({ erro: "E-mail e ID do evento são obrigatórios" });
-  }
-
-  try {
-    console.log(`Buscando CPF do usuário com e-mail: ${email}`);
-    const resultadoUsuario = await pool.query(
-      "SELECT cpf FROM usuario WHERE email_usuario = $1",
-      [email]
-    );
-
-    if (resultadoUsuario.rows.length === 0) {
-      console.log("Erro: Usuário não encontrado");
-      return res.status(404).json({ erro: "Usuário não encontrado" });
+      if (!cpf || !evento_id) {
+        console.log('Erro: CPF ou ID do evento não fornecido');
+        return res.status(400).json({ erro: "CPF e ID do evento são obrigatórios" });
+      }
+  
+      try {
+        // Agora você já tem o CPF diretamente no body
+        console.log(`Buscando evento já salvo para o CPF ${cpf} e ID do evento ${evento_id}`);
+        const existe = await pool.query(
+          "SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2",
+          [cpf, evento_id]
+        );
+  
+        if (existe.rows.length > 0) {
+          console.log('Erro: Evento já foi salvo');
+          return res.status(409).json({ erro: "Evento já salvo" });
+        }
+  
+        console.log('Salvando evento...');
+        await pool.query(
+          "INSERT INTO eventos_salvos (usuario_cpf, evento_id, criado_em) VALUES ($1, $2, NOW())",
+          [cpf, evento_id]
+        );
+  
+        console.log("Evento salvo com sucesso");
+        return res.status(201).json({ mensagem: "Evento salvo com sucesso" });
+  
+      } catch (error) {
+        console.error("Erro ao salvar evento:", error);
+        return res.status(500).json({ erro: "Erro ao salvar evento" });
+      }
     }
-
-    const cpf = resultadoUsuario.rows[0].cpf;
-
-    // Verifica se já foi salvo
-    const existe = await pool.query(
-      "SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2",
-      [cpf, evento_id]
-    );
-
-    if (existe.rows.length > 0) {
-      console.log('Erro: Evento já foi salvo');
-      return res.status(409).json({ erro: "Evento já salvo" });
-    }
-
-    // Salva o evento
-    await pool.query(
-    "INSERT INTO eventos_salvos (usuario_cpf, evento_id, criado_em) VALUES ($1, $2, NOW())",
-    [cpf, evento_id]
-    );
-
-    console.log("Evento salvo com sucesso");
-    return res.status(201).json({ mensagem: "Evento salvo com sucesso" });
-
-  } catch (error) {
-    console.error("Erro ao salvar evento:", error);
-    return res.status(500).json({ erro: "Erro ao salvar evento" });
-  }
-}
-
   // Rota: buscar eventos salvos por CPF
   if (method === "GET" && url.startsWith("/api/eventossalvos")) {
     const { cpf } = query;
