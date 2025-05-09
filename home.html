@@ -187,48 +187,53 @@
 
         botaoSalvar.textContent = 'Salvar';
         botaoSalvar.className = 'botao-salvar';
-        botaoSalvar.onclick = async (e) => {
-            e.stopPropagation();
-
-            const usuarioCPF = localStorage.getItem("usuarioCPF");
-    if (!usuarioCPF) {
-        alert("Você precisa estar logado para salvar eventos.");
-        return;
-    }
- // 🔹 Obtém o ID do evento correto a partir da div pai do botão, antes do try
-    const eventoID = e.target.closest(".conteudo-secundario-item")?.getAttribute("data-id");
-
-    if (!eventoID) {
-        console.error("Erro: ID do evento não encontrado.");
-        alert("Erro ao salvar evento.");
-        return;
-    }
-    
-    try {
-        console.log("Tentando salvar evento:", { cpf: usuarioCPF, evento_id: eventoID }); // ✅ Confirma os dados no console
-
-        const resSalvar = await fetch("/api/meusEventosPromotor", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cpf: usuarioCPF, evento_id: eventoID }) // ✅ Agora enviamos CPF corretamente
-        });
-
-        const resultSalvar = await resSalvar.json();
-        if (resSalvar.status === 201) {
-    alert(resultSalvar.mensagem);  // Exibindo a mensagem retornada pela API
-} else if (resSalvar.status === 409) {
-    alert(resultSalvar.mensagem);  // Exibindo a mensagem retornada pela API
-} else if (resSalvar.status === 400 || resSalvar.status === 500) {
-    alert("Erro ao salvar evento: " + resultSalvar.erro);  // Exibindo erro
-} else {
-    alert("Erro inesperado: " + resultSalvar.erro);  // Caso ocorra outro erro
-}
-
-    } catch (error) {
-        console.error("Erro ao salvar evento:", error);
-        alert("Erro ao salvar evento.");
-    }
-};
+        botaoSalvar.onclick = async function () {
+          const emailUsuario = localStorage.getItem('email');
+          const eventoId = this.getAttribute('data-evento-id');
+        
+          if (!emailUsuario || !eventoId) {
+            alert('Erro: e-mail do usuário ou ID do evento não encontrado.');
+            return;
+          }
+        
+          try {
+            // Busca o CPF pelo e-mail
+            const usuarioResponse = await fetch(`/api/usuarios?email=${emailUsuario}`);
+            if (!usuarioResponse.ok) {
+              const errorText = await usuarioResponse.text();
+              throw new Error(`Erro ao buscar CPF do usuário: ${errorText}`);
+            }
+            const usuario = await usuarioResponse.json();
+            const cpf = usuario.cpf;
+        
+            // Envia os dados para salvar o evento
+            const response = await fetch('/api/eventos', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ cpf, evento_id: eventoId })
+            });
+        
+            // Lê a resposta como texto primeiro
+            const responseText = await response.text();
+        
+            // Tenta converter para JSON, se possível
+            let jsonResponse;
+            try {
+              jsonResponse = JSON.parse(responseText);
+            } catch (e) {
+              throw new Error(`Resposta não é JSON válido: ${responseText}`);
+            }
+        
+            if (response.ok) {
+              alert(jsonResponse.mensagem || 'Evento salvo com sucesso!');
+            } else {
+              throw new Error(jsonResponse.erro || jsonResponse.mensagem || 'Erro ao salvar evento');
+            }
+          } catch (erro) {
+            console.error('Erro ao salvar evento:', erro);
+            alert(erro.message);
+          }
+        };
 
 div.appendChild(botaoSalvar);
 container.appendChild(div);
