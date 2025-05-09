@@ -22,6 +22,38 @@
             const ano = data.getFullYear();
             return `${dia}/${mes}/${ano}`;
             }
+// FUNÇÃO NOVA DE EDIÇÃO DE EVENTO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        function mostrarFormularioEdicao(id, nome, data, endereco) {
+    const form = document.getElementById(`form-edicao-${id}`);
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+
+async function enviarEdicao(id) {
+    const nome = document.getElementById(`nome-${id}`).value;
+    const data = document.getElementById(`data-${id}`).value;
+    const endereco = document.getElementById(`endereco-${id}`).value;
+
+    try {
+        const resposta = await fetch(`https://segue-o-festival.vercel.app/api/editarEvento`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id_evento: id, nome, data, endereco })
+        });
+
+        if (resposta.ok) {
+            alert("Evento atualizado com sucesso!");
+            carregarEventos(); // Atualiza a lista
+        } else {
+            throw new Error("Erro ao atualizar evento. Código: " + resposta.status);
+        }
+    } catch (error) {
+        console.error("Erro ao enviar edição:", error);
+        alert("Erro ao atualizar evento.");
+    }
+}
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
         async function carregarEventos() {
             // Recupera o CNPJ do usuário logado
             const cnpjUsuario = localStorage.getItem("cnpjUsuario");
@@ -60,6 +92,13 @@
         <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
         <p class="conteudo-secundario-paragrafo">${formatarData(evento.data)}</p>
         <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
+        <button onclick="mostrarFormularioEdicao('${evento.id_evento}', '${evento.nome}', '${evento.data}', '${evento.endereco}')">Editar</button>
+        <div id="form-edicao-${evento.id_evento}" style="display:none; margin-top:10px;">
+            <input type="text" id="nome-${evento.id_evento}" value="${evento.nome}" />
+            <input type="date" id="data-${evento.id_evento}" value="${evento.data.split('T')[0]}" />
+            <input type="text" id="endereco-${evento.id_evento}" value="${evento.endereco}" />
+            <button onclick="enviarEdicao('${evento.id_evento}')">Salvar</button>
+        </div>
     `;
     document.querySelector(".conteudo-secundario-primeiralinha").appendChild(eventoDiv);
 });
