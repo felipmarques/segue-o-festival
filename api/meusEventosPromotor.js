@@ -42,7 +42,48 @@ module.exports = async (req, res) => {
       return res.status(500).json({ erro: 'Erro ao recuperar eventos.' });
     }
 
-    } else if (req.method === 'POST') {
+    } else if (req.method === 'DELETE') {
+    const { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({ erro: 'Erro: ID do evento não fornecido.' });
+    }
+
+    try {
+        await pool.query("DELETE FROM eventos WHERE id_evento = $1", [id]);
+        return res.status(200).json({ mensagem: "Evento removido com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao remover evento:", error);
+        return res.status(500).json({ erro: "Erro ao remover evento." });
+    }
+} else if (req.method === 'PUT') {
+    let body = req.body;
+
+    if (typeof body === 'string') {
+        try {
+            body = JSON.parse(body);
+        } catch (err) {
+            return res.status(400).json({ erro: 'JSON inválido no corpo da requisição.' });
+        }
+    }
+
+    const { id, nome, descricao, data } = body;
+
+    if (!id || !nome || !descricao || !data) {
+        return res.status(400).json({ erro: 'Erro: Todos os campos são obrigatórios para edição.' });
+    }
+
+    try {
+        await pool.query(
+            "UPDATE eventos SET nome = $1, descricao = $2, data = $3 WHERE id_evento = $4",
+            [nome, descricao, data, id]
+        );
+        return res.status(200).json({ mensagem: "Evento atualizado com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao atualizar evento:", error);
+        return res.status(500).json({ erro: "Erro ao atualizar evento." });
+    }
+} else if (req.method === 'POST') {
     let body = req.body;
   
     // Garante que seja um objeto (em ambientes onde req.body pode vir como string)
