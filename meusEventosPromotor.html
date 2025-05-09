@@ -93,12 +93,14 @@ async function enviarEdicao(id) {
         <p class="conteudo-secundario-paragrafo">${formatarData(evento.data)}</p>
         <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
         <button onclick="mostrarFormularioEdicao('${evento.id_evento}', '${evento.nome}', '${evento.data}', '${evento.endereco}')">Editar</button>
+        /////BOTÃO PARA EDITAR EVENTO/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         <div id="form-edicao-${evento.id_evento}" style="display:none; margin-top:10px;">
             <input type="text" id="nome-${evento.id_evento}" value="${evento.nome}" />
             <input type="date" id="data-${evento.id_evento}" value="${evento.data.split('T')[0]}" />
             <input type="text" id="endereco-${evento.id_evento}" value="${evento.endereco}" />
             <button onclick="enviarEdicao('${evento.id_evento}')">Salvar</button>
         </div>
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     `;
     document.querySelector(".conteudo-secundario-primeiralinha").appendChild(eventoDiv);
 });
