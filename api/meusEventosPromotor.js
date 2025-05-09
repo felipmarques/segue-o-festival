@@ -42,9 +42,9 @@ module.exports = async (req, res) => {
       return res.status(500).json({ erro: 'Erro ao recuperar eventos.' });
     }
 
-  } else if (req.method === 'POST') {
+    } else if (req.method === 'POST') {
     let body = req.body;
-
+  
     // Garante que seja um objeto (em ambientes onde req.body pode vir como string)
     if (typeof body === 'string') {
       try {
@@ -53,31 +53,27 @@ module.exports = async (req, res) => {
         return res.status(400).json({ erro: 'JSON inválido no corpo da requisição.' });
       }
     }
-
+  
     const { cpf, evento_id } = body;
-
+  
     if (!cpf || !evento_id) {
       return res.status(400).json({ erro: 'Erro: CPF e ID do evento são obrigatórios.' });
     }
-
+  
     try {
-      const checkQuery = `SELECT 1 FROM eventos_salvos WHERE cpf = $1 AND evento_id = $2`;
+      const checkQuery = `SELECT 1 FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2`;
       const checkResult = await pool.query(checkQuery, [cpf, evento_id]);
-
+  
       if (checkResult.rowCount > 0) {
-        return res.status(409).json({ erro: 'Evento já salvo anteriormente.' });
+        return res.status(409).json({ mensagem: 'Evento já salvo anteriormente.' });
       }
-
-      const insertQuery = `INSERT INTO eventos_salvos (cpf, evento_id) VALUES ($1, $2)`;
+  
+      const insertQuery = `INSERT INTO eventos_salvos (usuario_cpf, evento_id) VALUES ($1, $2)`;
       await pool.query(insertQuery, [cpf, evento_id]);
-
+  
       return res.status(201).json({ mensagem: 'Evento salvo com sucesso!' });
     } catch (error) {
       console.error('Erro ao salvar evento:', error);
       return res.status(500).json({ erro: 'Erro ao salvar evento.' });
     }
-
-  } else {
-    return res.status(405).json({ erro: 'Método não permitido.' });
-  }
-};
+}
