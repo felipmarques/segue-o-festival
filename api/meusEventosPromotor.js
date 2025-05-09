@@ -50,8 +50,14 @@ if (req.query.teste === 'cnpj') {
     res.status(500).send('Erro ao recuperar eventos.');
   }
 // ✅ TESTE 2 — Outra funcionalidade simples
+ if (teste === 'cnpj') {
+    return res.status(200).json({ mensagem: `CNPJ recebido: ${cnpj}` });
+  }
+
+  // Segunda funcionalidade de teste — Consulta ao banco de dados para retornar nomes
   if (teste === 'usuarios') {
     try {
+      console.log("Buscando usuários...");
       const resultado = await pool.query('SELECT nome FROM usuario_promotor LIMIT 5;');
       const nomes = resultado.rows.map(row => row.nome);
       return res.status(200).json({ usuarios: nomes });
