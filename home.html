@@ -187,6 +187,7 @@
 
         botaoSalvar.textContent = 'Salvar';
         botaoSalvar.className = 'botao-salvar';
+        botaoSalvar.setAttribute('data-evento-id', evento.id_evento);
         botaoSalvar.onclick = async function () {
           const emailUsuario = localStorage.getItem('email');
           const eventoId = this.getAttribute('data-evento-id');
