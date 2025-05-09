@@ -189,10 +189,22 @@
         botaoSalvar.className = 'botao-salvar';
         botaoSalvar.setAttribute('data-evento-id', evento.id_evento);
         botaoSalvar.onclick = async function () {
-          const emailUsuario = localStorage.getItem('email');
+          const usuarioLogadoString = localStorage.getItem('usuarioLogado');
+          let emailUsuario = null;
+          if (usuarioLogadoString) {
+            try {
+              const usuarioLogado = JSON.parse(usuarioLogadoString);
+              emailUsuario = usuarioLogado.email;
+            } catch (error) {
+              console.error("Erro ao parsear usuarioLogado:", error);
+              alert('Erro ao obter informações do usuário. Por favor, faça login novamente.');
+              return;
+            }
+          }
+        
           const eventoId = this.getAttribute('data-evento-id');
         
-          if (!emailUsuario && !eventoId) {
+          if (!emailUsuario || !eventoId) {
             alert('Erro: e-mail do usuário ou ID do evento não encontrado.');
             return;
           }
