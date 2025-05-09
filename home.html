@@ -192,7 +192,7 @@
           const emailUsuario = localStorage.getItem('email');
           const eventoId = this.getAttribute('data-evento-id');
         
-          if (!emailUsuario || !eventoId) {
+          if (!emailUsuario && !eventoId) {
             alert('Erro: e-mail do usuário ou ID do evento não encontrado.');
             return;
           }
@@ -296,9 +296,7 @@ container.appendChild(div);
           saudacao.style.fontWeight = "bold";
           header.appendChild(saudacao);
         })
-        .catch(error => {
-          console.error("Erro ao buscar nome do usuário:", error);
-        });
+  
    }
   function logout() {
     localStorage.clear();
