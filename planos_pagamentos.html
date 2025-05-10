@@ -119,5 +119,14 @@
       <button class="button" onclick="window.location.href='loginPromotor.html'">Assinar Advanced</button>
     </div>
   </div>
+  
+  <script>
+  document.querySelectorAll('.button').forEach(button => {
+    button.addEventListener('click', () => {
+      alert('Plano escolhido com sucesso!');
+      window.location.href = 'loginPromotor.html';
+    });
+  });
+</script>
 </body>
 </html>
