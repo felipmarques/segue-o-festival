@@ -182,61 +182,6 @@
         div.appendChild(titulo);
         div.appendChild(data);
         div.appendChild(local);
-
-        const botaoSalvar = document.createElement('button');
-
-        botaoSalvar.textContent = 'Salvar';
-        botaoSalvar.className = 'botao-salvar';
-        botaoSalvar.setAttribute('data-evento-id', evento.id_evento);
-        botaoSalvar.onclick = async function () {
-          const emailUsuario = localStorage.getItem('email');
-          const eventoId = this.getAttribute('data-evento-id');
-        
-          if (!emailUsuario || !eventoId) {
-            alert('Erro: e-mail do usuário ou ID do evento não encontrado.');
-            return;
-          }
-        
-          try {
-            // Busca o CPF pelo e-mail
-            const usuarioResponse = await fetch(`/api/usuarios?email=${emailUsuario}`);
-            if (!usuarioResponse.ok) {
-              const errorText = await usuarioResponse.text();
-              throw new Error(`Erro ao buscar CPF do usuário: ${errorText}`);
-            }
-            const usuario = await usuarioResponse.json();
-            const cpf = usuario.cpf;
-        
-            // Envia os dados para salvar o evento
-            const response = await fetch('/api/eventos', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ cpf, evento_id: eventoId })
-            });
-        
-            // Lê a resposta como texto primeiro
-            const responseText = await response.text();
-        
-            // Tenta converter para JSON, se possível
-            let jsonResponse;
-            try {
-              jsonResponse = JSON.parse(responseText);
-            } catch (e) {
-              throw new Error(`Resposta não é JSON válido: ${responseText}`);
-            }
-        
-            if (response.ok) {
-              alert(jsonResponse.mensagem || 'Evento salvo com sucesso!');
-            } else {
-              throw new Error(jsonResponse.erro || jsonResponse.mensagem || 'Erro ao salvar evento');
-            }
-          } catch (erro) {
-            console.error('Erro ao salvar evento:', erro);
-            alert(erro.message);
-          }
-        };
-
-div.appendChild(botaoSalvar);
 container.appendChild(div);
       });
     }
