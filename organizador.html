@@ -217,6 +217,7 @@
             if (response.ok) {
                 alert("Cadastro realizado com sucesso!");
                 document.getElementById("registrationForm").reset();
+                window.location.href = "planos_pagamentos.html";
             } else {
                 const errorMessage = await response.text();
                 alert(`Erro ao cadastrar: ${errorMessage}`);
