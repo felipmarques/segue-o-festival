@@ -124,7 +124,14 @@
   document.querySelectorAll('.button').forEach(button => {
     button.addEventListener('click', () => {
       alert('Plano escolhido com sucesso!');
-      window.location.href = 'loginPromotor.html';
+      
+      const plano = button.textContent.trim();
+
+      if (plano === 'Começar grátis') {
+        window.location.href = 'loginPromotor.html';
+      } else {
+        window.location.href = 'pagamento.html';
+      }
     });
   });
 </script>
