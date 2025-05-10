@@ -106,6 +106,9 @@
           Pagamento Confirmado com Sucesso!
         `;
         statusDiv.style.color = '#28a745'; // Verde
+        setTimeout(() => {
+          window.location.href = 'loginPromotor.html';
+        }, 2000);
       } else {
         statusDiv.innerHTML = `
           <img src="https://via.placeholder.com/50/ff0000/ffffff?text=X" class="check-img" alt="Falha no Pagamento">
