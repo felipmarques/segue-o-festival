@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Planos de Pagamento</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+
+    .plans-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .plan {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .plan:hover {
+      transform: scale(1.05);
+    }
+
+    .plan h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .price {
+      font-size: 2rem;
+      margin: 1rem 0;
+    }
+
+    .features {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .features li {
+      margin-bottom: 0.5rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .features li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #00ffcc;
+    }
+
+    .button {
+      background: white;
+      color: #007bff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .button:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Escolha o Plano Ideal</h1>
+  <div class="plans-container">
+    <div class="plan">
+      <h2>Free</h2>
+      <p class="price">R$ 0/mês</p>
+      <ul class="features">
+        <li>Cadastro de até 4 eventos/mês</li>
+        <li>Listagem padrão</li>
+        <li>Painel básico</li>
+      </ul>
+      <button class="button">Começar grátis</button>
+    </div>
+    <div class="plan">
+      <h2>Pro</h2>
+      <p class="price">R$ 29/mês</p>
+      <ul class="features">
+        <li>8 eventos por mês</li>
+        <li>Eventos em destaque</li>
+        <li>Suporte por e-mail</li>
+        <li>Insights básicos</li>
+      </ul>
+      <button class="button">Assinar Pro</button>
+    </div>
+    <div class="plan">
+      <h2>Advanced</h2>
+      <p class="price">R$ 59/mês</p>
+      <ul class="features">
+        <li>Eventos ilimitados</li>
+        <li>Todos em destaque</li>
+        <li>Suporte prioritário</li>
+        <li>Estatísticas avançadas</li>
+        <li>Integrações sociais</li>
+      </ul>
+      <button class="button">Assinar Advanced</button>
+    </div>
+  </div>
+</body>
+</html>
