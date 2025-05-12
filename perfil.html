@@ -323,7 +323,7 @@
               }
             
               try {
-                const response = await fetch(`/api/usuarios?email=${encodeURIComponent(usuarioLogado.email)}`);
+                const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
                 if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
             
                 const dados = await response.json();
