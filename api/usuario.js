@@ -2,9 +2,7 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false },
 });
 
 module.exports = async (req, res) => {
@@ -17,7 +15,8 @@ module.exports = async (req, res) => {
 
     try {
       const query = `
-        SELECT nome, cpf, data_nascimento, email_usuario, telefone
+        SELECT nome, cpf, data_nascimento, sexo, endereco, cep, numero,
+               complemento, municipio, uf, email_usuario AS email, senha
         FROM usuario
         WHERE email_usuario = $1
       `;
@@ -32,9 +31,79 @@ module.exports = async (req, res) => {
       console.error('Erro ao consultar o usuário:', err);
       return res.status(500).json({ message: 'Erro interno do servidor' });
     }
-
-  } else {
-    res.status(405).send('Método não permitido');
   }
-  console.log('Email recebido:', email);
+
+  if (req.method === 'POST') {
+    const {
+      nome,
+      cpf,
+      data_nascimento,
+      sexo,
+      endereco,
+      cep,
+      numero,
+      complemento,
+      municipio,
+      uf,
+      email,
+      senha
+    } = req.body;
+
+    // Validações
+    const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+    if (!senhaRegex.test(senha)) {
+      return res.status(400).json({
+        message:
+          'A senha deve ter no mínimo 8 caracteres, com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.'
+      });
+    }
+
+    if (!/^\d{11}$/.test(cpf)) {
+      return res.status(400).json({ message: 'CPF deve conter 11 dígitos numéricos.' });
+    }
+
+    if (!/^\d{8}$/.test(cep)) {
+      return res.status(400).json({ message: 'CEP deve conter 8 dígitos numéricos.' });
+    }
+
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(data_nascimento)) {
+      return res.status(400).json({ message: 'Data deve estar no formato dd/mm/aaaa.' });
+    }
+
+    try {
+      const query = `
+        UPDATE usuario
+        SET nome = $1, cpf = $2, data_nascimento = $3, sexo = $4, endereco = $5,
+            cep = $6, numero = $7, complemento = $8, municipio = $9, uf = $10, senha = $11
+        WHERE email_usuario = $12
+      `;
+      const values = [
+        nome,
+        cpf,
+        data_nascimento,
+        sexo,
+        endereco,
+        cep,
+        numero,
+        complemento,
+        municipio,
+        uf,
+        senha,
+        email
+      ];
+
+      const result = await pool.query(query, values);
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'Usuário não encontrado para atualizar.' });
+      }
+
+      return res.status(200).json({ message: 'Dados atualizados com sucesso!' });
+    } catch (err) {
+      console.error('Erro ao atualizar o usuário:', err);
+      return res.status(500).json({ message: 'Erro interno ao atualizar o usuário.' });
+    }
+  }
+
+  return res.status(405).json({ message: 'Método não permitido' });
 };
