@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
     try {
       const query = `
         SELECT nome, cpf, data_nascimento, sexo, endereco, cep, numero,
-               complemento, municipio, uf, email_usuario AS email, senha
+               complemento, municipio, uf, email_usuario AS email, senha_usuario AS senha
         FROM usuario
         WHERE email_usuario = $1
       `;
