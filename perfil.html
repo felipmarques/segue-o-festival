@@ -306,7 +306,7 @@
           
     </main>
 
-          <script>
+         <script>
             document.addEventListener("DOMContentLoaded", async () => {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
@@ -328,13 +328,20 @@
             
                 const dados = await response.json();
             
-                // Preenche os campos com os dados retornados do servidor
                 document.getElementById("txtNome").value = dados.nome || "";
-                document.getElementById("telCPF").value = dados.cpf || "";
-                document.getElementById("dateNascimento").value = dados.data_nascimento || "";
+                document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
+                
+                // Mostra a data como dd/mm/aaaa
+                if (dados.data_nascimento) {
+                  const dataISO = new Date(dados.data_nascimento).toISOString().split("T")[0]; // yyyy-mm-dd
+                  const [ano, mes, dia] = dataISO.split("-");
+                  document.getElementById("dateNascimento").value = `${ano}-${mes}-${dia}`; // valor para input
+                  document.getElementById("dateNascimento").setAttribute("data-br", `${dia}/${mes}/${ano}`); // visual opcional
+                }
+            
                 document.getElementById("sexo").value = dados.sexo || "nao_informar";
                 document.getElementById("txtEndereço").value = dados.endereco || "";
-                document.getElementById("telCEP").value = dados.cep || "";
+                document.getElementById("telCEP").value = formatarCEP(dados.cep || "");
                 document.getElementById("telNum").value = dados.numero || "";
                 document.getElementById("telCom").value = dados.complemento || "";
                 document.getElementById("municipio").value = dados.municipio || "sao_paulo";
@@ -346,15 +353,18 @@
               }
             });
             
-            // Função para salvar dados no banco de dados
             async function salvarPerfil() {
+              const rawData = document.getElementById("dateNascimento").value;
+              const [ano, mes, dia] = rawData.split("-");
+              const dataBR = `${dia}/${mes}/${ano}`;
+            
               const dados = {
                 nome: document.getElementById("txtNome").value.trim(),
-                cpf: document.getElementById("telCPF").value.replace(/\D/g, ""), // remove pontos e traços
-                data_nascimento: document.getElementById("dateNascimento").value.trim(),
+                cpf: document.getElementById("telCPF").value.replace(/\D/g, ""),
+                data_nascimento: dataBR,
                 sexo: document.getElementById("sexo").value,
                 endereco: document.getElementById("txtEndereço").value.trim(),
-                cep: document.getElementById("telCEP").value.replace(/\D/g, ""), // remove traço
+                cep: document.getElementById("telCEP").value.replace(/\D/g, ""),
                 numero: document.getElementById("telNum").value.trim(),
                 complemento: document.getElementById("telCom").value.trim(),
                 municipio: document.getElementById("municipio").value,
@@ -380,13 +390,13 @@
                 return;
               }
             
-              if (!/^\d{4}-\d{2}-\d{2}$/.test(dados.data_nascimento)) {
-                alert("A data deve estar no formato YYYY-MM-DD (formato do input date).");
+              if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dados.data_nascimento)) {
+                alert("A data de nascimento deve estar no formato dd/mm/aaaa.");
                 return;
               }
             
               try {
-                const response = await fetch("/api/usuarios", {
+                const response = await fetch("/api/usuario", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(dados),
@@ -406,23 +416,29 @@
               }
             }
             
-            // Máscara para CPF
+            // Funções de máscara
             document.getElementById("telCPF").addEventListener("input", function (e) {
-              let value = e.target.value.replace(/\D/g, '');
-              if (value.length > 11) value = value.slice(0, 11);
-              value = value.replace(/(\d{3})(\d)/, '$1.$2');
-              value = value.replace(/(\d{3})(\d)/, '$1.$2');
-              value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-              e.target.value = value;
+              e.target.value = formatarCPF(e.target.value);
             });
             
-            // Máscara para CEP
             document.getElementById("telCEP").addEventListener("input", function (e) {
-              let value = e.target.value.replace(/\D/g, '');
-              if (value.length > 8) value = value.slice(0, 8);
-              value = value.replace(/(\d{5})(\d{1,3})$/, '$1-$2');
-              e.target.value = value;
+              e.target.value = formatarCEP(e.target.value);
             });
+            
+            function formatarCPF(valor) {
+              let v = valor.replace(/\D/g, "").slice(0, 11);
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+              return v;
+            }
+            
+            function formatarCEP(valor) {
+              let v = valor.replace(/\D/g, "").slice(0, 8);
+              v = v.replace(/(\d{5})(\d{1,3})$/, "$1-$2");
+              return v;
+            }
             </script>
+
 </body>
 </html>
