@@ -70,6 +70,10 @@ module.exports = async (req, res) => {
       return res.status(400).json({ message: 'Data deve estar no formato dd/mm/aaaa.' });
     }
 
+    // ✅ CONVERTE DATA PARA FORMATO ISO (yyyy-mm-dd)
+    const [dia, mes, ano] = data_nascimento.split('/');
+    const dataISO = `${ano}-${mes}-${dia}`;
+
     try {
       const query = `
         UPDATE usuario
@@ -80,7 +84,7 @@ module.exports = async (req, res) => {
       const values = [
         nome,
         cpf,
-        data_nascimento,
+        dataISO,  // ✅ agora no formato correto
         sexo,
         endereco,
         cep,
