@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login e Registro</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .input-container {
             position: relative;
@@ -22,17 +23,26 @@
 <body>
     <div class="container">
         <div class="left">
-            <h1>Entre na sua conta</h1>
-            <p>Entre com o seu e-mail</p>
+            <a href="https://segue-o-festival.vercel.app/"><h1 class="cabecalho-titulo">Segue<br>O Festival!</h1></a>
+            <h1 class="titulo-esquerda">Entre na sua conta</h1>
+            <div class="social-icons">
+                <img src="images/facebook.png" alt="Facebook" id="login-facebook">
+                <img src="images/twitter.png" alt="Twitter" id="login-twitter">
+                <img src="images/google.png" alt="Google" id="login-google">
+            </div>            
+            <p class="paragrafo-esquerda">Entre com o seu e-mail</p>
             <form id="loginForm">
                 <div class="input-container">
-                    <span class="icon">📧</span>
-                    <input type="text" id="identificador" name="identificador" placeholder="joaosilva@email.com" required>
+                    <span class="icon"><i class="fa-regular fa-envelope"></i></span>
+                    <input type="text" id="identificador" name="identificador" placeholder="E-mail" required>
                 </div>
                 <div class="input-container">
-                    <span class="icon">🔒</span>
+                    <span class="icon"><i class="fa-solid fa-lock"></i></span>
                     <input type="password" id="password" name="senha" placeholder="Senha" required>
-                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <i id="eye-show" class="fa-regular fa-eye" style="display: none;"></i>
+                        <i id="eye-hide" class="fa-regular fa-eye-slash"></i>
+                    </span>                    
                 </div>
                 <div class="forgot-password">
                     <a href="#">Esqueceu a senha?</a> | <a href="loginPromotor.html">Login de promotores</a>
@@ -41,18 +51,52 @@
             </form>
         </div>
         <div class="right">
-            <h1>Bem-Vindo de volta!</h1>
-            <p>Por favor insira os dados necessários para continuar</p>
-            <a href="identifica.html" class="register-link">Novo por aqui? Cadastre-se!</a>
+            <h1 class="titulo-direita">Bem-Vindo de Volta!</h1>
+            <p class="paragrafo-direita">Por favor insira os dados<br>necessários para continuar</p>
+            <div class="cadastro">
+                <p class="paragrafo-cadastro">Novo por aqui? Cadastre-se!</p>
+                <a href="#" class="botao-cadastrar">Cadastre-se</a>
+            </div>
         </div>
+
+                
+        <div id="modal-cadastro" class="modal">
+            <div class="modal-content">
+            <span class="fechar" onclick="fecharModal()">&times;</span>
+            <h2 class="modal-text">Você é festivo ou promotor?</h2>
+            <div class="botoes-escolha">
+                <button class="escolha" onclick="iniciarDirecionamento('https://segue-o-festival.vercel.app/cadastro_participante.html')">Festivo</button>
+                <button class="escolha" onclick="iniciarDirecionamento('https://segue-o-festival.vercel.app/organizador.html')">Promotor</button>
+            </div>
+            
+            <div id="carregando" class="carregando">
+                <p class="modal-text">Direcionando...</p>
+                <div class="barra">
+                <div class="progresso"></div>
+                </div>
+            </div>
+            </div>
+        </div>
+  
     </div>
 
     <script>
         function togglePassword() {
-            const passwordField = document.getElementById("password");
-            const type = passwordField.getAttribute("type");
-            passwordField.setAttribute("type", type === "password" ? "text" : "password");
+            const passwordInput = document.getElementById("password");
+            const eyeShow = document.getElementById("eye-show");
+            const eyeHide = document.getElementById("eye-hide");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeShow.style.display = "inline";
+                eyeHide.style.display = "none";
+            } else {
+                passwordInput.type = "password";
+                eyeShow.style.display = "none";
+                eyeHide.style.display = "inline";
+            }
         }
+
 
         // Envio do formulário para a API
         document.getElementById("loginForm").addEventListener("submit", async function (event) {
@@ -96,6 +140,39 @@
                 alert("Houve um erro na requisição. Tente novamente mais tarde.");
             }
         });
+
+        document.getElementById("login-facebook").addEventListener("click", function () {
+            window.location.href = "https://www.facebook.com/v13.0/dialog/oauth?client_id=SEU_APP_ID&redirect_uri=SUA_REDIRECT_URI&response_type=token";
+        });
+
+        document.getElementById("login-twitter").addEventListener("click", function () {
+            window.location.href = "https://api.twitter.com/oauth/authenticate?oauth_token=SEU_TOKEN_AQUI";
+        });
+
+        document.getElementById("login-google").addEventListener("click", function () {
+            window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?client_id=SEU_CLIENT_ID&redirect_uri=SUA_REDIRECT_URI&response_type=token&scope=email profile";
+        });
+
+
+        // Mostrar o modal quando clicar no botão "Cadastre-se"
+        document.querySelector('.botao-cadastrar').addEventListener('click', function (event) {
+        event.preventDefault(); 
+        document.getElementById('modal-cadastro').style.display = 'block';
+        });
+
+        function iniciarDirecionamento(destino) {
+        const carregando = document.getElementById('carregando');
+        carregando.style.display = 'block';
+
+        setTimeout(() => {
+            window.location.href = destino;
+        }, 3000);
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-cadastro').style.display = 'none';
+        }
+
     </script>
 </body>
 </html>
