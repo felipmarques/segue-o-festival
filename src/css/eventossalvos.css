@@ -355,6 +355,59 @@ main {
     color: #666;
     font-family: 'Poppins', sans-serif;
   }
+
+/* Container que segura os eventos (ex: #eventosContainer ou .conteudo-secundario) */
+.conteudo-secundario {
+  display: flex;
+  justify-content: center; /* ou space-around, dependendo do alinhamento desejado */
+  gap: 20px; /* reduz o espaçamento entre os cards */
+  flex-wrap: wrap; /* permite que eles quebrem a linha se necessário */
+}
+
+/* Estilo de cada evento */
+.conteudo-secundario-item {
+  max-width: 350px; /* limita a largura do card */
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* Imagem */
+.conteudo-secundario-imagem {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Título */
+.conteudo-secundario-titulo {
+  font-size: 1.1rem;
+  margin: 10px 0 5px;
+  text-align: center;
+}
+
+/* Parágrafo (descrição) */
+.conteudo-secundario-paragrafo {
+  font-size: 0.95rem;
+  text-align: justify;
+  max-height: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+/* (Opcional) mostra reticências visuais */
+.conteudo-secundario-paragrafo::after {
+  content: '...';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-left: 10px;
+  background: linear-gradient(to right, transparent, white 50%);
+}
+
   
   
 
