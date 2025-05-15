@@ -406,6 +406,39 @@ main {
   -webkit-box-orient: vertical;
 }
 
+.previsao-tempo {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.previsao-tempo input {
+  padding: 10px;
+  width: 60%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.previsao-tempo button {
+  padding: 10px 15px;
+  margin-left: 10px;
+  border: none;
+  background-color: #fecd2f;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+#resultadoClima {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
 
   
   
