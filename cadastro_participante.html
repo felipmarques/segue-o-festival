@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela de Login e Registro</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cadastroparticipante.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .input-container {
             display: flex;
@@ -34,56 +35,53 @@
 <body>
     <div class="container">
         <div class="left">
-            <h1>Bem-Vindo!</h1>
-            <p>Se você já tem uma conta, entre!</p>
-            <a href="login.html">
-                <button class="login-button">Entrar</button>
-            </a>
+            <a href="https://segue-o-festival.vercel.app/"><h1 class="cabecalho-titulo">Segue<br>O Festival!</h1></a>
+            <h1 class="titulo-esquerda">Bem-Vindo!</h1>
+            <p class="paragrafo-esquerda">Por favor forneça as<br>informações necessárias<br>para criar uma conta</p>
+            <p class="paragrafo-esquerda-botao">Se você têm uma conta, entre!</p>
+                <a href="login.html" class="login-button">Entre</a>
         </div>
         <div class="right">
-            <h1>Crie uma nova conta</h1>
+            <h1 class="titulo-direita">Crie uma nova conta</h1>
+            <div class="social-icons">
+                <img src="src/images/facebook.png" alt="Facebook" id="login-facebook">
+                <img src="src/images/twitter.png" alt="Twitter" id="login-twitter">
+                <img src="src/images/google.png" alt="Google" id="login-google">
+            </div> 
+            <p class="paragrafo-direita">Cadastre-se com o seu e-mail</p>
             <form id="registrationForm" action="/api/register" method="post">
                 <div class="input-container">
-                    <span class="icon">👤</span>
+                    <span class="icon"><i class="fa-regular fa-user"></i></span>
                     <input type="text" name="nome" placeholder="Nome de Usuário" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: João Silva</span>
                     <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
                 <div class="input-container">
-                    <span class="icon">📧</span>
+                    <span class="icon"><i class="fa-regular fa-envelope"></i></span>
                     <input type="email" name="email_usuario" placeholder="E-mail" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: joaosilva@email.com</span>
                     <span class="error" id="emailError">Por favor, insira um email válido.</span>
                 </div>
                 <div class="input-container">
-                    <span class="icon">🔒</span>
+                    <span class="icon"><i class="fa-solid fa-lock"></i></span>
                     <input type="password" name="senha_usuario" placeholder="Senha" required id="password">
-                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <i id="eye-show" class="fa-regular fa-eye" style="display: none;"></i>
+                        <i id="eye-hide" class="fa-regular fa-eye-slash"></i>
+                    </span> 
                     <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
                 </div>
                 <div class="input-container">
-                    <span class="icon">📞</span>
+                    <span class="icon"><i class="fa-solid fa-phone"></i></span>
                     <input type="text" name="telefone" placeholder="Telefone" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Exemplo: 11987654321</span>
                     <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
                 </div>
                 <div class="input-container">
-                    <span class="icon">📅</span>
+                    <span class="icon"><i class="fa-regular fa-calendar"></i></span>
                     <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Data de nascimento</span>
                     <span class="error" id="dataNascimentoError">Por favor, insira uma data de nascimento válida.</span>
                 </div>
                 <div class="input-container">
-                    <span class="icon">📄</span>
+                    <span class="icon"><i class="fa-regular fa-file"></i></span>
                     <input type="text" name="cpf" placeholder="CPF" required>
-                    <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                    <span class="info-text">Formato: 12345678900</span>
                     <span class="error" id="cpfError">Por favor, insira um CPF válido.</span>
                 </div>
                 <button class="register-button" type="submit">Cadastrar</button>
@@ -91,14 +89,23 @@
         </div>
     </div>
 
+    
+
     <script>
+
         function togglePassword() {
-            var passwordField = document.getElementById("password");
-            var passwordFieldType = passwordField.getAttribute("type");
-            if (passwordFieldType === "password") {
-                passwordField.setAttribute("type", "text");
+            const passwordInput = document.getElementById("password");
+            const eyeShow = document.getElementById("eye-show");
+            const eyeHide = document.getElementById("eye-hide");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeShow.style.display = "inline";
+                eyeHide.style.display = "none";
             } else {
-                passwordField.setAttribute("type", "password");
+                passwordInput.type = "password";
+                eyeShow.style.display = "none";
+                eyeHide.style.display = "inline";
             }
         }
 
