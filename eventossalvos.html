@@ -63,6 +63,12 @@
       <a href="pagina2.html">2</a>
       <a href="pagina3.html">3</a>
     </div>
+    <section class="previsao-tempo">
+      <h2>Confira o Clima</h2>
+      <input type="text" id="cidadeInput" placeholder="Digite a cidade" />
+      <button onclick="buscarClima()">Ver previsão</button>
+      <div id="resultadoClima"></div>
+    </section>
 
     <footer class="rodape">
       <h3 class="titulo-rodape">Segue<br />O Festival!</h3>
@@ -198,6 +204,35 @@
       console.error("Erro ao carregar eventos aleatórios:", error);
     }
   });
+  async function buscarClima() {
+    const cidade = document.getElementById('cidadeInput').value.trim();
+    const resultado = document.getElementById('resultadoClima');
+
+    if (!cidade) {
+      resultado.textContent = "Digite uma cidade válida.";
+      return;
+    }
+
+    const apiKey = 'SUA_API_KEY_AQUI';
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cidade)}&appid=${apiKey}&units=metric&lang=pt_br`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Cidade não encontrada');
+
+      const data = await response.json();
+      resultado.innerHTML = `
+        <strong>${data.name}, ${data.sys.country}</strong><br>
+        ${data.weather[0].description}<br>
+        Temperatura: ${data.main.temp}°C<br>
+        Sensação térmica: ${data.main.feels_like}°C<br>
+        Umidade: ${data.main.humidity}%
+      `;
+    } catch (error) {
+      resultado.textContent = "Erro ao buscar previsão. Verifique o nome da cidade.";
+      console.error(error);
+    }
+  }
 </script>
 
 </body>
