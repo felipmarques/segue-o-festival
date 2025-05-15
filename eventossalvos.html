@@ -17,12 +17,6 @@
             <span class="item-description">Olá, Lorena!</span>
           </p>
         </div>
-      </section>
-         <section class="previsao-tempo">
-            <h2>Previsão do Tempo - São Paulo (SP)</h2>
-            <div id="previsaoContainer">
-            <p>Carregando previsão...</p>
-        </div>  
 
         <ul id="side_items">
           <li class="side-item"><a href="https://segue-o-festival.vercel.app/"><i class="fa-solid fa-house"></i><span class="item-description">Home</span></a></li>
@@ -69,7 +63,6 @@
       <a href="pagina2.html">2</a>
       <a href="pagina3.html">3</a>
     </div>
-   
 
     <footer class="rodape">
       <h3 class="titulo-rodape">Segue<br />O Festival!</h3>
@@ -133,7 +126,7 @@
         return;
       }
 
-      fetch(`/api/eventos-salvos?cpf=${encodeURIComponent(usuarioLogado.cpf)}`)
+      fetch(/api/eventos-salvos?cpf=${encodeURIComponent(usuarioLogado.cpf)})
         .then(response => {
           if (!response.ok) throw new Error("Erro ao buscar eventos salvos");
           return response.json();
@@ -149,12 +142,12 @@
 
           eventos.forEach(evento => {
             const div = document.createElement("div");
-            div.innerHTML = `
+            div.innerHTML = 
               <img class="conteudo-secundario-imagem" src="${evento.imagemUrl}" alt="Banner ${evento.titulo}">
               <h3 class="conteudo-secundario-titulo">${evento.titulo}</h3>
               <p class="conteudo-secundario-paragrafo">${evento.data}</p>
               <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
-            `;
+            ;
             container.appendChild(div);
           });
         })
@@ -184,7 +177,7 @@
 
         const imagem = document.createElement("img");
         imagem.className = "conteudo-secundario-imagem";
-        imagem.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : "/img/default.jpg";
+        imagem.src = evento.imagem ? data:image/jpeg;base64,${evento.imagem} : "/img/default.jpg";
         imagem.alt = evento.nome;
 
         const titulo = document.createElement("h3");
@@ -205,38 +198,6 @@
       console.error("Erro ao carregar eventos aleatórios:", error);
     }
   });
-  fetch("https://apiprevmet3.inmet.gov.br/previsao/SP")
-  .then(response => response.json())
-  .then(data => {
-    const container = document.getElementById("previsaoContainer");
-    container.innerHTML = ""; // limpa "carregando..."
-
-    const cidades = Object.keys(data);
-    const cidade = cidades[0]; // pega a primeira cidade (ex: Adamantina)
-
-    const previsoes = data[cidade];
-    const dias = Object.keys(previsoes).slice(0, 3); // mostra só os próximos 3 dias
-
-    dias.forEach(dia => {
-      const info = previsoes[dia];
-      const div = document.createElement("div");
-      div.className = "previsao-dia";
-
-      div.innerHTML = `
-        <strong>${dia}</strong><br>
-        Resumo: ${info.resumo}<br>
-        Temp Mín: ${info.temp_min}°C - Temp Máx: ${info.temp_max}°C<br>
-        UV: ${info.uv}
-      `;
-
-      container.appendChild(div);
-    });
-  })
-  .catch(err => {
-    console.error("Erro ao buscar previsão:", err);
-    document.getElementById("previsaoContainer").innerText = "Não foi possível carregar a previsão.";
-  });
-  }
 </script>
 
 </body>
