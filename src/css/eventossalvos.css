@@ -359,8 +359,8 @@ main {
 /* Container principal que segura os cards */
 .conteudo-secundario {
   display: flex;
-  justify-content: center; /* centraliza */
-  gap: 40px; /* espaço entre os cards */
+  justify-content: center;
+  gap: 24px; /* Reduzido de 40px para 24px */
   flex-wrap: wrap;
   padding: 20px;
 }
