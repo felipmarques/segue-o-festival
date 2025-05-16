@@ -142,12 +142,12 @@
 
           eventos.forEach(evento => {
             const div = document.createElement("div");
-            div.innerHTML = 
+            div.innerHTML = `
               <img class="conteudo-secundario-imagem" src="${evento.imagemUrl}" alt="Banner ${evento.titulo}">
               <h3 class="conteudo-secundario-titulo">${evento.titulo}</h3>
               <p class="conteudo-secundario-paragrafo">${evento.data}</p>
               <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
-            ;
+            `;
             container.appendChild(div);
           });
         })
@@ -177,7 +177,7 @@
 
         const imagem = document.createElement("img");
         imagem.className = "conteudo-secundario-imagem";
-        imagem.src = evento.imagem ? data:image/jpeg;base64,${evento.imagem} : "/img/default.jpg";
+        imagem.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : "/img/default.jpg";
         imagem.alt = evento.nome;
 
         const titulo = document.createElement("h3");
