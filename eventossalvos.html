@@ -119,84 +119,44 @@
   </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-      if (!usuarioLogado?.cpf) {
-        console.warn("Usuário não logado ou CPF não disponível.");
-        return;
-      }
+  document.addEventListener("DOMContentLoaded", () => {
+    const eventosSalvos = JSON.parse(localStorage.getItem("eventosSalvos")) || [];
+    const container = document.getElementById("eventosContainer");
+    container.innerHTML = "";
 
-      fetch(`/api/eventos-salvos?cpf=${encodeURIComponent(usuarioLogado.cpf)}`)
-        .then(response => {
-          if (!response.ok) throw new Error("Erro ao buscar eventos salvos");
-          return response.json();
-        })
-        .then(eventos => {
-          const container = document.getElementById("eventosContainer");
-          container.innerHTML = "";
-
-          if (eventos.length === 0) {
-            container.innerHTML = "<p>Você ainda não salvou nenhum evento.</p>";
-            return;
-          }
-
-          eventos.forEach(evento => {
-            const div = document.createElement("div");
-            div.innerHTML = `
-              <img class="conteudo-secundario-imagem" src="${evento.imagemUrl}" alt="Banner ${evento.titulo}">
-              <h3 class="conteudo-secundario-titulo">${evento.titulo}</h3>
-              <p class="conteudo-secundario-paragrafo">${evento.data}</p>
-              <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
-            `;
-            container.appendChild(div);
-          });
-        })
-        .catch(err => {
-          console.error("Erro ao carregar eventos salvos:", err);
-        });
-    });
-  
-  document.addEventListener("DOMContentLoaded", async () => {
-    try {
-      const response = await fetch('/api/buscaeventos'); // ou a rota que retorna todos os eventos
-      if (!response.ok) throw new Error('Erro ao buscar eventos');
-
-      const eventos = await response.json();
-
-      if (!eventos.length) return;
-
-      // Embaralha o array e pega os 2 primeiros
-      const eventosAleatorios = eventos.sort(() => 0.5 - Math.random()).slice(0, 2);
-
-      const container = document.getElementById("eventosContainer");
-      container.innerHTML = ''; // limpa o conteúdo anterior
-
-      eventosAleatorios.forEach(evento => {
-        const div = document.createElement("div");
-        div.className = 'conteudo-secundario-item';
-
-        const imagem = document.createElement("img");
-        imagem.className = "conteudo-secundario-imagem";
-        imagem.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : "/img/default.jpg";
-        imagem.alt = evento.nome;
-
-        const titulo = document.createElement("h3");
-        titulo.className = "conteudo-secundario-titulo";
-        titulo.textContent = evento.nome;
-
-        const descricao = document.createElement("p");
-        descricao.className = "conteudo-secundario-paragrafo";
-        descricao.textContent = evento.descricao || "Sem descrição";
-
-        div.appendChild(imagem);
-        div.appendChild(titulo);
-        div.appendChild(descricao);
-        container.appendChild(div);
-      });
-
-    } catch (error) {
-      console.error("Erro ao carregar eventos aleatórios:", error);
+    if (eventosSalvos.length === 0) {
+      container.innerHTML = "<p>Você ainda não salvou nenhum evento.</p>";
+      return;
     }
+
+    eventosSalvos.forEach(evento => {
+      const div = document.createElement("div");
+      div.className = "conteudo-secundario-item";
+
+      const imagem = document.createElement("img");
+      imagem.className = "conteudo-secundario-imagem";
+      imagem.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : "/img/default.jpg";
+      imagem.alt = evento.nome;
+
+      const titulo = document.createElement("h3");
+      titulo.className = "conteudo-secundario-titulo";
+      titulo.textContent = evento.nome;
+
+      const data = document.createElement("p");
+      data.className = "conteudo-secundario-paragrafo";
+      data.textContent = evento.data || "Data não disponível";
+
+      const endereco = document.createElement("p");
+      endereco.className = "conteudo-secundario-paragrafo";
+      endereco.textContent = evento.endereco || "Endereço não informado";
+
+      div.appendChild(imagem);
+      div.appendChild(titulo);
+      div.appendChild(data);
+      div.appendChild(endereco);
+
+      container.appendChild(div);
+    });
   });
 </script>
 
