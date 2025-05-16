@@ -157,12 +157,12 @@
         const data = document.createElement('p');
         if (evento.data) {
           const dataEvento = new Date(evento.data);
-
+        
         const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric'
-
+        
         const botaoSalvar = document.createElement('button');
           botaoSalvar.className = 'botao-salvar';
           botaoSalvar.textContent = verificarEventoSalvo(evento.id_evento) ? 'Salvo' : 'Salvar';
@@ -175,7 +175,7 @@
             alternarSalvarEvento(evento.id_evento, botaoSalvar);
           };
           
-      });
+        });
 
         const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
           weekday: 'long'
@@ -193,7 +193,8 @@
         div.appendChild(titulo);
         div.appendChild(data);
         div.appendChild(local);
-container.appendChild(div);
+        div.appendChild(botaoSalvar);
+        container.appendChild(div);
       });
     }
 
