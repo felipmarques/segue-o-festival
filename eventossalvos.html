@@ -126,7 +126,7 @@
         return;
       }
 
-      fetch(/api/eventos-salvos?cpf=${encodeURIComponent(usuarioLogado.cpf)})
+      fetch(`/api/eventos-salvos?cpf=${encodeURIComponent(usuarioLogado.cpf)}`)
         .then(response => {
           if (!response.ok) throw new Error("Erro ao buscar eventos salvos");
           return response.json();
