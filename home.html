@@ -162,6 +162,19 @@
           day: '2-digit',
           month: '2-digit',
           year: 'numeric'
+
+        const botaoSalvar = document.createElement('button');
+          botaoSalvar.className = 'botao-salvar';
+          botaoSalvar.textContent = verificarEventoSalvo(evento.id_evento) ? 'Salvo' : 'Salvar';
+          if (verificarEventoSalvo(evento.id_evento)) {
+            botaoSalvar.classList.add('botao-salvo');
+          }
+        
+          botaoSalvar.onclick = (e) => {
+            e.stopPropagation(); // evitar redirecionamento
+            alternarSalvarEvento(evento.id_evento, botaoSalvar);
+          };
+          
       });
 
         const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
@@ -250,6 +263,28 @@ container.appendChild(div);
   if (!localStorage.getItem("usuarioLogado")) {
     window.location.href = "index.html";
   }
+
+    function verificarEventoSalvo(idEvento) {
+      const salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
+      return salvos.includes(idEvento);
+    }
+
+    function alternarSalvarEvento(idEvento, botao) {
+      let salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
+      const index = salvos.indexOf(idEvento);
+    
+      if (index > -1) {
+        salvos.splice(index, 1);
+        botao.textContent = 'Salvar';
+        botao.classList.remove('botao-salvo');
+      } else {
+        salvos.push(idEvento);
+        botao.textContent = 'Salvo';
+        botao.classList.add('botao-salvo');
+      }
+    
+      localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
+}
   </script>
 </body>
 <footer>
