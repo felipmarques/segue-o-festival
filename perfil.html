@@ -16,7 +16,6 @@
     
                 <p id="user_infos">
                     <span class="item-description">
-                        Olá, Lorena!
                     </span>
                 </p>
             </div>
@@ -310,11 +309,6 @@
             document.addEventListener("DOMContentLoaded", async () => {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
-              if (!usuarioLogado || !usuarioLogado.email) {
-                alert("Usuário não autenticado.");
-                window.location.href = "index.html";
-                return;
-              }
             
               // Saudação no menu lateral
               const nomeUsuario = document.querySelector("#user_infos .item-description");
