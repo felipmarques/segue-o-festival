@@ -131,6 +131,8 @@
 </head>
 <body>
   <div class="container">
+    <button id="btn-voltar-home" style="margin-bottom: 1rem; padding: 0.5rem 1rem; border-radius: 8px; background-color: #001f3f; color: white; border: none; cursor: pointer;">
+    </button>
     <div class="evento-header">
       <img id="imagem" alt="Imagem do evento"/>
       <div class="evento-info">
@@ -277,6 +279,9 @@
     }
 
     document.getElementById("calcular_distancia").addEventListener("click", calcularDistancia);
+    document.getElementById('btn-voltar-home').addEventListener('click', () => {
+      window.location.href = 'index.html';  // ajuste para o caminho correto da sua página inicial
+    });
   </script>
 </body>
 </html>
