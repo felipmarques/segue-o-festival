@@ -92,6 +92,18 @@
             <div>
                 <h2>Bem-Vindo ao Cadastro de Eventos!</h2>
                 <p>Preencha os dados necessários para cadastrar seu evento e torná-lo acessível para o público.</p>
+                 <button id="btn-voltar" style="
+                      margin-top: 1rem;
+                      padding: 0.5rem 1rem;
+                      border-radius: 8px;
+                      background-color: #FFD700;
+                      color: #001f3f;
+                      border: none;
+                      cursor: pointer;
+                      font-weight: bold;
+                      font-size: 1rem;
+                    ">← Voltar</button>
+              </div>
             </div>
         </div>
     </div>
@@ -149,6 +161,13 @@
                 mensagemErro.textContent = "⚠️ Erro ao cadastrar o evento. Tente novamente.";
             }
         });
+        document.getElementById('btn-voltar').addEventListener('click', () => {
+            if (document.referrer) {
+              history.back();
+            } else {
+              window.location.href = 'index.html';
+            }
+          });
     </script>
 
 </body>
