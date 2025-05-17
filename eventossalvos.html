@@ -119,45 +119,75 @@
   </main>
 
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const eventosSalvos = JSON.parse(localStorage.getItem("eventosSalvos")) || [];
-    const container = document.getElementById("eventosContainer");
-    container.innerHTML = "";
-
-    if (eventosSalvos.length === 0) {
-      container.innerHTML = "<p>Você ainda não salvou nenhum evento.</p>";
-      return;
-    }
-
-    eventosSalvos.forEach(evento => {
-      const div = document.createElement("div");
-      div.className = "conteudo-secundario-item";
-
-      const imagem = document.createElement("img");
-      imagem.className = "conteudo-secundario-imagem";
-      imagem.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : "/img/default.jpg";
-      imagem.alt = evento.nome;
-
-      const titulo = document.createElement("h3");
-      titulo.className = "conteudo-secundario-titulo";
-      titulo.textContent = evento.nome;
-
-      const data = document.createElement("p");
-      data.className = "conteudo-secundario-paragrafo";
-      data.textContent = evento.data || "Data não disponível";
-
-      const endereco = document.createElement("p");
-      endereco.className = "conteudo-secundario-paragrafo";
-      endereco.textContent = evento.endereco || "Endereço não informado";
-
-      div.appendChild(imagem);
-      div.appendChild(titulo);
-      div.appendChild(data);
-      div.appendChild(endereco);
-
-      container.appendChild(div);
+    document.addEventListener("DOMContentLoaded", async () => {
+      const eventosSalvos = JSON.parse(localStorage.getItem("eventosSalvos")) || [];
+  
+      if (eventosSalvos.length === 0) {
+        document.getElementById("eventos-lista").innerHTML = "<p>Você ainda não salvou nenhum evento.</p>";
+        return;
+      }
+  
+      try {
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error("Erro ao buscar eventos");
+  
+        const todosEventos = await response.json();
+  
+        const eventosFiltrados = todosEventos.filter(evento =>
+          eventosSalvos.includes(evento.id_evento)
+        );
+  
+        const container = document.getElementById("eventos-lista");
+        container.innerHTML = "";
+  
+        eventosFiltrados.forEach(evento => {
+          const div = document.createElement("div");
+          div.className = 'conteudo-secundario-item';
+          div.style.cursor = 'pointer';
+          div.onclick = () => {
+            window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+          };
+  
+          const imagem = document.createElement("img");
+          imagem.src = evento.imagem
+            ? `data:image/jpeg;base64,${evento.imagem}`
+            : '/img/default.jpg';
+          imagem.alt = evento.nome;
+  
+          const titulo = document.createElement("h3");
+          titulo.textContent = evento.nome;
+  
+          const data = document.createElement("p");
+          if (evento.data) {
+            const dataEvento = new Date(evento.data);
+            const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            });
+            const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+              weekday: 'long'
+            });
+            data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+          } else {
+            data.textContent = 'Data não informada';
+          }
+  
+          const local = document.createElement("p");
+          local.textContent = evento.endereco || 'Local não informado';
+  
+          div.appendChild(imagem);
+          div.appendChild(titulo);
+          div.appendChild(data);
+          div.appendChild(local);
+          container.appendChild(div);
+        });
+  
+      } catch (error) {
+        console.error("Erro ao carregar eventos:", error);
+        document.getElementById("eventos-lista").innerHTML = "<p>Erro ao carregar eventos salvos.</p>";
+      }
     });
-  });
 </script>
 
 </body>
