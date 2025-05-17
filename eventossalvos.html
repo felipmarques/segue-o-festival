@@ -196,6 +196,10 @@
       console.error("Erro ao carregar eventos aleatórios:", error);
     }
   });
+    document.getElementById('logout_btn').addEventListener('click', () => {
+     localStorage.clear();
+     window.location.href = 'login.html';
+  });
 </script>
 
 </body>
