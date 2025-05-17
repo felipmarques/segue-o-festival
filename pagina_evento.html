@@ -290,9 +290,14 @@
     }
 
     document.getElementById("calcular_distancia").addEventListener("click", calcularDistancia);
-    document.getElementById('btn-voltar-home').addEventListener('click', () => {
-      window.location.href = 'index.html';  // ajuste para o caminho correto da sua página inicial
-    });
+    document.getElementById('btn-voltar').addEventListener('click', () => {
+    if (document.referrer) {
+      history.back();
+    } else {
+      // Caso não tenha página anterior, redireciona para a home
+      window.location.href = 'index.html';
+    }
+   });
   </script>
 </body>
 </html>
