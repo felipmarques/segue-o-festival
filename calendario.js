@@ -46,9 +46,10 @@ function createCalendar(container, inputElement) {
     const totalDays = new Date(year, month + 1, 0).getDate();
     const lastDay = new Date(year, month + 1, 0).getDay();
 
-    monthYear.textContent = currentDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+    monthYear.textContent = currentDate.toLocaleString('pt-BR', {
+      month: 'long', year: 'numeric'
+    });
 
-    // Dias do mês anterior
     for (let i = firstDay; i > 0; i--) {
       const prevDate = new Date(year, month, 0 - i + 1);
       const btn = document.createElement('button');
@@ -58,7 +59,6 @@ function createCalendar(container, inputElement) {
       dates.appendChild(btn);
     }
 
-    // Dias do mês atual
     for (let i = 1; i <= totalDays; i++) {
       const date = new Date(year, month, i);
       const btn = document.createElement('button');
@@ -67,13 +67,14 @@ function createCalendar(container, inputElement) {
       }
       btn.textContent = i;
       btn.addEventListener('click', () => {
-        inputElement.value = date.toLocaleDateString('pt-BR');
+        const dataFormatada = date.toLocaleDateString('pt-BR');
+        inputElement.value = dataFormatada;
         container.remove();
+        filtrarEventos('data', dataFormatada); // <- Chama o filtro dinâmico com a data
       });
       dates.appendChild(btn);
     }
 
-    // Dias do mês seguinte
     for (let i = 1; i <= 6 - lastDay; i++) {
       const nextDate = new Date(year, month + 1, i);
       const btn = document.createElement('button');
