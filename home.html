@@ -8,6 +8,16 @@
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
+  <style>
+    #lista-estados::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #lista-estados::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
+</style>
 </head>
 <body>
   <header class="cabecalho">
@@ -285,7 +295,7 @@
 }
   </script>
   <script src="js/filtros-logado.js"></script>
-  <script src="js/calendario.js" defer></script>
+  <script src="js/calendario.js"></script>
 </body>
 <footer>
   <button class="cabecalho-botao-entrar" onclick="logout()">Logout</button>
