@@ -4,111 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="css/organizador_styles.css">
+    <link rel="stylesheet" href="css/cadastro-promotor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+    <a href="https://segue-o-festival.vercel.app/"><h1 class="cabecalho-titulo">Segue<br>O Festival!</h1></a>
     <div class="container">
-        <h1>Bem-vindo Promotor!</h1>
-        <p class="subtitle">Crie sua conta, é gratuita e fácil. Se você já tem uma conta, <strong><a href="index.html">clique aqui</a></strong>.</p>
+        <h1 class="titulo-promotor">Bem-vindo Promotor!</h1>
+        <p class="subtitle">Crie sua conta, é gratuita e fácil! Se você já tem uma conta, <strong><a href="index.html">clique aqui</a></strong>.</p>
         <form id="registrationForm">
+            <!-- Coluna Esquerda -->
+            
             <div class="column">
+            <div class="dados-pessoais">
                 <div class="form-group">
-                    <label for="nome">1. Nome do Responsável</label>
+                    <label for="nome">Nome do Responsável</label>
                     <div class="input-container">
                         <input type="text" id="nome" name="nome" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: João Silva</span>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
                     </div>
                     <span class="error" id="nomeError">Por favor, insira um nome válido.</span>
                 </div>
+
                 <div class="form-group">
-                    <label for="telefone">2. Número de Telefone</label>
-                    <div class="input-container">
-                        <input type="tel" id="telefone" name="telefone" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: 11987654321</span>
-                    </div>
-                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
-                </div>
-                <div class="form-group">
-                    <label for="email">3. Endereço de Email</label>
-                    <div class="input-container">
-                        <input type="email" id="email" name="email" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: joaosilva@email.com</span>
-                    </div>
-                    <span class="error" id="emailError">Por favor, insira um email válido.</span>
-                </div>
-                <div class="form-group">
-                    <label for="cep">4. CEP</label>
-                    <div class="input-container">
-                        <input type="text" id="cep" name="cep" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: 12345678</span>
-                    </div>
-                    <span class="error" id="cepError">Por favor, insira um CEP válido.</span>
-                </div>
-                <div class="form-group">
-                    <label for="rua">5. Rua</label>
-                    <div class="input-container">
-                        <input type="text" id="rua" name="rua" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: Rua das Flores</span>
-                    </div>
-                    <span class="error" id="ruaError">Por favor, insira um nome de rua válido.</span>
-                </div>
-            </div>
-            <div class="column">
-                <div class="form-group">
-                    <label for="numero">6. Número</label>
-                    <div class="input-container">
-                        <input type="text" id="numero" name="numero" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: 123</span>
-                    </div>
-                    <span class="error" id="numeroError">Por favor, insira um número válido.</span>
-                </div>
-                <div class="form-group">
-                    <label for="complemento">7. Complemento</label>
-                    <div class="input-container">
-                        <input type="text" id="complemento" name="complemento">
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: Apartamento 101</span>
-                    </div>
-                    <span class="error" id="complementoError">Por favor, insira um complemento válido.</span>
-                </div>
-                <div class="form-group">
-                    <label for="cnpj">8. CNPJ da Empresa</label>
+                    <label for="cnpj">CNPJ da Empresa</label>
                     <div class="input-container">
                         <input type="text" id="cnpj" name="cnpj" required>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">Exemplo: 12345678000195</span>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
                     </div>
                     <span class="error" id="cnpjError">Por favor, insira um CNPJ válido.</span>
                 </div>
+            </div>
+
+
+            <div class="dados-endereco">
                 <div class="form-group">
-                    <label for="senha">9. Senha</label>
+                    <label for="cep">CEP</label>
+                    <div class="input-container">
+                        <input type="text" id="cep" name="cep" required>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="cepError">Por favor, insira um CEP válido.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="numero">Número</label>
+                    <div class="input-container">
+                        <input type="text" id="numero" name="numero" required>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="numeroError">Por favor, insira um número válido.</span>
+                </div>
+            
+            </div>
+            
+
+            <div class="dados-senha">
+                <div class="form-group">
+                    <label for="senha">Senha</label>
                     <div class="input-container">
                         <input type="password" id="senha" name="senha" required>
-                        <span class="toggle-password" onclick="togglePassword()">👁️</span>
-                        <span class="info-icon" onclick="toggleInfo(this)">ℹ️</span>
-                        <span class="info-text">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
+                        <span class="toggle-password" onclick="togglePassword()">
+                            <i id="eye-show" class="fa-regular fa-eye" style="display: none;"></i>
+                            <i id="eye-hide" class="fa-regular fa-eye-slash"></i>
+                        </span>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
                     </div>
                     <span class="error" id="senhaError">A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.</span>
                 </div>
             </div>
-            <div class="button-container">
-                <button type="submit">Cadastre-se</button>
             </div>
-        </form>
+
+        <!-- Coluna Direita -->
+        <div class="column">
+            <div class="dados-pessoais">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <div class="input-container">
+                        <input type="email" id="email" name="email" required>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="emailError">Por favor, insira um email válido.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <div class="input-container">
+                        <input type="tel" id="telefone" name="telefone" required>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="telefoneError">Por favor, insira um telefone válido.</span>
+                </div>
+            </div>
+
+            <div class="dados-endereco">
+                <div class="form-group">
+                    <label for="rua">Endereço</label>
+                    <div class="input-container">
+                        <input type="text" id="rua" name="rua" required>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="ruaError">Por favor, insira um nome de rua válido.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="complemento">Complemento</label>
+                    <div class="input-container">
+                        <input type="text" id="complemento" name="complemento">
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="complementoError">Por favor, insira um complemento válido.</span>
+                </div>
+            </div>
+
+            <div class="dados-senha">
+                <div class="form-group">
+                    <label for="confirmarSenha">Confirme sua senha</label>
+                    <div class="input-container">
+                        <input type="password" id="confirmarSenha" name="confirmarSenha" required>
+                        <span class="toggle-password" onclick="toggleConfirmarSenha()">
+                            <i id="eye-show-confirm" class="fa-regular fa-eye" style="display: none;"></i>
+                            <i id="eye-hide-confirm" class="fa-regular fa-eye-slash"></i>
+                        </span>
+                        <span class="info-icon" onclick="toggleInfo(this)"></span>
+                    </div>
+                    <span class="error" id="confirmarSenhaError">As senhas devem coincidir.</span>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+        <button type="submit">Cadastre-se</button>
     </div>
+    </form>
+
+
+
+
 
     <script>
-    function togglePassword() {
-        const passwordField = document.getElementById("senha");
-        const passwordFieldType = passwordField.getAttribute("type");
-        passwordField.setAttribute("type", passwordFieldType === "password" ? "text" : "password");
-    }
+            function togglePassword() {
+                const passwordInput = document.getElementById("senha");
+                const eyeShow = document.getElementById("eye-show");
+                const eyeHide = document.getElementById("eye-hide");
+
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    eyeShow.style.display = "inline";
+                    eyeHide.style.display = "none";
+                } else {
+                    passwordInput.type = "password";
+                    eyeShow.style.display = "none";
+                    eyeHide.style.display = "inline";
+                }
+            }
+
+            function toggleConfirmarSenha() {
+                const passwordInput = document.getElementById("confirmarSenha");
+                const eyeShow = document.getElementById("eye-show-confirm");
+                const eyeHide = document.getElementById("eye-hide-confirm");
+
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    eyeShow.style.display = "inline";
+                    eyeHide.style.display = "none";
+                } else {
+                    passwordInput.type = "password";
+                    eyeShow.style.display = "none";
+                    eyeHide.style.display = "inline";
+                }
+            }
+
+            
 
     function toggleInfo(element) {
         const infoText = element.nextElementSibling;
