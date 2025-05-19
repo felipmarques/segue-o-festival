@@ -246,6 +246,7 @@
             }
         }
 
+
         // Validação de senha
         const senha = document.querySelector('input[name="senha"]').value.trim();
         const confirmarSenha = document.querySelector('input[name="confirmarSenha"]').value.trim();
@@ -258,9 +259,12 @@
             confirmarSenhaError.style.display = "none";
         }
 
+
         // Continue validando outros campos aqui (telefone, email, etc.).
 
         if (!isValid) return;
+
+
 
         // Criação do objeto formData
         const formData = {
@@ -272,7 +276,7 @@
             numero: document.querySelector('input[name="numero"]').value.trim(),
             complemento: document.querySelector('input[name="complemento"]').value.trim() || "",
             cnpj,
-            senha: document.querySelector('input[name="senha"]').value.trim(),
+            senha,
         };
 
         // Envio do formulário
