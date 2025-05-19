@@ -246,6 +246,18 @@
             }
         }
 
+        // Validação de senha
+        const senha = document.querySelector('input[name="senha"]').value.trim();
+        const confirmarSenha = document.querySelector('input[name="confirmarSenha"]').value.trim();
+        const confirmarSenhaError = document.getElementById("confirmarSenhaError");
+
+        if (senha !== confirmarSenha) {
+            isValid = false;
+            confirmarSenhaError.style.display = "block";
+        } else {
+            confirmarSenhaError.style.display = "none";
+        }
+
         // Continue validando outros campos aqui (telefone, email, etc.).
 
         if (!isValid) return;
