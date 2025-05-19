@@ -8,15 +8,23 @@
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
+  <style>
+    /* Limite de altura e scroll no menu de estados */
+    #lista-estados {
+      max-height: 240px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
+
 <body>
   <header class="cabecalho">
     <h3 class="cabecalho-titulo">
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
-        <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
-        <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
     </div>
   </header>
 
@@ -59,18 +67,19 @@
       </ul>
     </div>
     <div class="menu-item">
-      <button class="menu-botao">🎫Tipo de Evento</button>
+      <button class="menu-botao">🎢Tipo de Evento</button>
       <ul class="menu-lista" id="lista-tipos">
         <li onclick="filtrarEventos('tipo', null)">Todos</li>
         <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
         <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
         <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
         <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
-        <li onclick="filtrarEventos('tipo', 'Palestra')">Música</li>
+        <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
       </ul>
     </div>
     <div class="search-bar">
-      <input type="text" id="dataInput" name="data" placeholder="📅Buscar por data" readonly />
+      <input type="text" id="dataInput" name="data" placeholder="🗕Buscar por data" readonly />
+      <button onclick="limparFiltros()">Limpar filtros</button>
     </div>
   </nav>
 
@@ -96,6 +105,7 @@
     let todosEventos = [];
     let estadoSelecionado = null;
     let tipoSelecionado = null;
+    let dataSelecionada = null;
 
     async function buscarEventos() {
       try {
@@ -116,7 +126,17 @@
         estadoSelecionado = valor;
       } else if (tipo === 'tipo') {
         tipoSelecionado = valor;
+      } else if (tipo === 'data') {
+        dataSelecionada = valor;
       }
+      exibirEventosFiltrados();
+    }
+
+    function limparFiltros() {
+      estadoSelecionado = null;
+      tipoSelecionado = null;
+      dataSelecionada = null;
+      document.getElementById('dataInput').value = '';
       exibirEventosFiltrados();
     }
 
@@ -125,8 +145,10 @@
       container.innerHTML = '';
 
       const eventosFiltrados = todosEventos.filter(evento => {
+        const dataEvento = evento.data ? new Date(evento.data).toLocaleDateString('pt-BR') : null;
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo_evento === tipoSelecionado);
+               (!tipoSelecionado || evento.tipo_evento === tipoSelecionado) &&
+               (!dataSelecionada || dataEvento === dataSelecionada);
       });
 
       if (eventosFiltrados.length === 0) {
@@ -140,7 +162,7 @@
         link.className = 'conteudo-secundario-item';
         link.style.textDecoration = 'none';
         link.style.color = 'inherit';
-        
+
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
           ? `data:image/jpeg;base64,${evento.imagem}`
@@ -153,20 +175,13 @@
         const data = document.createElement('p');
         if (evento.data) {
           const dataEvento = new Date(evento.data);
-  
-        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-      });
-
-        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
-          weekday: 'long'
-        });
-
-        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+          });
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', { weekday: 'long' });
+          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
         } else {
-        data.textContent = 'Data não informada';
+          data.textContent = 'Data não informada';
         }
 
         const local = document.createElement('p');
@@ -183,7 +198,6 @@
     buscarEventos();
 
     let index = 0;
-
     function exibirCarrossel(eventos) {
       const carrossel = document.getElementById("carrossel");
       carrossel.innerHTML = '';
@@ -196,22 +210,18 @@
         img.alt = evento.nome;
         carrossel.appendChild(img);
       });
-  
       index = 0;
       atualizarCarrossel();
     }
-  
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
       carrossel.style.transform = `translateX(-${index * 100}%)`;
     }
-  
     function avancar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index + 1) % total;
       atualizarCarrossel();
     }
-  
     function voltar() {
       const total = document.querySelectorAll('#carrossel img').length;
       index = (index - 1 + total) % total;
