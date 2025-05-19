@@ -180,3 +180,113 @@ button:hover {
     display: block;
 }
 
+
+#botao-ajuda {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+}
+
+#popup-ajuda {
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+  width: 260px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+
+
+.popup-header {
+  background: linear-gradient(to right, #08C2FF, #A0DEFF);
+  color: white;
+  padding: 16px;
+  padding-right: 60px; 
+  position: relative;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: 16px;
+  min-height: 80px;
+}
+
+.ajuda-texto {
+  line-height: 1.2;
+  font-family: 'Raleway',sans-serif;
+}
+
+
+.titulo-ajuda {
+  font-size: 22px;
+  display: flex;
+  margin-top: 5px;
+}
+
+.ajuda-conteudo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menino-ajuda {
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+  width: 60px; 
+  height: auto;
+}
+
+
+
+.popup-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popup-body button {
+  padding: 10px;
+  border: 2px solid #008cff;
+  background-color: white;
+  color: #008cff;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popup-body button:hover {
+  background-color: #fdf3be;
+}
+
+.fechar {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+.hidden {
+  display: none;
+}
+
