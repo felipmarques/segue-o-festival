@@ -1,4 +1,4 @@
-function createCalendar(container, inputElement) {
+function createCalendar(container, inputElement, onDateSelect) {
   container.innerHTML = '';
 
   const calendar = document.createElement('div');
@@ -46,10 +46,9 @@ function createCalendar(container, inputElement) {
     const totalDays = new Date(year, month + 1, 0).getDate();
     const lastDay = new Date(year, month + 1, 0).getDay();
 
-    monthYear.textContent = currentDate.toLocaleString('pt-BR', {
-      month: 'long', year: 'numeric'
-    });
+    monthYear.textContent = currentDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
+    // Dias do mês anterior
     for (let i = firstDay; i > 0; i--) {
       const prevDate = new Date(year, month, 0 - i + 1);
       const btn = document.createElement('button');
@@ -59,22 +58,29 @@ function createCalendar(container, inputElement) {
       dates.appendChild(btn);
     }
 
+    // Dias do mês atual
     for (let i = 1; i <= totalDays; i++) {
       const date = new Date(year, month, i);
       const btn = document.createElement('button');
+      btn.textContent = i;
+
       if (date.toDateString() === new Date().toDateString()) {
         btn.classList.add('today');
       }
-      btn.textContent = i;
+
       btn.addEventListener('click', () => {
         const dataFormatada = date.toLocaleDateString('pt-BR');
         inputElement.value = dataFormatada;
         container.remove();
-        filtrarEventos('data', dataFormatada); // <- Chama o filtro dinâmico com a data
+        if (typeof onDateSelect === 'function') {
+          onDateSelect(dataFormatada);
+        }
       });
+
       dates.appendChild(btn);
     }
 
+    // Dias do mês seguinte
     for (let i = 1; i <= 6 - lastDay; i++) {
       const nextDate = new Date(year, month + 1, i);
       const btn = document.createElement('button');
@@ -106,6 +112,7 @@ function createCalendar(container, inputElement) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('dataInput');
+  if (!input) return;
 
   input.addEventListener('focus', () => {
     const existing = document.querySelector('.calendar-container');
@@ -120,6 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
     calendarDiv.style.left = `${rect.left + window.scrollX}px`;
 
     document.body.appendChild(calendarDiv);
-    createCalendar(calendarDiv, input);
+    createCalendar(calendarDiv, input, () => {
+      const event = new Event("input");
+      input.dispatchEvent(event); // dispara atualização no filtro de data
+    });
   });
 });
