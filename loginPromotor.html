@@ -51,8 +51,30 @@
                     <p class="paragrafo-cadastro">Novo por aqui? Cadastre-se!</p>
                     <a href="#" class="botao-cadastrar">Cadastre-se</a>
                 </div>
+
+
+                <!-- Botão flutuante de ajuda -->
+                    <div id="botao-ajuda" onclick="togglePopup()">
+                    <span>Precisa de Ajuda?</span>
+                    </div>
+
+                <!-- Popup de ajuda -->
+                    <div id="popup-ajuda" class="hidden">
+                    <div class="popup-header">
+                        <div class="ajuda-conteudo">
+                            <div class="ajuda-texto">
+                                <strong>Precisando de<br><span class="titulo-ajuda">Ajuda?</span></strong>
+                            </div>
+                            <img src="src/images/menino_logo-removebg-preview.png" alt="Ajuda" class="menino-ajuda" />
+                        </div>
+                        <span class="fechar" onclick="togglePopup()">×</span>
+                    </div>
+                    <div class="popup-body">
+                        <button onclick="window.location.href='https://segue-o-festival.vercel.app/planos_pagamentos.html'">Conheça nossos planos</button>
+                        <button onclick="window.location.href='ATENDENTE_URL_AQUI'">Converse com um atendente</button>
+                    </div>
+                    </div>
         </div>
-            </div>
 
                 <div id="modal-cadastro" class="modal">
             <div class="modal-content">
@@ -149,6 +171,14 @@
         function fecharModal() {
             document.getElementById('modal-cadastro').style.display = 'none';
         }
+
+        function togglePopup() {
+            const popup = document.getElementById("popup-ajuda");
+            const botaoAjuda = document.getElementById("botao-ajuda");
+
+            const isHidden = popup.classList.toggle("hidden");
+            botaoAjuda.style.display = isHidden ? "flex" : "none";
+            }
     </script>
 </body>
 </html>
