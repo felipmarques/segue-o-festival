@@ -4,89 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Planos de Pagamento</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #007bff, #00c6ff);
-      color: white;
-    }
-
-    h1 {
-      text-align: center;
-      padding: 2rem 0 1rem;
-    }
-
-    .plans-container {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      padding: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .plan {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 2rem;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-    }
-
-    .plan:hover {
-      transform: scale(1.05);
-    }
-
-    .plan h2 {
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-    }
-
-    .price {
-      font-size: 2rem;
-      margin: 1rem 0;
-    }
-
-    .features {
-      list-style: none;
-      padding: 0;
-      text-align: left;
-      margin-bottom: 2rem;
-    }
-
-    .features li {
-      margin-bottom: 0.5rem;
-      padding-left: 1rem;
-      position: relative;
-    }
-
-    .features li::before {
-      content: "✔";
-      position: absolute;
-      left: 0;
-      color: #00ffcc;
-    }
-
-    .button {
-      background: white;
-      color: #007bff;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .button:hover {
-      background: #f0f0f0;
-    }
-  </style>
+  <link rel="stylesheet" href="css/planos-pagamento.css">
 </head>
 <body>
-  <h1>Escolha o Plano Ideal</h1>
+  <a href="https://segue-o-festival.vercel.app/"><h1 class="titulo">Segue<br>O Festival!</h1></a>
+  <h1 class="texto">Escolha o Plano Ideal</h1>
   <div class="plans-container">
     <div class="plan">
       <h2>Free</h2>
@@ -119,6 +41,25 @@
       <button class="button" onclick="window.location.href='loginPromotor.html'">Assinar Advanced</button>
     </div>
   </div>
+    <!-- Botão flutuante de ajuda -->
+        <div id="botao-ajuda" onclick="togglePopup()">
+        <span>Precisa de Ajuda?</span>
+        </div>
+
+    <!-- Popup de ajuda -->
+        <div id="popup-ajuda" class="hidden">
+        <div class="popup-header">
+            <div class="ajuda-conteudo">
+                <div class="ajuda-texto">
+                    <strong>Precisando de<br><span class="titulo-ajuda">Ajuda?</span></strong>
+                </div>
+                <img src="src/images/menino_logo-removebg-preview.png" alt="Ajuda" class="menino-ajuda" />
+            </div>
+            <span class="fechar" onclick="togglePopup()">×</span>
+        </div>
+        <div class="popup-body">
+            <button onclick="window.location.href='ATENDENTE_URL_AQUI'">Converse com um atendente</button>
+        </div>
   
   <script>
   document.querySelectorAll('.button').forEach(button => {
@@ -134,6 +75,15 @@
       }
     });
   });
+
+      function togglePopup() {
+    const popup = document.getElementById("popup-ajuda");
+    const botaoAjuda = document.getElementById("botao-ajuda");
+
+    const isHidden = popup.classList.toggle("hidden");
+    botaoAjuda.style.display = isHidden ? "flex" : "none";
+    }
+
 </script>
 </body>
 </html>
