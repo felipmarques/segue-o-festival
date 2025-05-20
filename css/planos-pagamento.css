@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://use.typekit.net/qrb0jox.css");
+   
+   body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    background: #fff;
+    color: white;
+    }
+
+
+    .titulo {
+    font-family: 'Droog', sans-serif;
+    font-size: 27px;
+    color: #00bfff;
+    text-align: left;
+    line-height: 1.2;
+    position: absolute; 
+    top: 30px;  
+    left: 25px; 
+}
+
+
+    .texto {
+    margin-top: 130px;
+      text-align: center;
+      padding: 2rem 0 1rem;
+      color: #000;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .plans-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .plan {
+    font-family: 'Inter', sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    background: linear-gradient(to right, #08C2FF, #A0DEFF);
+    border: #fff100 1px solid;
+    }
+
+    .plan:hover {
+      transform: scale(1.05);
+    }
+
+    .plan h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .price {
+      font-size: 2rem;
+      margin: 1rem 0;
+    }
+
+    .features {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .features li {
+      margin-bottom: 0.5rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .features li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #00ffcc;
+    }
+
+    .button {
+      background: white;
+      color: #007bff;
+        border: 1px solid #fff100;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .button:hover {
+      background: #fdf3be;
+    }
+ 
+
+    #botao-ajuda {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+}
+
+#popup-ajuda {
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+  width: 260px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+
+
+.popup-header {
+  background: linear-gradient(to right, #08C2FF, #A0DEFF);
+  color: white;
+  padding: 16px;
+  padding-right: 60px; 
+  position: relative;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: 16px;
+  min-height: 80px;
+}
+
+.ajuda-texto {
+  line-height: 1.2;
+  font-family: 'Raleway',sans-serif;
+}
+
+
+.titulo-ajuda {
+  font-size: 22px;
+  display: flex;
+  margin-top: 5px;
+}
+
+.ajuda-conteudo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menino-ajuda {
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+  width: 60px; 
+  height: auto;
+}
+
+
+
+.popup-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popup-body button {
+  padding: 10px;
+  border: 2px solid #008cff;
+  background-color: white;
+  color: #008cff;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popup-body button:hover {
+  background-color: #fdf3be;
+}
+
+.fechar {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+.hidden {
+  display: none;
+}
