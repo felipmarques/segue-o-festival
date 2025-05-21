@@ -1,9 +1,10 @@
+const { Pool } = require('pg');
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
-  ssl: { rejectUnauthorized: false }
 });
 
 module.exports = async (req, res) => {
@@ -16,12 +17,9 @@ module.exports = async (req, res) => {
   if (!cnpj) {
     return res.status(400).send('Erro: CNPJ do usuário não fornecido.');
   }
-  
-  try {
-    console.log(`Buscando eventos para o CNPJ: ${cnpj}`);
 
-    // Primeira funcionalidade - Consulta dos eventos
-    const queryEventos = `
+  try {
+    const query = `
       SELECT e.* 
       FROM eventos e
       JOIN usuario_promotor u ON e.id_promotor = u.cnpj
@@ -29,22 +27,21 @@ module.exports = async (req, res) => {
       ORDER BY e.data DESC;
     `;
 
-    const resultEventos = await pool.query(queryEventos, [cnpj]);
+    const result = await pool.query(query, [cnpj]);
 
-    if (resultEventos.rows.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).send('Nenhum evento encontrado para este usuário.');
     }
 
     // Convertendo buffer da imagem para Base64 com prefixo correto
-    const eventosComImagem = resultEventos.rows.map(evento => ({
+    const eventosComImagem = result.rows.map(evento => ({
       ...evento,
       imagem: evento.imagem ? `data:image/jpeg;base64,${evento.imagem.toString('base64')}` : null
     }));
 
-    // Retorna os eventos com as imagens convertidas
     res.status(200).json(eventosComImagem);
   } catch (error) {
     console.error('Erro ao buscar eventos:', error);
     res.status(500).send('Erro ao recuperar eventos.');
   }
-  };
+};
