@@ -155,14 +155,6 @@ main {
 }
 
 
-.cabecalho-titulo {
-    font-family: 'Droog', sans-serif;
-    font-size: 27px;
-    color: #00bfff;
-    text-align: left;
-    line-height: 1.2;
-}
-
 .cabecalho-botoes {
     display: flex;
     gap: 20px;
@@ -199,7 +191,3 @@ main {
     margin-right: 10px;
 }
 
-.cabecalho-titulo-container {
-    display: flex;
-    align-items: center;
-}
