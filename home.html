@@ -121,8 +121,8 @@
 
         todosEventos = await response.json();
         exibirEventosFiltrados();
-        carregarEventosNoMapaHoje();
         exibirCarrossel(todosEventos);
+        carregarEventosNoMapaHoje();
       } catch (error) {
         document.getElementById('eventos-lista').innerHTML = 'Erro ao carregar eventos.';
         console.error(error);
