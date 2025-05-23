@@ -379,9 +379,7 @@
 }
 
 carregarEventosNoMapaHoje();
-</script>
 <div id="eventos-por-categoria"></div>
-<script>
   async function carregarEventosAgrupados() {
     try {
       const resposta = await fetch('/api/sua-api-de-eventos'); // Altere o caminho da API se necessário
@@ -389,7 +387,7 @@ carregarEventosNoMapaHoje();
 
       const container = document.getElementById('eventos-por-categoria');
 
-      // Agrupar por tipo_evento
+
       const categoriasMap = {};
       eventos.forEach(evento => {
         const tipo = evento.tipo_evento || 'Sem categoria';
@@ -398,8 +396,6 @@ carregarEventosNoMapaHoje();
         }
         categoriasMap[tipo].push(evento);
       });
-
-      // Renderizar
       for (const tipo in categoriasMap) {
         const titulo = document.createElement('h2');
         titulo.textContent = tipo;
@@ -430,7 +426,7 @@ carregarEventosNoMapaHoje();
   }
 
   carregarEventosAgrupados();
-</script>
+  </script>  
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
   <button class="logout-botao" onclick="logout()">
