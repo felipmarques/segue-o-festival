@@ -162,13 +162,9 @@
       const eventos = await response.json();
 
       if (!eventos.length) return;
-
-      // Embaralha o array e pega os 2 primeiros
       const eventosAleatorios = eventos.sort(() => 0.5 - Math.random()).slice(0, 2);
-
       const container = document.getElementById("eventosContainer");
-      container.innerHTML = ''; // limpa o conteúdo anterior
-
+      container.innerHTML = ''; 
       eventosAleatorios.forEach(evento => {
         const div = document.createElement("div");
         div.className = 'conteudo-secundario-item';
@@ -200,6 +196,19 @@
      localStorage.clear();
      window.location.href = 'login.html';
   });
+  const usuarioLogado = localStorage.getItem("usuarioLogado");
+  if (!usuarioLogado) {
+    window.location.href = "login.html";
+  } else {
+    try {
+      const dados = JSON.parse(usuarioLogado);
+      if (!dados.email || !dados.cpf) {
+        window.location.href = "login.html";
+      }
+    } catch (e) {
+      window.location.href = "login.html";
+    }
+  }
 </script>
 
 </body>
