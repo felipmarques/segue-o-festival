@@ -325,9 +325,8 @@
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
   <script>
-  async function carregarEventosNoMapa() {
-  // Centraliza no Brasil
-  const map = L.map('map').setView([-14.2350, -51.9253], 4);
+  async function carregarEventosNoMapaHoje() {
+  const map = L.map('map').setView([-14.2350, -51.9253], 4); // Centraliza no Brasil
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
@@ -335,22 +334,33 @@
 
   try {
     const resposta = await fetch('/api/eventos');
-    if (!resposta.ok) throw new Error('Erro ao buscar eventos');
-
     const eventos = await resposta.json();
 
-    for (const evento of eventos) {
-      if (!evento.endereco || evento.endereco.trim() === '') continue;
+    // Data atual no formato yyyy-mm-dd para comparar só a data (sem horário)
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    const dataHoje = `${ano}-${mes}-${dia}`;
+
+    // Filtra só eventos da data atual
+    const eventosHoje = eventos.filter(evento => {
+      if (!evento.data) return false;
+      const dataEvento = new Date(evento.data);
+      const anoE = dataEvento.getFullYear();
+      const mesE = String(dataEvento.getMonth() + 1).padStart(2, '0');
+      const diaE = String(dataEvento.getDate()).padStart(2, '0');
+      const dataFormatada = `${anoE}-${mesE}-${diaE}`;
+      return dataFormatada === dataHoje;
+    });
+
+    for (const evento of eventosHoje) {
+      if (!evento.endereco) continue;
 
       const endereco = encodeURIComponent(evento.endereco);
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${endereco}&limit=1`;
 
       const response = await fetch(url);
-      if (!response.ok) {
-        console.warn(`Erro ao buscar endereço do evento ${evento.nome}`);
-        continue;
-      }
-
       const data = await response.json();
 
       if (data.length > 0) {
@@ -361,15 +371,13 @@
           .addTo(map)
           .bindPopup(`<strong>${evento.nome}</strong><br>${evento.endereco}`);
       }
-
-      // Aguardar 1 segundo para evitar limite da API
-      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   } catch (error) {
     console.error("Erro ao carregar eventos no mapa:", error);
   }
 }
-carregarEventosNoMapa();
+
+carregarEventosNoMapaHoje();
 </script>
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
