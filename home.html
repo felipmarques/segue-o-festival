@@ -326,38 +326,50 @@
   <script src="js/calendario.js"></script>
   <script>
   async function carregarEventosNoMapa() {
-    const map = L.map('map').setView([-14.2350, -51.9253], 4); // Centraliza no Brasil
+  // Centraliza no Brasil
+  const map = L.map('map').setView([-14.2350, -51.9253], 4);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-    try {
-      const resposta = await fetch('/api/eventos');
-      const eventos = await resposta.json();
+  try {
+    const resposta = await fetch('/api/eventos');
+    if (!resposta.ok) throw new Error('Erro ao buscar eventos');
 
-      for (const evento of eventos) {
-        const endereco = encodeURIComponent(evento.endereco);
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${endereco}&limit=1`;
+    const eventos = await resposta.json();
 
-        const response = await fetch(url);
-        const data = await response.json();
+    for (const evento of eventos) {
+      if (!evento.endereco || evento.endereco.trim() === '') continue;
 
-        if (data.length > 0) {
-          const lat = parseFloat(data[0].lat);
-          const lon = parseFloat(data[0].lon);
+      const endereco = encodeURIComponent(evento.endereco);
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${endereco}&limit=1`;
 
-          L.marker([lat, lon])
-            .addTo(map)
-            .bindPopup(`<strong>${evento.nome}</strong><br>${evento.endereco}`);
-        }
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.warn(`Erro ao buscar endereço do evento ${evento.nome}`);
+        continue;
       }
-    } catch (error) {
-      console.error("Erro ao carregar eventos no mapa:", error);
-    }
-  }
 
-  carregarEventosNoMapa();
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+
+        L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(`<strong>${evento.nome}</strong><br>${evento.endereco}`);
+      }
+
+      // Aguardar 1 segundo para evitar limite da API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  } catch (error) {
+    console.error("Erro ao carregar eventos no mapa:", error);
+  }
+}
+carregarEventosNoMapa();
 </script>
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
