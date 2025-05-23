@@ -8,6 +8,8 @@
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     #lista-estados::-webkit-scrollbar {
       width: 6px;
@@ -97,6 +99,7 @@
         <!-- Eventos serão carregados aqui -->
       </div>
     </section>
+    <div id="map" style="height: 400px; border-radius: 12px; margin: 2rem 0;"></div>
   </main>
 
   <script>
@@ -296,7 +299,28 @@
     
       localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
 }
-  </script>
+    const enderecoEvento = "Av. Paulista, 1000, São Paulo, Brasil"; // Substitua por um endereço válido ou variável
+
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enderecoEvento)}`)
+    .then(res => res.json())
+    .then(locations => {
+      if (locations.length > 0) {
+        const lat = parseFloat(locations[0].lat);
+        const lon = parseFloat(locations[0].lon);
+
+        const map = L.map('map').setView([lat, lon], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([lat, lon]).addTo(map)
+          .bindPopup("Local do Evento")
+          .openPopup();
+      } else {
+        console.error("Endereço não encontrado para o mapa.");
+      }
+    })
+    .catch(error => console.error("Erro ao carregar mapa:", error));
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
 </body>
