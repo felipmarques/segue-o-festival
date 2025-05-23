@@ -8,6 +8,28 @@
     <title>Segue o Festival</title>
 </head>
 <body>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const usuarioLogado = localStorage.getItem("usuarioLogado");
+    
+        if (!usuarioLogado) {
+          // Usuário não está logado, redireciona para login
+          window.location.href = "login.html";
+          return;
+        }
+    
+        try {
+          const dados = JSON.parse(usuarioLogado);
+          if (!dados.email) {
+            // Dados inválidos ou incompletos
+            window.location.href = "login.html";
+          }
+        } catch (erro) {
+          // Erro ao interpretar JSON
+          window.location.href = "login.html";
+        }
+      });
+</script>
     <header>
     <nav id="sidebar" class="open-sidebar">
         <div id="sidebar_content">
