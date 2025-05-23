@@ -324,6 +324,41 @@
   </script>  
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
+  <script>
+  async function carregarEventosNoMapa() {
+    const map = L.map('map').setView([-14.2350, -51.9253], 4); // Centraliza no Brasil
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    try {
+      const resposta = await fetch('/api/eventos');
+      const eventos = await resposta.json();
+
+      for (const evento of eventos) {
+        const endereco = encodeURIComponent(evento.endereco);
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${endereco}&limit=1`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lon = parseFloat(data[0].lon);
+
+          L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup(`<strong>${evento.nome}</strong><br>${evento.endereco}`);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao carregar eventos no mapa:", error);
+    }
+  }
+
+  carregarEventosNoMapa();
+</script>
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
   <button class="logout-botao" onclick="logout()">
