@@ -396,15 +396,15 @@
             }
 
             function toggleLista(id) {
-              const lista = document.getElementById(id);
+            const lista = document.getElementById(id);
               if (lista) {
                 lista.classList.toggle("lista-escondida");
               }
-            }
+             }
 
             document.getElementById("logout_btn").addEventListener("click", () => {
-              localStorage.removeItem("usuarioLogado");
-              window.location.href = "login.html";
+            localStorage.removeItem("usuarioLogado");
+            window.location.href = "login.html";
             });
          </script>
     </body>
