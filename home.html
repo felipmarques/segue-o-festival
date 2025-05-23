@@ -99,7 +99,10 @@
         <!-- Eventos serão carregados aqui -->
       </div>
     </section>
-     <h2 style="margin-top: 2rem; margin-bottom: 1rem;">Eventos hoje</h2>
+    <section class="conteudo-secundario">
+    <div class="conteudo-secundario-destaque">
+      <h1>Eventos de hoje</h1>
+    </div>
     <div id="map" style="height: 400px; border-radius: 12px; margin: 2rem 0;"></div>
   </main>
 
@@ -152,7 +155,7 @@
         
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
-        div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
+        div.style.cursor = 'pointer'; 
         div.setAttribute("data-id", evento.id_evento);
         
         div.onclick = () => {
@@ -198,7 +201,7 @@
           }
         
           botaoSalvar.onclick = (e) => {
-            e.stopPropagation(); // evitar redirecionamento
+            e.stopPropagation(); 
             alternarSalvarEvento(evento.id_evento, botaoSalvar);
           };
           
@@ -336,15 +339,12 @@
   try {
     const resposta = await fetch('/api/eventos');
     const eventos = await resposta.json();
-
-    // Data atual no formato yyyy-mm-dd para comparar só a data (sem horário)
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
     const dia = String(hoje.getDate()).padStart(2, '0');
     const dataHoje = `${ano}-${mes}-${dia}`;
 
-    // Filtra só eventos da data atual
     const eventosHoje = eventos.filter(evento => {
       if (!evento.data) return false;
       const dataEvento = new Date(evento.data);
