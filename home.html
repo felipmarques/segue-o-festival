@@ -380,6 +380,57 @@
 
 carregarEventosNoMapaHoje();
 </script>
+<div id="eventos-por-categoria"></div>
+<script>
+  async function carregarEventosAgrupados() {
+    try {
+      const resposta = await fetch('/api/sua-api-de-eventos'); // Altere o caminho da API se necessário
+      const eventos = await resposta.json();
+
+      const container = document.getElementById('eventos-por-categoria');
+
+      // Agrupar por tipo_evento
+      const categoriasMap = {};
+      eventos.forEach(evento => {
+        const tipo = evento.tipo_evento || 'Sem categoria';
+        if (!categoriasMap[tipo]) {
+          categoriasMap[tipo] = [];
+        }
+        categoriasMap[tipo].push(evento);
+      });
+
+      // Renderizar
+      for (const tipo in categoriasMap) {
+        const titulo = document.createElement('h2');
+        titulo.textContent = tipo;
+        container.appendChild(titulo);
+
+        const lista = document.createElement('div');
+        lista.classList.add('eventos-lista');
+
+        categoriasMap[tipo].forEach(evento => {
+          const eventoDiv = document.createElement('div');
+          eventoDiv.classList.add('evento');
+
+          eventoDiv.innerHTML = `
+            <h3>${evento.nome}</h3>
+            <p>${evento.descricao}</p>
+            <p><strong>Data:</strong> ${new Date(evento.data).toLocaleDateString()}</p>
+            ${evento.imagem ? `<img src="data:image/jpeg;base64,${evento.imagem}" alt="Imagem do evento" style="max-width:200px;" />` : ''}
+          `;
+
+          lista.appendChild(eventoDiv);
+        });
+
+        container.appendChild(lista);
+      }
+    } catch (erro) {
+      console.error('Erro ao carregar eventos:', erro);
+    }
+  }
+
+  carregarEventosAgrupados();
+</script>
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
   <button class="logout-botao" onclick="logout()">
