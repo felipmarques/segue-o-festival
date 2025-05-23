@@ -360,60 +360,54 @@
                 return;
               }
             
-              if (!/^\d{8}$/.test(dados.cep)) {
-                alert("O CEP deve conter exatamente 8 dígitos numéricos.");
-                return;
-              }
-            
-              if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dados.data_nascimento)) {
-                alert("A data de nascimento deve estar no formato dd/mm/aaaa.");
-                return;
-              }
-            
+                if (!/^\d{8}$/.test(dados.cep)) {
+                    alert("O CEP deve conter exatamente 8 dígitos numéricos.");
+                    return;
+               }
+
               try {
                 const response = await fetch("/api/usuario", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
                   body: JSON.stringify(dados),
                 });
-            
-                const resultado = await response.json();
-            
+
                 if (!response.ok) {
-                  alert(`Erro: ${resultado.message}`);
-                  return;
+                  throw new Error("Erro ao salvar os dados");
                 }
-            
-                alert("Dados atualizados com sucesso!");
-              } catch (err) {
-                console.error("Erro ao salvar dados:", err);
-                alert("Erro ao salvar dados.");
+
+                alert("Dados salvos com sucesso!");
+              } catch (error) {
+                console.error("Erro ao salvar perfil:", error);
+                alert("Erro ao salvar os dados do perfil.");
               }
             }
-            
-            // Funções de máscara
-            document.getElementById("telCPF").addEventListener("input", function (e) {
-              e.target.value = formatarCPF(e.target.value);
-            });
-            
-            document.getElementById("telCEP").addEventListener("input", function (e) {
-              e.target.value = formatarCEP(e.target.value);
-            });
-            
-            function formatarCPF(valor) {
-              let v = valor.replace(/\D/g, "").slice(0, 11);
-              v = v.replace(/(\d{3})(\d)/, "$1.$2");
-              v = v.replace(/(\d{3})(\d)/, "$1.$2");
-              v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-              return v;
-            }
-            
-            function formatarCEP(valor) {
-              let v = valor.replace(/\D/g, "").slice(0, 8);
-              v = v.replace(/(\d{5})(\d{1,3})$/, "$1-$2");
-              return v;
-            }
-            </script>
 
-</body>
+            function formatarCPF(cpf) {
+              cpf = cpf.replace(/\D/g, "");
+              return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+            }
+
+            function formatarCEP(cep) {
+              cep = cep.replace(/\D/g, "");
+              return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
+            }
+
+            function toggleLista(id) {
+              const lista = document.getElementById(id);
+              if (lista) {
+                lista.classList.toggle("lista-escondida");
+              }
+            }
+
+            document.getElementById("logout_btn").addEventListener("click", () => {
+              localStorage.removeItem("usuarioLogado");
+              window.location.href = "login.html";
+            });
+         </script>
+    </body>
 </html>
+
+
