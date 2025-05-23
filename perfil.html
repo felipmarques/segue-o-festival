@@ -13,7 +13,6 @@
         const usuarioLogado = localStorage.getItem("usuarioLogado");
     
         if (!usuarioLogado) {
-          // Usuário não está logado, redireciona para login
           window.location.href = "login.html";
           return;
         }
@@ -21,11 +20,9 @@
         try {
           const dados = JSON.parse(usuarioLogado);
           if (!dados.email) {
-            // Dados inválidos ou incompletos
             window.location.href = "login.html";
           }
         } catch (erro) {
-          // Erro ao interpretar JSON
           window.location.href = "login.html";
         }
       });
@@ -253,9 +250,7 @@
          <script>
             document.addEventListener("DOMContentLoaded", async () => {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-            
-            
-              // Saudação no menu lateral
+
               const nomeUsuario = document.querySelector("#user_infos .item-description");
               if (nomeUsuario) {
                 nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
@@ -270,7 +265,6 @@
                 document.getElementById("txtNome").value = dados.nome || "";
                 document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
                 
-                // Mostra a data como dd/mm/aaaa
                 if (dados.data_nascimento) {
                   const dataISO = new Date(dados.data_nascimento).toISOString().split("T")[0]; // yyyy-mm-dd
                   const [ano, mes, dia] = dataISO.split("-");
