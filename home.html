@@ -424,8 +424,41 @@ carregarEventosNoMapaHoje();
       console.error('Erro ao carregar eventos:', erro);
     }
   }
+  <h2 style="margin-top: 40px;">Eventos Religiosos</h2>
+  <div id="eventos-religiosos"></div>
 
   carregarEventosAgrupados();
+  async function carregarEventosReligiosos() {
+    try {
+      const resposta = await fetch('/api/eventos');
+      const todosEventos = await resposta.json();
+
+      const eventosReligiosos = todosEventos.filter(e => e.tipo_evento?.toLowerCase() === 'religioso');
+
+      const container = document.getElementById('eventos-religiosos');
+      container.innerHTML = '';
+
+      if (eventosReligiosos.length === 0) {
+        container.innerHTML = '<p>Nenhum evento religioso encontrado.</p>';
+        return;
+      }
+
+      eventosReligiosos.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'evento';
+        div.innerHTML = `
+          <img src="data:image/jpeg;base64,${evento.imagem}" alt="Imagem do evento" style="width: 200px;">
+          <h3>${evento.nome}</h3>
+          <p>${evento.descricao}</p>
+          <p><strong>Data:</strong> ${evento.data}</p>
+        `;
+        container.appendChild(div);
+      });
+    } catch (error) {
+      console.error('Erro ao carregar eventos religiosos:', error);
+    }
+  }
+  carregarEventosReligiosos();
   </script>  
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
