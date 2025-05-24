@@ -430,7 +430,7 @@ carregarEventosNoMapaHoje();
   carregarEventosAgrupados();
   async function carregarEventosReligiosos() {
     try {
-      const resposta = await fetch('/api/eventos');
+      const resposta = await fetch('/api/buscaeventos');
       const todosEventos = await resposta.json();
 
       const eventosReligiosos = todosEventos.filter(e => e.tipo_evento?.toLowerCase() === 'religioso');
