@@ -426,8 +426,10 @@ carregarEventosNoMapaHoje();
   }
   <h2 style="margin-top: 40px;">Eventos Religiosos</h2>
   <div id="eventos-religiosos"></div>
-
-  carregarEventosAgrupados();
+  document.addEventListener('DOMContentLoaded', () => {
+    carregarEventosAgrupados();
+    carregarEventosReligiosos();
+  });
   async function carregarEventosReligiosos() {
     try {
       const resposta = await fetch('/api/buscaeventos');
@@ -458,7 +460,6 @@ carregarEventosNoMapaHoje();
       console.error('Erro ao carregar eventos religiosos:', error);
     }
   }
-  carregarEventosReligiosos();
   </script>  
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
