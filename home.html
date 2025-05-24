@@ -117,7 +117,7 @@
     async function buscarEventos() {
       try {
         const response = await fetch('/api/buscaeventos');
-        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+        if (!response.ok) throw new Error(Erro: ${response.status});
 
         todosEventos = await response.json();
         exibirEventosFiltrados();
@@ -159,12 +159,12 @@
         div.setAttribute("data-id", evento.id_evento);
         
         div.onclick = () => {
-          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+          window.location.href = pagina_evento.html?id=${evento.id_evento};
         };
 
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
-          ? `data:image/jpeg;base64,${evento.imagem}`
+          ? data:image/jpeg;base64,${evento.imagem}
           : '/img/default.jpg';
         imagem.alt = evento.nome;
 
@@ -185,7 +185,7 @@
           weekday: 'long'
         });
 
-        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+        data.textContent = ${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)};
         } else {
         data.textContent = 'Data não informada';
         }
@@ -226,7 +226,7 @@
       eventos.forEach(evento => {
         const img = document.createElement("img");
         img.src = evento.imagem
-          ? `data:image/jpeg;base64,${evento.imagem}`
+          ? data:image/jpeg;base64,${evento.imagem}
           : '/img/default.jpg';
         img.alt = evento.nome;
         carrossel.appendChild(img);
@@ -238,7 +238,7 @@
 
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
-      carrossel.style.transform = `translateX(-${index * 100}%)`;
+      carrossel.style.transform = translateX(-${index * 100}%);
     }
 
     function avancar() {
@@ -256,7 +256,7 @@
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
     if (usuarioLogado?.email) {
-      fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`)
+      fetch(/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)})
         .then(response => {
           if (!response.ok) throw new Error('Erro ao buscar nome do usuário');
           return response.json();
@@ -265,7 +265,7 @@
           const nome = data.nome;
           const header = document.querySelector(".cabecalho");
           const saudacao = document.createElement("p");
-          saudacao.textContent = `Olá, ${nome}!`;
+          saudacao.textContent = Olá, ${nome}!;
           saudacao.style.marginLeft = "1rem";
           saudacao.style.fontWeight = "bold";
           header.appendChild(saudacao);
@@ -305,7 +305,7 @@
 }
     const enderecoEvento = "Av. Paulista, 1000, São Paulo, Brasil"; // Substitua por um endereço válido ou variável
 
-  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enderecoEvento)}`)
+  fetch(https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enderecoEvento)})
     .then(res => res.json())
     .then(locations => {
       if (locations.length > 0) {
@@ -324,10 +324,10 @@
         console.error("Endereço não encontrado para o mapa.");
       }
     })
-    .catch(error => console.error("Erro ao carregar mapa:", error)); 
+    .catch(error => console.error("Erro ao carregar mapa:", error));
+  </script>  
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
-  </script>
   <script>
   async function carregarEventosNoMapaHoje() {
   const map = L.map('map').setView([-14.2350, -51.9253], 4); // Centraliza no Brasil
@@ -343,7 +343,7 @@
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
     const dia = String(hoje.getDate()).padStart(2, '0');
-    const dataHoje = `${ano}-${mes}-${dia}`;
+    const dataHoje = ${ano}-${mes}-${dia};
 
     const eventosHoje = eventos.filter(evento => {
       if (!evento.data) return false;
@@ -351,7 +351,7 @@
       const anoE = dataEvento.getFullYear();
       const mesE = String(dataEvento.getMonth() + 1).padStart(2, '0');
       const diaE = String(dataEvento.getDate()).padStart(2, '0');
-      const dataFormatada = `${anoE}-${mesE}-${diaE}`;
+      const dataFormatada = ${anoE}-${mesE}-${diaE};
       return dataFormatada === dataHoje;
     });
 
@@ -359,7 +359,7 @@
       if (!evento.endereco) continue;
 
       const endereco = encodeURIComponent(evento.endereco);
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${endereco}&limit=1`;
+      const url = https://nominatim.openstreetmap.org/search?format=json&q=${endereco}&limit=1;
 
       const response = await fetch(url);
       const data = await response.json();
@@ -370,7 +370,7 @@
 
         L.marker([lat, lon])
           .addTo(map)
-          .bindPopup(`<strong>${evento.nome}</strong><br>${evento.endereco}`);
+          .bindPopup(<strong>${evento.nome}</strong><br>${evento.endereco});
       }
     }
   } catch (error) {
@@ -379,88 +379,7 @@
 }
 
 carregarEventosNoMapaHoje();
-<div id="eventos-por-categoria"></div>
-  async function carregarEventosAgrupados() {
-    try {
-      const resposta = await fetch('/api/sua-api-de-eventos'); // Altere o caminho da API se necessário
-      const eventos = await resposta.json();
-
-      const container = document.getElementById('eventos-por-categoria');
-
-
-      const categoriasMap = {};
-      eventos.forEach(evento => {
-        const tipo = evento.tipo_evento || 'Sem categoria';
-        if (!categoriasMap[tipo]) {
-          categoriasMap[tipo] = [];
-        }
-        categoriasMap[tipo].push(evento);
-      });
-      for (const tipo in categoriasMap) {
-        const titulo = document.createElement('h2');
-        titulo.textContent = tipo;
-        container.appendChild(titulo);
-
-        const lista = document.createElement('div');
-        lista.classList.add('eventos-lista');
-
-        categoriasMap[tipo].forEach(evento => {
-          const eventoDiv = document.createElement('div');
-          eventoDiv.classList.add('evento');
-
-          eventoDiv.innerHTML = `
-            <h3>${evento.nome}</h3>
-            <p>${evento.descricao}</p>
-            <p><strong>Data:</strong> ${new Date(evento.data).toLocaleDateString()}</p>
-            ${evento.imagem ? `<img src="data:image/jpeg;base64,${evento.imagem}" alt="Imagem do evento" style="max-width:200px;" />` : ''}
-          `;
-
-          lista.appendChild(eventoDiv);
-        });
-
-        container.appendChild(lista);
-      }
-    } catch (erro) {
-      console.error('Erro ao carregar eventos:', erro);
-    }
-  }
-  <h2 style="margin-top: 40px;">Eventos Religiosos</h2>
-  <div id="eventos-religiosos"></div>
-  document.addEventListener('DOMContentLoaded', () => {
-    carregarEventosAgrupados();
-    carregarEventosReligiosos();
-  });
-  async function carregarEventosReligiosos() {
-    try {
-      const resposta = await fetch('/api/buscaeventos');
-      const todosEventos = await resposta.json();
-
-      const eventosReligiosos = todosEventos.filter(e => e.tipo_evento?.toLowerCase() === 'religioso');
-
-      const container = document.getElementById('eventos-religiosos');
-      container.innerHTML = '';
-
-      if (eventosReligiosos.length === 0) {
-        container.innerHTML = '<p>Nenhum evento religioso encontrado.</p>';
-        return;
-      }
-
-      eventosReligiosos.forEach(evento => {
-        const div = document.createElement('div');
-        div.className = 'evento';
-        div.innerHTML = `
-          <img src="data:image/jpeg;base64,${evento.imagem}" alt="Imagem do evento" style="width: 200px;">
-          <h3>${evento.nome}</h3>
-          <p>${evento.descricao}</p>
-          <p><strong>Data:</strong> ${evento.data}</p>
-        `;
-        container.appendChild(div);
-      });
-    } catch (error) {
-      console.error('Erro ao carregar eventos religiosos:', error);
-    }
-  }
-  </script>  
+</script>
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
   <button class="logout-botao" onclick="logout()">
