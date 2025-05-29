@@ -375,49 +375,85 @@
             });
 
            async function alterarSenha() {
+           async function salvarPerfil() {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-              const novaSenha = document.getElementById("novaSenha").value;
-              const confirmarSenha = document.getElementById("confirmarSenha").value;
+              
+              // Coletar todos os dados do formulário
+              const dadosPerfil = {
+                cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
+                nome: document.getElementById("txtNome").value,
+                data_nascimento: document.getElementById("dateNascimento").value,
+                email_usuario: document.getElementById("emailEm").value,
+                telefone: document.getElementById("telTelefone").value.replace(/\D/g, ''),
+                sexo: document.getElementById("sexo").value,
+                endereco: document.getElementById("txtEndereço").value,
+                cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
+                numero: document.getElementById("telNum").value,
+                complemento: document.getElementById("telCom").value,
+                municipio: document.getElementById("municipio").value,
+                uf: document.getElementById("uf").value,
+                // Campos de senha (opcionais)
+                novaSenha: document.getElementById("novaSenha").value,
+                confirmarSenha: document.getElementById("confirmarSenha").value
+              };
             
-              if (!novaSenha || !confirmarSenha) {
-                alert("Por favor, preencha todos os campos");
+         
+              if (!dadosPerfil.nome || !dadosPerfil.email_usuario || !dadosPerfil.cpf) {
+                alert("Nome, CPF e e-mail são obrigatórios");
                 return;
               }
             
-              if (novaSenha !== confirmarSenha) {
-                alert("As senhas não coincidem");
-                return;
+    
+              if (dadosPerfil.novaSenha || dadosPerfil.confirmarSenha) {
+                if (dadosPerfil.novaSenha !== dadosPerfil.confirmarSenha) {
+                  alert("As senhas não coincidem");
+                  return;
+                }
+                if (dadosPerfil.novaSenha.length < 6) {
+                  alert("A senha deve ter pelo menos 6 caracteres");
+                  return;
+                }
               }
             
               try {
-                const response = await fetch('/api/alterar_senha', {
+         
+                const response = await fetch('/api/atualizar_perfil', {
                   method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({
-                    email: usuarioLogado.email,
-                    novaSenha: novaSenha
-                  })
+                  body: JSON.stringify(dadosPerfil)
                 });
             
                 const result = await response.json();
             
                 if (!response.ok) {
-                  throw new Error(result.message || 'Erro ao alterar senha');
+                  throw new Error(result.message || 'Erro ao salvar perfil');
                 }
             
-                alert("Senha alterada com sucesso!");
-                // Limpa os campos após sucesso
+         
+                if (result.usuario) {
+                  localStorage.setItem("usuarioLogado", JSON.stringify({
+                    ...usuarioLogado,
+                    nome: result.usuario.nome,
+                    email: result.usuario.email_usuario
+                  }));
+                }
+            
+                alert("Perfil atualizado com sucesso!");
+                
+
                 document.getElementById("novaSenha").value = "";
                 document.getElementById("confirmarSenha").value = "";
             
               } catch (error) {
-                console.error("Erro:", error);
-                alert(error.message || "Erro ao alterar senha");
+                console.error("Erro ao salvar perfil:", error);
+                alert(error.message || "Erro ao salvar perfil");
               }
             }
-            document.querySelector('.botao-salvar').addEventListener('click', alterarSenha);    
+            
+
+            document.querySelector('.botao-salvar').addEventListener('click', salvarPerfil);   
          </script>
     </body>
 </html>
