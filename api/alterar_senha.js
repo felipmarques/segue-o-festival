@@ -12,17 +12,50 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, message: 'Método não permitido' });
   }
 
-  const { email, novaSenha } = req.body;
-
-  if (!email || !novaSenha) {
-    return res.status(400).json({ success: false, message: 'E-mail e nova senha são obrigatórios' });
-  }
+  const {
+    cpf,
+    nome,
+    data_nascimento,
+    email_usuario,
+    telefone,
+    sexo,
+    endereco,
+    cep,
+    numero,
+    complemento,
+    municipio,
+    uf
+  } = req.body;
 
   try {
-    // Atualização direta da senha no banco de dados
     const result = await pool.query(
-      'UPDATE usuario SET senha_usuario = $1 WHERE email_usuario = $2 RETURNING email_usuario, nome',
-      [novaSenha, email]
+      `UPDATE usuario SET
+        nome = $1,
+        data_nascimento = $2,
+        telefone = $3,
+        sexo = $4,
+        endereco = $5,
+        cep = $6,
+        numero = $7,
+        complemento = $8,
+        municipio = $9,
+        uf = $10
+      WHERE cpf = $11 AND email_usuario = $12
+      RETURNING *`,
+      [
+        nome,
+        data_nascimento,
+        telefone,
+        sexo,
+        endereco,
+        cep,
+        numero,
+        complemento,
+        municipio,
+        uf,
+        cpf,
+        email_usuario
+      ]
     );
 
     if (result.rowCount === 0) {
@@ -31,12 +64,12 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: 'Senha atualizada com sucesso',
+      message: 'Perfil atualizado com sucesso',
       usuario: result.rows[0]
     });
 
   } catch (error) {
-    console.error('Erro ao atualizar senha:', error);
+    console.error('Erro ao atualizar perfil:', error);
     return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
   }
 }
