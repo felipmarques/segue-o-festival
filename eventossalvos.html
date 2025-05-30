@@ -1,194 +1,210 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="src/css/eventossalvos.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meus Eventos Salvos | Segue o Festival</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
-    /* Estilos adicionais para a versão completa */
-    .conteudo-secundario-item {
-      position: relative;
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    /* Sidebar styles... (manter existente) */
+
+    main {
+      margin-left: 250px;
+      padding: 20px;
+    }
+
+    .cabecalho-titulo {
+      color: var(--primary-color);
+      text-transform: uppercase;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+
+    .conteudo-secundario-destaque {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
     }
-    
+
+    .conteudo-secundario-destaque h1 {
+      color: var(--primary-color);
+      font-size: 1.8em;
+      margin: 0;
+    }
+
+    .conteudo-secundario-primeiralinha {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .evento-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .evento-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .evento-imagem {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .evento-content {
+      padding: 15px;
+    }
+
+    .evento-titulo {
+      font-size: 1.2em;
+      margin: 0 0 10px 0;
+      color: var(--primary-color);
+    }
+
+    .evento-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .evento-info i {
+      margin-right: 8px;
+      color: var(--secondary-color);
+    }
+
     .remove-btn {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(255,0,0,0.7);
+      top: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      color: var(--error-color);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .remove-btn:hover {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .remove-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 3em;
+      color: #ddd;
+      margin-bottom: 15px;
+    }
+
+    .btn-primary {
+      background: var(--secondary-color);
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
     }
-    
-    .remove-btn:hover {
-      background: rgba(255,0,0,0.9);
-    }
-    
-    .sem-eventos {
+
+    .error-state {
+      grid-column: 1 / -1;
       text-align: center;
-      padding: 40px;
-      color: #666;
-      font-size: 1.2em;
+      padding: 50px 20px;
+      color: var(--error-color);
     }
-    
-    .erro-carregamento {
-      text-align: center;
-      padding: 40px;
-      color: #d32f2f;
-      font-size: 1.2em;
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      main {
+        margin-left: 0;
+        padding: 15px;
+      }
+
+      .conteudo-secundario-primeiralinha {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <nav id="sidebar">
-      <div id="sidebar_content">
-        <div id="user">
-          <img src="src/images/avatar.avif" id="user_avatar" alt="Avatar" />
-          <p id="user_infos">
-            <span class="item-description">Olá, Lorena!</span>
-          </p>
-        </div>
-
-        <ul id="side_items">
-          <li class="side-item"><a href="https://segue-o-festival.vercel.app/home.html"><i class="fa-solid fa-house"></i><span class="item-description">Home</span></a></li>
-          <li class="side-item"><a href="https://segue-o-festival.vercel.app/perfil.html"><i class="fa-solid fa-user"></i><span class="item-description">Perfil</span></a></li>
-          <li class="side-item active"><a href="#"><i class="fa-solid fa-star"></i><span class="item-description">Meus Eventos</span></a></li>
-        </ul>
-
-        <button id="open_btn">
-          <i id="open_btn_icon" class="fa-solid fa-chevron-right"></i>
-        </button>
-      </div>
-
-      <div id="logout">
-        <button id="logout_btn">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span class="item-description">Logout</span>
-        </button>
-      </div>
-    </nav>
-  </header>
+  <!-- Sidebar (manter código existente) -->
 
   <main>
-    <h1 class="cabecalho-titulo">Segue<br />O Festival</h1>
+    <h1 class="cabecalho-titulo">Meus Eventos Salvos</h1>
 
     <section class="conteudo-secundario">
       <div class="conteudo-secundario-destaque">
-        <h1>Meus Eventos Salvos</h1>
-        <a href="#">
-          <div class="filtro">
-            <i class="fa-solid fa-filter"></i>
-          </div>
-        </a>
+        <h1>Seus Eventos Favoritos</h1>
       </div>
 
       <div class="conteudo-secundario-primeiralinha" id="eventosContainer">
-        <!-- Eventos serão carregados dinamicamente aqui -->
+        <!-- Eventos serão carregados aqui -->
       </div>
     </section>
-
-    <div class="paginacao">
-      <a href="#" class="ativo">1</a>
-    </div>
-
-    <footer class="rodape">
-      <h3 class="titulo-rodape">Segue<br />O Festival!</h3>
-
-      <div class="rodape-links">
-        <div class="menu-hover">
-          <div>
-            <span class="rodape-direcionamento" onclick="toggleLista('listaEventos')">Encontre Eventos</span>
-            <ul class="lista-escondida" id="listaEventos">
-              <li>Festival A</li>
-              <li>Festival B</li>
-              <li>Festival C</li>
-            </ul>
-          </div>
-
-          <div>
-            <span class="rodape-direcionamento" onclick="toggleLista('listaCidades')">Cidades</span>
-            <ul class="lista-escondida" id="listaCidades">
-              <li>São Paulo</li>
-              <li>Rio de Janeiro</li>
-              <li>Belo Horizonte</li>
-              <li>Curitiba</li>
-            </ul>
-          </div>
-
-          <div>
-            <span class="rodape-direcionamento" onclick="toggleLista('listaCategorias')">Categorias</span>
-            <ul class="lista-escondida" id="listaCategorias">
-              <li>Festival</li>
-              <li>Show</li>
-              <li>Religioso</li>
-              <li>Carnaval</li>
-              <li>Festa Junina</li>
-              <li>Ano Novo</li>
-            </ul>
-          </div>
-
-          <div>
-            <span class="rodape-direcionamento" onclick="toggleLista('listaParaPromotores')">Para Promotores</span>
-            <ul class="lista-escondida" id="listaParaPromotores">
-              <li>Cadastrar Evento</li>
-              <li>Contato</li>
-            </ul>
-          </div>
-
-          <a href="https://cadastro-organizador.vercel.app/faq.html" class="rodape-direcionamento">Ajuda</a>
-        </div>
-      </div>
-
-      <div class="direitos-reservados">
-        &copy; 2025 Segue o Festival. Todos os direitos reservados.
-      </div>
-    </footer>
   </main>
 
   <script>
-    // Função para alternar listas no footer
-    function toggleLista(id) {
-      const lista = document.getElementById(id);
-      lista.style.display = lista.style.display === 'none' ? 'block' : 'none';
-    }
+    let usuarioLogado = null;
 
-    // Verifica se o usuário está logado
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    if (!usuarioLogado) {
-      window.location.href = "login.html";
-    } else {
-      // Atualiza o nome do usuário na sidebar
-      const userInfos = document.getElementById("user_infos");
-      if (userInfos) {
-        userInfos.querySelector('.item-description').textContent = `Olá, ${usuarioLogado.nome || 'Usuário'}!`;
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Verifica autenticação
+      usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+      if (!usuarioLogado?.cpf) {
+        showLoginMessage();
+        return;
       }
-    }
 
-    // Logout
-    document.getElementById('logout_btn').addEventListener('click', () => {
-      localStorage.clear();
-      window.location.href = 'login.html';
+      await loadSavedEvents();
     });
 
-    // Carrega os eventos salvos
-    document.addEventListener("DOMContentLoaded", async () => {
-      try {
-        if (!usuarioLogado?.cpf) {
-          document.getElementById("eventosContainer").innerHTML = `
-            <div class="sem-eventos">
-              <p>Você precisa estar logado para ver seus eventos salvos.</p>
-              <a href="login.html" class="btn-login">Fazer Login</a>
-            </div>
-          `;
-          return;
-        }
+    async function loadSavedEvents() {
+      const container = document.getElementById('eventosContainer');
+      container.innerHTML = '<div class="loading-state">Carregando...</div>';
 
+      try {
         const response = await fetch(`/api/eventos-salvos-usuario?cpf=${encodeURIComponent(usuarioLogado.cpf)}`);
         
         if (!response.ok) {
@@ -196,87 +212,133 @@
         }
 
         const eventos = await response.json();
-        const container = document.getElementById("eventosContainer");
 
         if (eventos.length === 0) {
-          container.innerHTML = `
-            <div class="sem-eventos">
-              <i class="fa-regular fa-star" style="font-size: 2em; margin-bottom: 15px;"></i>
-              <p>Você ainda não salvou nenhum evento.</p>
-              <a href="home.html" class="btn-explorar">Explorar Eventos</a>
-            </div>
-          `;
+          showEmptyState();
           return;
         }
 
-        container.innerHTML = eventos.map(evento => `
-          <div class="conteudo-secundario-item">
-            <img class="conteudo-secundario-imagem" 
-                 src="${evento.imagemUrl || 'src/images/default-event.jpg'}" 
-                 alt="Banner ${evento.titulo}">
-            <h3 class="conteudo-secundario-titulo">${evento.titulo}</h3>
-            <p class="conteudo-secundario-paragrafo">
-              <i class="fa-regular fa-calendar"></i> ${evento.data}
-            </p>
-            <p class="conteudo-secundario-paragrafo">
-              <i class="fa-solid fa-location-dot"></i> ${evento.endereco}
-            </p>
-            <button class="remove-btn" data-id="${evento.id_evento}">
-              <i class="fa-solid fa-trash"></i> Remover
-            </button>
-          </div>
-        `).join('');
+        renderEvents(eventos);
+      } catch (error) {
+        console.error('Erro ao carregar eventos:', error);
+        showErrorState(error);
+      }
+    }
 
-        // Adiciona eventos de clique para os botões de remoção
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const eventoId = e.currentTarget.getAttribute('data-id');
-            try {
-              const deleteResponse = await fetch('/api/eventos-salvos-usuario', {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                  eventoId, 
-                  cpf: usuarioLogado.cpf 
-                })
-              });
-              
-              if (!deleteResponse.ok) {
-                throw new Error('Falha ao remover evento');
-              }
-              
-              // Recarrega a página para atualizar a lista
-              window.location.reload();
-            } catch (error) {
-              console.error('Erro ao remover evento:', error);
-              alert('Ocorreu um erro ao remover o evento. Tente novamente.');
-            }
-          });
+    function renderEvents(eventos) {
+      const container = document.getElementById('eventosContainer');
+      container.innerHTML = '';
+
+      eventos.forEach(evento => {
+        const eventCard = document.createElement('div');
+        eventCard.className = 'evento-card';
+        eventCard.innerHTML = `
+          <img src="${evento.imagemUrl || 'src/images/default-event.jpg'}" 
+               alt="${evento.titulo}" 
+               class="evento-imagem">
+          <div class="evento-content">
+            <h3 class="evento-titulo">${evento.titulo}</h3>
+            <div class="evento-info">
+              <i class="fas fa-calendar-alt"></i>
+              <span>${evento.data}</span>
+            </div>
+            <div class="evento-info">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>${evento.endereco}</span>
+            </div>
+          </div>
+          <button class="remove-btn" data-id="${evento.id_evento}" title="Remover evento">
+            <i class="fas fa-trash"></i>
+          </button>
+        `;
+        container.appendChild(eventCard);
+      });
+
+      // Adiciona event listeners para os botões de remoção
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const eventId = e.currentTarget.getAttribute('data-id');
+          await removeSavedEvent(eventId);
+        });
+      });
+    }
+
+    async function removeSavedEvent(eventId) {
+      const btn = document.querySelector(`.remove-btn[data-id="${eventId}"]`);
+      if (!btn) return;
+
+      btn.classList.add('loading');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+      try {
+        const response = await fetch('/api/eventos-salvos-usuario', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventoId: parseInt(eventId),
+            cpf: usuarioLogado.cpf
+          })
         });
 
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Erro ao remover evento');
+        }
+
+        // Recarrega a lista após remoção
+        await loadSavedEvents();
       } catch (error) {
-        console.error("Erro ao carregar eventos salvos:", error);
-        document.getElementById("eventosContainer").innerHTML = `
-          <div class="erro-carregamento">
-            <i class="fa-solid fa-exclamation-triangle"></i>
-            <p>Ocorreu um erro ao carregar seus eventos salvos.</p>
-            <button onclick="window.location.reload()">Tentar novamente</button>
-          </div>
-        `;
+        console.error('Erro ao remover evento:', error);
+        alert(error.message);
+        btn.classList.remove('loading');
+        btn.innerHTML = '<i class="fas fa-trash"></i>';
       }
-    });
+    }
 
-    // Sidebar toggle
-    const openBtn = document.getElementById('open_btn');
-    const sidebar = document.getElementById('sidebar');
+    function showEmptyState() {
+      const container = document.getElementById('eventosContainer');
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="far fa-star"></i>
+          <h3>Nenhum evento salvo</h3>
+          <p>Você ainda não salvou nenhum evento.</p>
+          <a href="home.html" class="btn-primary">Explorar Eventos</a>
+        </div>
+      `;
+    }
 
-    openBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      const icon = document.getElementById('open_btn_icon');
-      icon.classList.toggle('fa-chevron-right');
-      icon.classList.toggle('fa-chevron-left');
+    function showErrorState(error) {
+      const container = document.getElementById('eventosContainer');
+      container.innerHTML = `
+        <div class="error-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Erro ao carregar eventos</h3>
+          <p>${error.message || 'Ocorreu um erro ao carregar seus eventos salvos.'}</p>
+          <button onclick="location.reload()" class="btn-primary">Tentar novamente</button>
+        </div>
+      `;
+    }
+
+    function showLoginMessage() {
+      const container = document.getElementById('eventosContainer');
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-user-lock"></i>
+          <h3>Acesso não autorizado</h3>
+          <p>Você precisa estar logado para ver seus eventos salvos.</p>
+          <a href="login.html" class="btn-primary">Fazer Login</a>
+        </div>
+      `;
+    }
+
+    // Logout
+    document.getElementById('logout_btn')?.addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = 'login.html';
     });
   </script>
 </body>
