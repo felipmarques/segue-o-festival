@@ -303,30 +303,37 @@ async function alternarSalvarEvento(idEvento, botao) {
 
     const estaSalvo = botao.textContent === 'Salvo';
     
-    const response = await fetch('/api/salvar-evento', {
+    const response = await fetch('/api/eventos-salvos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'usuario-logado': localStorage.getItem("usuarioLogado")
       },
       body: JSON.stringify({ 
-        id_evento: idEvento,
-        acao: estaSalvo ? 'remover' : 'adicionar'
+        id_evento: idEvento, 
+        acao: estaSalvo ? 'remover' : 'salvar'
       })
     });
 
-    if (!response.ok) {
-      const erro = await response.json();
-      throw new Error(erro.message || 'Erro ao salvar evento');
+    // Verifica primeiro o tipo de conteúdo
+    const contentType = response.headers.get('content-type');
+    
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(text || 'Resposta inválida do servidor');
     }
 
-    // Atualiza o botão apenas se a requisição foi bem-sucedida
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Erro na requisição');
+    }
+    
     botao.textContent = estaSalvo ? 'Salvar' : 'Salvo';
     botao.classList.toggle('botao-salvo', !estaSalvo);
-    
   } catch (error) {
     console.error('Erro:', error);
-    alert(error.message || 'Ocorreu um erro ao salvar o evento');
+    alert(error.message || 'Ocorreu um erro');
   }
 }
   </script>
