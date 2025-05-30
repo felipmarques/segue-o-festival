@@ -136,6 +136,7 @@
       padding: 8px 15px;
       border-radius: 2px;
       font-size: 14px;
+      font-family: 'Open Sans', sans-serif; 
       cursor: pointer;
       transition: all 0.2s ease-in-out;
     }
