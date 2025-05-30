@@ -276,22 +276,25 @@
               }
             
               try {
-                // Buscar dados completos do usuário
+     
                 const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
                 if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
             
                 const dados = await response.json();
             
-                // Preencher todos os campos do formulário
+       
                 document.getElementById("txtNome").value = dados.nome || "";
                 document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
                 document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
-                document.getElementById("emailEm").value = dados.email_usuario || "";
+                document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
                 
                 if (dados.data_nascimento) {
-                  const [ano, mes, dia] = dados.data_nascimento.split('-');
-                  document.getElementById("dateNascimento").value = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-                }
+
+                  const dataFormatada = dados.data_nascimento.includes('/') 
+                    ? dados.data_nascimento.split('/').reverse().join('-')
+                    : dados.data_nascimento;
+                  document.getElementById("dateNascimento").value = dataFormatada;
+              }
                 
                 if (dados.sexo) document.getElementById("sexo").value = dados.sexo;
                 if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
