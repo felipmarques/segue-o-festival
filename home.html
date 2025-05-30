@@ -273,82 +273,77 @@
 
   async function verificarEventoSalvo(idEvento) {
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    
     if (!usuarioLogado?.email) return false;
   
     try {
-      const responseUsuario = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-      if (!responseUsuario.ok) return false;
+      // 1. Busca o CPF do usuário
+      const userResponse = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
+      if (!userResponse.ok) return false;
       
-      const usuario = await responseUsuario.json();
-      const cpfUsuario = usuario.cpf;
-  
-      const response = await fetch(`/api/eventos-salvos?cpf=${cpfUsuario}&evento_id=${idEvento}`);
+      const usuario = await userResponse.json();
+      
+      // 2. Verifica se o evento está salvo
+      const response = await fetch(`/api/eventos-salvos?cpf=${usuario.cpf}&evento_id=${idEvento}`);
       if (!response.ok) return false;
       
-      const eventosSalvos = await response.json();
-      return eventosSalvos.length > 0;
+      const data = await response.json();
+      return data.length > 0;
     } catch (error) {
       console.error("Erro ao verificar evento salvo:", error);
       return false;
     }
   }
 
-  async function alternarSalvarEvento(idEvento, botao) {
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+async function alternarSalvarEvento(idEvento, botao) {
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  if (!usuarioLogado?.email) {
+    alert("Você precisa estar logado para salvar eventos");
+    return;
+  }
+
+  try {
+    // 1. Busca o CPF do usuário
+    const userResponse = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
+    if (!userResponse.ok) throw new Error('Erro ao buscar dados do usuário');
     
-    if (!usuarioLogado?.email) {
-      alert("Você precisa estar logado para salvar eventos");
-      return;
-    }
-  
-    try {
-      // Primeiro buscamos o CPF do usuário
-      const responseUsuario = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-      if (!responseUsuario.ok) throw new Error('Erro ao buscar dados do usuário');
+    const usuario = await userResponse.json();
+    const cpfUsuario = usuario.cpf;
+
+    // 2. Verifica se o evento já está salvo
+    const isSaved = await verificarEventoSalvo(idEvento);
+
+    if (isSaved) {
+      // Remove o evento salvo
+      const deleteResponse = await fetch(`/api/eventos-salvos?cpf=${cpfUsuario}&evento_id=${idEvento}`, {
+        method: 'DELETE'
+      });
       
-      const usuario = await responseUsuario.json();
-      const cpfUsuario = usuario.cpf;
-  
-      // Verifica se o evento já está salvo
-      const responseVerifica = await fetch(`/api/eventos-salvos?cpf=${cpfUsuario}&evento_id=${idEvento}`);
-      if (!responseVerifica.ok) throw new Error('Erro ao verificar evento salvo');
+      if (!deleteResponse.ok) throw new Error('Erro ao remover evento salvo');
       
-      const eventoSalvo = await responseVerifica.json();
-      const eventoJaSalvo = eventoSalvo.length > 0;
-  
-      if (eventoJaSalvo) {
-        // Remove o evento salvo
-        const responseRemove = await fetch(`/api/eventos-salvos/${eventoSalvo[0].id}`, {
-          method: 'DELETE'
-        });
-        
-        if (!responseRemove.ok) throw new Error('Erro ao remover evento salvo');
-        
-        botao.textContent = 'Salvar';
-        botao.classList.remove('botao-salvo');
-      } else {
-        // Adiciona novo evento salvo
-        const responseAdiciona = await fetch('/api/eventos-salvos', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            usuario_cpf: cpfUsuario,
-            evento_id: idEvento
-          })
-        });
-        
-        if (!responseAdiciona.ok) throw new Error('Erro ao salvar evento');
-        
-        botao.textContent = 'Salvo';
-        botao.classList.add('botao-salvo');
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert(error.message || "Erro ao alternar estado do evento");
+      botao.textContent = 'Salvar';
+      botao.classList.remove('botao-salvo');
+    } else {
+      // Adiciona novo evento salvo
+      const postResponse = await fetch('/api/eventos-salvos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          usuario_cpf: cpfUsuario,
+          evento_id: idEvento
+        })
+      });
+      
+      if (!postResponse.ok) throw new Error('Erro ao salvar evento');
+      
+      botao.textContent = 'Salvo';
+      botao.classList.add('botao-salvo');
     }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert(error.message || "Erro ao alternar estado do evento");
+  }
 }
   </script>
   <script src="js/filtros-logado.js"></script>
