@@ -1,103 +1,112 @@
-const { Pool } = require('pg');
-
+const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 module.exports = async (req, res) => {
-  console.log('Requisição recebida:', req.method, req.query);
+  const { method, query, body } = req;
+
+  console.log(`[${new Date().toISOString()}] ${method} ${req.url}`);
 
   try {
-    switch (req.method) {
+    switch (method) {
       case 'GET':
-        // GET /api/eventos-salvos?cpf=XXX&evento_id=YYY
-        if (req.query.cpf && req.query.evento_id) {
-          const query = `
-            SELECT * FROM eventos_salvos 
-            WHERE usuario_cpf = $1 AND evento_id = $2
-          `;
-          const result = await pool.query(query, [req.query.cpf, req.query.evento_id]);
-          res.status(200).json(result.rows);
-        } 
-        // GET /api/eventos-salvos?cpf=XXX (todos eventos salvos do usuário)
-        else if (req.query.cpf) {
-          const query = `
-            SELECT e.* FROM eventos e
-            JOIN eventos_salvos es ON e.id_evento = es.evento_id
-            WHERE es.usuario_cpf = $1
-          `;
-          const result = await pool.query(query, [req.query.cpf]);
+        // Buscar eventos salvos por CPF
+        if (query.cpf) {
+          const result = await pool.query(
+            `SELECT e.* FROM eventos e
+             JOIN eventos_salvos es ON e.id_evento = es.evento_id
+             WHERE es.usuario_cpf = $1`,
+            [query.cpf]
+          );
           
-          // Converte buffer da imagem para base64
-          const eventosComImagem = result.rows.map(evento => ({
+          const eventos = result.rows.map(evento => ({
             ...evento,
             imagem: evento.imagem ? evento.imagem.toString('base64') : null
           }));
           
-          res.status(200).json(eventosComImagem);
-        } else {
-          res.status(400).send('CPF do usuário é obrigatório');
+          return res.status(200).json({
+            success: true,
+            data: eventos
+          });
         }
         break;
 
       case 'POST':
-        // POST /api/eventos-salvos
-        const { usuario_cpf, evento_id } = req.body;
+        // Salvar novo evento
+        const { cpf, evento_id } = body;
         
-        if (!usuario_cpf || !evento_id) {
-          return res.status(400).send('CPF do usuário e ID do evento são obrigatórios');
+        if (!cpf || !evento_id) {
+          return res.status(400).json({
+            success: false,
+            error: "CPF e ID do evento são obrigatórios"
+          });
         }
 
-        // Verifica se o evento já está salvo
-        const checkQuery = `
-          SELECT id FROM eventos_salvos 
-          WHERE usuario_cpf = $1 AND evento_id = $2
-        `;
-        const checkResult = await pool.query(checkQuery, [usuario_cpf, evento_id]);
+        // Verifica se já está salvo
+        const exists = await pool.query(
+          "SELECT id FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2",
+          [cpf, evento_id]
+        );
 
-        if (checkResult.rows.length > 0) {
-          return res.status(409).send('Evento já está salvo para este usuário');
+        if (exists.rows.length > 0) {
+          return res.status(409).json({
+            success: false,
+            error: "Evento já está salvo"
+          });
         }
 
         // Insere novo registro
-        const insertQuery = `
-          INSERT INTO eventos_salvos (usuario_cpf, evento_id)
-          VALUES ($1, $2)
-          RETURNING *
-        `;
-        const insertResult = await pool.query(insertQuery, [usuario_cpf, evento_id]);
-        res.status(201).json(insertResult.rows[0]);
-        break;
+        await pool.query(
+          "INSERT INTO eventos_salvos (usuario_cpf, evento_id, criado_em) VALUES ($1, $2, NOW())",
+          [cpf, evento_id]
+        );
+
+        return res.status(201).json({
+          success: true,
+          message: "Evento salvo com sucesso"
+        });
 
       case 'DELETE':
-        // DELETE /api/eventos-salvos?cpf=XXX&evento_id=YYY
-        if (!req.query.cpf || !req.query.evento_id) {
-          return res.status(400).send('CPF do usuário e ID do evento são obrigatórios');
+        // Remover evento salvo
+        if (query.cpf && query.evento_id) {
+          const result = await pool.query(
+            "DELETE FROM eventos_salvos WHERE usuario_cpf = $1 AND evento_id = $2 RETURNING *",
+            [query.cpf, query.evento_id]
+          );
+
+          if (result.rows.length === 0) {
+            return res.status(404).json({
+              success: false,
+              error: "Evento salvo não encontrado"
+            });
+          }
+
+          return res.status(200).json({
+            success: true,
+            message: "Evento removido dos salvos"
+          });
         }
-
-        const deleteQuery = `
-          DELETE FROM eventos_salvos 
-          WHERE usuario_cpf = $1 AND evento_id = $2
-          RETURNING *
-        `;
-        const deleteResult = await pool.query(deleteQuery, [req.query.cpf, req.query.evento_id]);
-
-        if (deleteResult.rows.length === 0) {
-          return res.status(404).send('Registro não encontrado');
-        }
-
-        res.status(200).json(deleteResult.rows[0]);
         break;
 
       default:
-        res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
-        res.status(405).send('Método não permitido');
+        return res.status(405).json({
+          success: false,
+          error: "Método não permitido"
+        });
     }
-  } catch (err) {
-    console.error('Erro na API eventos-salvos:', err);
-    res.status(500).send('Erro interno do servidor');
+
+    return res.status(400).json({
+      success: false,
+      error: "Parâmetros inválidos"
+    });
+
+  } catch (error) {
+    console.error("Erro na API eventos-salvos:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Erro interno do servidor"
+    });
   }
 };
