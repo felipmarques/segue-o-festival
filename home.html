@@ -75,10 +75,6 @@
         <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
       </ul>
     </div>
-    <div class="search-bar">
-      <input type="text" id="dataInput" name="data" placeholder="📅Buscar por data" readonly />
-      <button onclick="limparFiltros()">Limpar</button>
-    </div>
   </nav>
   
   <main class="conteudo">
@@ -188,14 +184,16 @@
 
         const botaoSalvar = document.createElement('button');
           botaoSalvar.className = 'botao-salvar';
-          const jaSalvo = await verificarEventoSalvo(evento.id_evento);
-          botaoSalvar.textContent = jaSalvo ? 'Salvo' : 'Salvar';
-          if (jaSalvo) botaoSalvar.classList.add('botao-salvo');
-          
+          botaoSalvar.textContent = verificarEventoSalvo(evento.id_evento) ? 'Salvo' : 'Salvar';
+          if (verificarEventoSalvo(evento.id_evento)) {
+            botaoSalvar.classList.add('botao-salvo');
+          }
+        
           botaoSalvar.onclick = (e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // evitar redirecionamento
             alternarSalvarEvento(evento.id_evento, botaoSalvar);
           };
+          
 
         div.appendChild(imagem);
         div.appendChild(titulo);
@@ -273,83 +271,27 @@
     window.location.href = "index.html";
   }
 
-  async function verificarEventoSalvo(idEvento) {
-    try {
-      const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
-      if (!usuario?.cpf) return false;
+    function verificarEventoSalvo(idEvento) {
+      const salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
+      return salvos.includes(idEvento);
+    }
+
+    function alternarSalvarEvento(idEvento, botao) {
+      let salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
+      const index = salvos.indexOf(idEvento);
     
-      const response = await fetch(`/api/eventos-salvos?evento_id=${idEvento}`, {
-        method: 'GET',
-        headers: {
-          'usuario-logado': localStorage.getItem("usuarioLogado")
-        }
-      });
+      if (index > -1) {
+        salvos.splice(index, 1);
+        botao.textContent = 'Salvar';
+        botao.classList.remove('botao-salvo');
+      } else {
+        salvos.push(idEvento);
+        botao.textContent = 'Salvo';
+        botao.classList.add('botao-salvo');
+      }
     
-      if (!response.ok) return false;
-      
-      const data = await response.json();
-      return data.salvo || false;
-    } catch (error) {
-      console.error('Erro ao verificar evento salvo:', error);
-      return false;
-    }
-    }
-  async function alternarSalvarEvento(idEvento, botao) {
-    try {
-      const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
-      if (!usuario?.cpf) {
-        alert('Faça login para salvar eventos');
-        window.location.href = 'login.html';
-        return;
-      }
-  
-      const estaSalvo = botao.textContent === 'Salvo';
-      
-      const response = await fetch('/api/eventos-salvos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'usuario-logado': localStorage.getItem("usuarioLogado")
-        },
-        body: JSON.stringify({ 
-          evento_id: idEvento,
-          acao: estaSalvo ? 'remover' : 'salvar' 
-        })
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.erro || 'Erro na requisição');
-      }
-  
-      // Atualiza o botão visualmente
-      botao.textContent = estaSalvo ? 'Salvar' : 'Salvo';
-      botao.classList.toggle('botao-salvo', !estaSalvo);
-      
-      // Feedback visual para o usuário
-      const feedback = document.createElement('span');
-      feedback.textContent = estaSalvo ? 'Removido dos favoritos' : 'Salvo nos favoritos!';
-      feedback.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: ${estaSalvo ? '#e74c3c' : '#2ecc71'};
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        z-index: 1000;
-        animation: fadeInOut 2.5s ease-in-out;
-      `;
-      
-      document.body.appendChild(feedback);
-      setTimeout(() => feedback.remove(), 2500);
-      
-    } catch (error) {
-      console.error('Erro:', error);
-      alert(error.message || 'Ocorreu um erro ao processar sua solicitação');
-    }
-  }
+      localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
+}
   </script>
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
@@ -362,4 +304,5 @@
 </footer>
 
 </html>
+
 
