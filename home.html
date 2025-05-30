@@ -181,20 +181,7 @@
 
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
-
-        const botaoSalvar = document.createElement('button');
-          botaoSalvar.className = 'botao-salvar';
-          botaoSalvar.textContent = verificarEventoSalvo(evento.id_evento) ? 'Salvo' : 'Salvar';
-          if (verificarEventoSalvo(evento.id_evento)) {
-            botaoSalvar.classList.add('botao-salvo');
-          }
-        
-          botaoSalvar.onclick = (e) => {
-            e.stopPropagation(); // evitar redirecionamento
-            alternarSalvarEvento(evento.id_evento, botaoSalvar);
-          };
           
-
         div.appendChild(imagem);
         div.appendChild(titulo);
         div.appendChild(data);
