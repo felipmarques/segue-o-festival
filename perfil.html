@@ -289,14 +289,27 @@
                 document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
                 
                 if (dados.data_nascimento) {
+                  let dataFormatada;
+            
+                  if (/^\d{4}-\d{2}-\d{2}$/.test(dados.data_nascimento)) {
+                    dataFormatada = dados.data_nascimento;
+                  } 
+    
+                  else if (/\d{2}\/\d{2}\/\d{4}/.test(dados.data_nascimento)) {
+                    const [dia, mes, ano] = dados.data_nascimento.split('/');
+                    dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                  }
+                  
+                  if (dataFormatada) {
+                    document.getElementById("dateNascimento").value = dataFormatada;
+                  }
+                }
 
-                  const dataFormatada = dados.data_nascimento.includes('/') 
-                    ? dados.data_nascimento.split('/').reverse().join('-')
-                    : dados.data_nascimento;
-                  document.getElementById("dateNascimento").value = dataFormatada;
-              }
-                
-                if (dados.sexo) document.getElementById("sexo").value = dados.sexo;
+                if (dados.sexo) {
+                  const selectSexo = document.getElementById("sexo");
+                  selectSexo.value = dados.sexo;
+                  selectSexo.dispatchEvent(new Event('change'));
+                }
                 if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
                 if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
                 if (dados.numero) document.getElementById("telNum").value = dados.numero;
