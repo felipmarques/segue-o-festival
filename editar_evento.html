@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Evento - Segue o Festival</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/editarEvento.css">
+</head>
+<body>
+    <header class="cabecalho">
+        <div class="cabecalho-botoes">
+            <button class="cabecalho-botao-entrar" onclick="location.href='meusEventosPromotor.html'">Voltar</button>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="titulo-principal">Editar Evento</h1>
+        
+        <form id="formEditarEvento" class="formulario-edicao">
+            <input type="hidden" id="id_evento">
+            <input type="hidden" id="cnpj_promotor">
+
+            <div class="form-group">
+                <label for="nome">Nome do Evento:</label>
+                <input type="text" id="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="data">Data:</label>
+                <input type="datetime-local" id="data" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP:</label>
+                <input type="text" id="cep" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" required>
+            </div>
+
+            <div class="form-group">
+                <label for="link_ingresso">Link para Ingressos:</label>
+                <input type="url" id="link_ingresso" required>
+            </div>
+
+            <div class="form-group">
+                <label for="line_up">Line-up (Artistas/Atrações):</label>
+                <input type="text" id="line_up" required>
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado:</label>
+                <input type="text" id="estado" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_evento">Tipo de Evento:</label>
+                <select id="tipo_evento" required>
+                    <option value="Música">Música</option>
+                    <option value="Teatro">Teatro</option>
+                    <option value="Esporte">Esporte</option>
+                    <option value="Festival">Festival</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="imagem">Imagem do Evento:</label>
+                <input type="file" id="imagem" accept="image/*">
+                <small>Deixe em branco para manter a imagem atual</small>
+            </div>
+
+            <div class="form-botoes">
+                <button type="button" class="botao-cancelar" onclick="location.href='meusEventosPromotor.html'">Cancelar</button>
+                <button type="submit" class="botao-salvar">Salvar Alterações</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Obtém o ID do evento da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const idEvento = urlParams.get('id');
+            
+            if (!idEvento) {
+                alert("Evento não especificado.");
+                window.location.href = "meusEventosPromotor.html";
+                return;
+            }
+
+            // Obtém o CNPJ do usuário logado
+            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+            document.getElementById("cnpj_promotor").value = cnpjUsuario;
+            document.getElementById("id_evento").value = idEvento;
+
+            try {
+                // Carrega os dados do evento
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}`);
+                
+                if (!resposta.ok) throw new Error("Erro ao carregar evento.");
+                
+                const eventos = await resposta.json();
+                const evento = eventos.find(e => e.id_evento == idEvento);
+                
+                if (!evento) {
+                    throw new Error("Evento não encontrado.");
+                }
+
+                // Preenche o formulário com os dados do evento
+                document.getElementById("nome").value = evento.nome || "";
+                document.getElementById("descricao").value = evento.descricao || "";
+                
+                // Formata a data para o input datetime-local
+                if (evento.data) {
+                    const data = new Date(evento.data);
+                    const dataFormatada = data.toISOString().slice(0, 16);
+                    document.getElementById("data").value = dataFormatada;
+                }
+                
+                document.getElementById("cep").value = evento.cep || "";
+                document.getElementById("endereco").value = evento.endereco || "";
+                document.getElementById("link_ingresso").value = evento.link_ingresso || "";
+                document.getElementById("line_up").value = evento.line_up || "";
+                document.getElementById("estado").value = evento.estado || "";
+                document.getElementById("tipo_evento").value = evento.tipo_evento || "Música";
+
+            } catch (error) {
+                console.error("Erro:", error);
+                alert(error.message || "Erro ao carregar dados do evento.");
+                window.location.href = "meusEventosPromotor.html";
+            }
+        });
+
+        // Envia o formulário de edição
+        document.getElementById("formEditarEvento").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const idEvento = document.getElementById("id_evento").value;
+            const cnpjPromotor = document.getElementById("cnpj_promotor").value;
+            
+            const dadosEvento = {
+                cnpj: cnpjPromotor,
+                nome: document.getElementById("nome").value,
+                descricao: document.getElementById("descricao").value,
+                data: document.getElementById("data").value,
+                cep: document.getElementById("cep").value,
+                endereco: document.getElementById("endereco").value,
+                link_ingresso: document.getElementById("link_ingresso").value,
+                line_up: document.getElementById("line_up").value,
+                estado: document.getElementById("estado").value,
+                tipo_evento: document.getElementById("tipo_evento").value
+            };
+
+            try {
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/editarEventoPromotor?id_evento=${idEvento}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dadosEvento)
+                });
+
+                if (!resposta.ok) {
+                    const erro = await resposta.json();
+                    throw new Error(erro.message || "Erro ao atualizar evento.");
+                }
+
+                const resultado = await resposta.json();
+                alert("Evento atualizado com sucesso!");
+                window.location.href = "meusEventosPromotor.html";
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                alert(error.message || "Erro ao atualizar evento.");
+            }
+        });
+    </script>
+</body>
+</html>
