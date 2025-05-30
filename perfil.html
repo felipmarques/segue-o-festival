@@ -96,7 +96,7 @@
                 <div class="dados-pessoais-baixo">
                 <div class="dados-pessoais-telefone">
                     <p>CPF</p>
-                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF" readonly>
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="000.000.000-00" readonly>
                 </div>
                 <div class="dados-pessoais-telefone">
                     <p>Telefone</p>
@@ -105,16 +105,12 @@
     
                 <div class="dados-pessoais-datanascimento">
                     <p>Data de Nascimento</p>
-                    <input class="dados-pessoais-datanascimento-formulario" type="date" id="dateNascimento" placeholder="Insira a Data de Nascimento">
+                    <input class="dados-pessoais-datanascimento-formulario" type="date" id="dateNascimento" placeholder="AAAA-MM-DD">
                 </div>
     
                 <div class="dados-pessoais-sexo">
                     <p>Sexo</p>
-                    <select class="dados-pessoais-sexo-formulario" id="sexo" name="sexo">
-                    <option value="feminino">Feminino</option>
-                    <option value="masculino">Masculino</option>
-                    <option value="nao_informar">Prefiro não informar</option>
-                    </select>
+                    <input class="dados-pessoais-sexo-formulario" type="text" id="sexo" placeholder="Feminino, Masculino ou Não informar">
                 </div>
                 </div>
             </div>
@@ -130,7 +126,7 @@
                 <div class="dados-endereco-abaixo" >
                 <div class="dados-pessoais-cep">
                     <p>CEP</p>
-                    <input class="dados-pessoais-cep-formulario" type="tel" id="telCEP" placeholder="CEP">
+                    <input class="dados-pessoais-cep-formulario" type="tel" id="telCEP" placeholder="00000-000">
                 </div>
     
                 <div class="dados-pessoais-numero">
@@ -147,72 +143,13 @@
                 <div class="dados-endereco-abaixo-secundario" >
                 <div class="dados-pessoais-municipio" >
                     <p>Município</p>
-                    <select class="dados-pessoais-municipio-formulario" id="municipio" name="municipio">
-                    <option value="americana">Americana</option>
-                    <option value="barueri">Barueri</option>
-                    <option value="braganca_paulista">Bragança Paulista</option>
-                    <option value="cajamar">Cajamar</option>
-                    <option value="campinas">Campinas</option>
-                    <option value="carapicuiba">Carapicuíba</option>
-                    <option value="diadema">Diadema</option>
-                    <option value="embu_das_artes">Embu das Artes</option>
-                    <option value="guaruja">Guarujá</option>
-                    <option value="hortolandia">Hortolândia</option>
-                    <option value="itatiba">Itatiba</option>
-                    <option value="itapecerica_da_serra">Itapecerica da Serra</option>
-                    <option value="jundiai">Jundiaí</option>
-                    <option value="maua">Mauá</option>
-                    <option value="osasco">Osasco</option>
-                    <option value="piracicaba">Piracicaba</option>
-                    <option value="praia_grande">Praia Grande</option>
-                    <option value="ribeirao_pires">Ribeirão Pires</option>
-                    <option value="rio_grande_da_serra">Rio Grande da Serra</option>
-                    <option value="santana_de_parnaiba">Santana de Parnaíba</option>
-                    <option value="santo_andre">Santo André</option>
-                    <option value="santos">Santos</option>
-                    <option value="sao_bernardo">São Bernardo do Campo</option>
-                    <option value="sao_caetano">São Caetano do Sul</option>
-                    <option value="sao_jose_dos_campos">São José dos Campos</option>
-                    <option value="sao_paulo">São Paulo</option>
-                    <option value="sorocaba">Sorocaba</option>
-                    <option value="sumare">Sumaré</option>
-                    <option value="taubate">Taubaté</option>
-                    <option value="taboao_da_serra">Taboão da Serra</option>
-                    </select>
+                    <input class="dados-pessoais-municipio-formulario" type="text" id="municipio" placeholder="Nome do Município">
                 </div>
                     
     
                 <div class="dados-pessoais-uf">
                     <p>UF</p>
-                    <select class="dados-pessoais-uf-formulario" id="uf" name="uf">
-                    <option value="AC">Acre (AC)</option>
-                    <option value="AL">Alagoas (AL)</option>
-                    <option value="AP">Amapá (AP)</option>
-                    <option value="AM">Amazonas (AM)</option>
-                    <option value="BA">Bahia (BA)</option>
-                    <option value="CE">Ceará (CE)</option>
-                    <option value="DF">Distrito Federal (DF)</option>
-                    <option value="ES">Espírito Santo (ES)</option>
-                    <option value="GO">Goiás (GO)</option>
-                    <option value="MA">Maranhão (MA)</option>
-                    <option value="MT">Mato Grosso (MT)</option>
-                    <option value="MS">Mato Grosso do Sul (MS)</option>
-                    <option value="MG">Minas Gerais (MG)</option>
-                    <option value="PA">Pará (PA)</option>
-                    <option value="PB">Paraíba (PB)</option>
-                    <option value="PR">Paraná (PR)</option>
-                    <option value="PE">Pernambuco (PE)</option>
-                    <option value="PI">Piauí (PI)</option>
-                    <option value="RJ">Rio de Janeiro (RJ)</option>
-                    <option value="RN">Rio Grande do Norte (RN)</option>
-                    <option value="RS">Rio Grande do Sul (RS)</option>
-                    <option value="RO">Rondônia (RO)</option>
-                    <option value="RR">Roraima (RR)</option>
-                    <option value="SC">Santa Catarina (SC)</option>
-                    <option value="SP">São Paulo (SP)</option>
-                    <option value="SE">Sergipe (SE)</option>
-                    <option value="TO">Tocantins (TO)</option>
-                    </select>
+                    <input class="dados-pessoais-uf-formulario" type="text" id="uf" placeholder="Sigla do Estado (ex: SP)">
                 </div>
                 </div>
             </div>
@@ -280,20 +217,6 @@
             return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
 
-        // Função para converter data ISO (yyyy-mm-dd) para formato brasileiro (dd/mm/aaaa)
-        function formatarDataBrasil(dataISO) {
-            if (!dataISO) return '';
-            const [ano, mes, dia] = dataISO.split('-');
-            return `${dia}/${mes}/${ano}`;
-        }
-
-        // Função para converter data brasileira (dd/mm/aaaa) para ISO (yyyy-mm-dd)
-        function formatarDataISO(dataBr) {
-            if (!dataBr) return '';
-            const [dia, mes, ano] = dataBr.split('/');
-            return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-        }
-
         // Carregar dados do usuário ao abrir a página
         document.addEventListener("DOMContentLoaded", async () => {
             const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -325,10 +248,9 @@
                 document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
                 document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
                 
-                // Formatando a data de nascimento
+                // Preencher data de nascimento (formato YYYY-MM-DD)
                 if (dados.data_nascimento) {
-                    const dataFormatada = formatarDataBrasil(dados.data_nascimento);
-                    document.getElementById("dateNascimento").value = formatarDataISO(dataFormatada);
+                    document.getElementById("dateNascimento").value = dados.data_nascimento;
                 }
 
                 // Preencher os demais campos
@@ -367,7 +289,7 @@
             const dadosAtualizados = {
                 nome: document.getElementById("txtNome").value,
                 cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
-                data_nascimento: formatarDataBrasil(document.getElementById("dateNascimento").value),
+                data_nascimento: document.getElementById("dateNascimento").value, // Já no formato YYYY-MM-DD
                 sexo: document.getElementById("sexo").value,
                 endereco: document.getElementById("txtEndereço").value,
                 cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
@@ -380,7 +302,7 @@
                 telefone: document.getElementById("telTelefone").value.replace(/\D/g, '')
             };
 
-            // Verificar se há nova senha para atualizar
+            // Verificar e atualizar senha se os campos estiverem preenchidos
             const novaSenha = document.getElementById("novaSenha").value;
             const confirmarSenha = document.getElementById("confirmarSenha").value;
             
@@ -392,19 +314,19 @@
                 dadosAtualizados.senha = novaSenha;
             }
 
-            // Validações adicionais conforme sua API
+            // Validações básicas
+            if (!dadosAtualizados.nome) {
+                alert("O nome é obrigatório");
+                return;
+            }
+
             if (!/^\d{11}$/.test(dadosAtualizados.cpf)) {
-                alert("CPF deve conter 11 dígitos numéricos.");
+                alert("CPF deve conter 11 dígitos numéricos");
                 return;
             }
 
-            if (!/^\d{8}$/.test(dadosAtualizados.cep)) {
-                alert("CEP deve conter 8 dígitos numéricos.");
-                return;
-            }
-
-            if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dadosAtualizados.data_nascimento)) {
-                alert("Data deve estar no formato dd/mm/aaaa.");
+            if (!dadosAtualizados.data_nascimento) {
+                alert("A data de nascimento é obrigatória");
                 return;
             }
 
