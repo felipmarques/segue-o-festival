@@ -151,6 +151,7 @@
         <p><strong>Line-up:</strong> <span id="lineup"></span></p>
         <p><strong>Data:</strong> <span id="data"></span></p>
         <p><strong>Endereço:</strong> <span id="endereco"></span></p>
+        <button id="btn-salvar-evento" class="btn-salvar-evento">Salvar Evento</button>
       </div>
     </div>
 
@@ -200,6 +201,91 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const id_evento = params.get("id");
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    const btnSalvarEvento = document.getElementById('btn-salvar-evento');
+    let eventoSalvo = false;
+
+    // Função para verificar se o evento está salvo
+    async function verificarEventoSalvo() {
+      if (!usuarioLogado?.cpf) return false;
+      
+      try {
+        const response = await fetch('/api/eventos-salvos', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'usuario-logado': JSON.stringify(usuarioLogado)
+          }
+        });
+        
+        if (!response.ok) throw new Error('Erro ao verificar evento salvo');
+        
+        const eventosSalvos = await response.json();
+        return eventosSalvos.some(evento => evento.evento_id == id_evento);
+      } catch (error) {
+        console.error('Erro ao verificar evento salvo:', error);
+        return false;
+      }
+    }
+
+    // Função para alternar o estado do evento salvo
+    async function alternarSalvarEvento() {
+      if (!usuarioLogado?.cpf) {
+        alert('Você precisa estar logado para salvar eventos.');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      btnSalvarEvento.disabled = true;
+      
+      try {
+        const response = await fetch('/api/eventos-salvos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'usuario-logado': JSON.stringify(usuarioLogado)
+          },
+          body: JSON.stringify({ 
+            evento_id: id_evento,
+            acao: eventoSalvo ? 'remover' : 'salvar'
+          })
+        });
+        
+        if (!response.ok) throw new Error('Erro ao atualizar evento salvo');
+        
+        eventoSalvo = !eventoSalvo;
+        atualizarBotaoSalvar();
+      } catch (error) {
+        console.error('Erro ao alternar evento salvo:', error);
+        alert('Ocorreu um erro ao salvar/remover o evento. Tente novamente.');
+      } finally {
+        btnSalvarEvento.disabled = false;
+      }
+    }
+
+    // Função para atualizar o estado visual do botão
+    function atualizarBotaoSalvar() {
+      if (eventoSalvo) {
+        btnSalvarEvento.textContent = 'Remover dos Salvos';
+        btnSalvarEvento.classList.add('salvo');
+      } else {
+        btnSalvarEvento.textContent = 'Salvar Evento';
+        btnSalvarEvento.classList.remove('salvo');
+      }
+    }
+
+    // Carregar informações do evento e verificar se está salvo
+    async function carregarPaginaEvento() {
+      // Verificar se o usuário está logado
+      if (!usuarioLogado?.cpf) {
+        btnSalvarEvento.textContent = 'Login para Salvar';
+        btnSalvarEvento.onclick = () => window.location.href = 'login.html';
+      } else {
+        // Verificar se o evento está salvo
+        eventoSalvo = await verificarEventoSalvo();
+        atualizarBotaoSalvar();
+        btnSalvarEvento.onclick = alternarSalvarEvento;
+      }
 
     let coordenadasEvento = {};
 
