@@ -277,7 +277,7 @@
             
               try {
                 // Buscar dados completos do usuário
-                const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email_usuario)}`);
+                const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
                 if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
             
                 const dados = await response.json();
