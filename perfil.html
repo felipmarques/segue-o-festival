@@ -165,21 +165,21 @@
                 </div>
             
                 <div class="dados-pessoais-senha">
-                    <h3>Alterar Senha</h3>
+                    <h3>Alterar Senha (opcional)</h3>
                     
                     <div class="campo-senha">
                         <p>Nova Senha:</p>
-                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
+                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Deixe em branco para não alterar">
                     </div>
                     
                     <div class="campo-senha">
-                        <p>Confirmar Senha:</p>
+                        <p>Confirmar Nova Senha:</p>
                         <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
                     </div>
 
                     <div class="campo-senha">
                         <p>Confirmação (digite sua senha atual):</p>
-                        <input class="dados-pessoais-senha-formulario" type="password" id="senhaAtual" placeholder="Digite sua senha atual">
+                        <input class="dados-pessoais-senha-formulario" type="password" id="senhaAtual" placeholder="Obrigatório para confirmar alterações" required>
                     </div>
                 </div>
             </div> 
@@ -324,7 +324,7 @@
                 senha_atual: senhaAtual
             };
 
-            // Verificar e atualizar senha se os campos estiverem preenchidos
+            // Verificar se o usuário quer alterar a senha
             const novaSenha = document.getElementById("novaSenha").value;
             const confirmarSenha = document.getElementById("confirmarSenha").value;
             
@@ -333,6 +333,14 @@
                     alert("As novas senhas não coincidem");
                     return;
                 }
+                
+                // Só aplica as regras de validação se estiver alterando a senha
+                const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+                if (novaSenha && !senhaRegex.test(novaSenha)) {
+                    alert("A nova senha deve ter no mínimo 8 caracteres, com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial");
+                    return;
+                }
+                
                 dadosAtualizados.nova_senha = novaSenha;
             }
 
