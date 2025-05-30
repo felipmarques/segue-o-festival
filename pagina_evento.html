@@ -127,6 +127,82 @@
     .airbnb-link:hover {
       text-decoration: underline;
     }
+    
+    /* Estilos para o botão de salvar evento */
+    .btn-salvar-evento {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-top: 1rem;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-salvar-evento:hover {
+      background-color: #45a049;
+    }
+    
+    .btn-salvar-evento.salvo {
+      background-color: #f44336;
+    }
+    
+    .btn-salvar-evento.salvo:hover {
+      background-color: #d32f2f;
+    }
+    
+    .btn-salvar-evento:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      color: white;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.5s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .toast.success {
+      background-color: #4CAF50;
+    }
+    
+    .toast.error {
+      background-color: #f44336;
+    }
+    
+    .toast.warning {
+      background-color: #ff9800;
+    }
   </style>
 </head>
 <body>
@@ -135,15 +211,16 @@
       margin-bottom: 1rem;
       padding: 0.5rem 1rem;
       border-radius: 8px;
-      background-color: #FFD700; /* amarelo para contraste */
-      color: #001f3f; /* texto escuro */
+      background-color: #FFD700;
+      color: #001f3f;
       border: none;
       cursor: pointer;
       font-weight: bold;
       font-size: 1rem;
     ">
       ← Voltar para Home
-  </button>
+    </button>
+    
     <div class="evento-header">
       <img id="imagem" alt="Imagem do evento"/>
       <div class="evento-info">
@@ -151,6 +228,10 @@
         <p><strong>Line-up:</strong> <span id="lineup"></span></p>
         <p><strong>Data:</strong> <span id="data"></span></p>
         <p><strong>Endereço:</strong> <span id="endereco"></span></p>
+        <button id="btn-salvar-evento" class="btn-salvar-evento">
+          <span id="spinner" class="spinner" style="display: none;"></span>
+          <span id="btn-text">Salvar Evento</span>
+        </button>
       </div>
     </div>
 
@@ -200,63 +281,174 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const id_evento = params.get("id");
-
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    const btnSalvarEvento = document.getElementById('btn-salvar-evento');
+    const btnTexto = document.getElementById('btn-text');
+    const spinner = document.getElementById('spinner');
     let coordenadasEvento = {};
+    let eventoSalvo = false;
 
-    fetch(`/api/pagina_evento?id_evento=${id_evento}`)
-      .then(res => res.json())
-      .then(evento => {
-        document.getElementById('imagem').src = `data:image/jpeg;base64,${evento.imagem}`;
-        document.getElementById('titulo').textContent = evento.nome;
-        document.getElementById('lineup').textContent = evento.line_up;
-        document.getElementById('data').textContent = new Date(evento.data).toLocaleString('pt-BR');
-        document.getElementById('endereco').textContent = evento.endereco;
-        document.getElementById('descricao').textContent = evento.descricao;
-        document.getElementById('link_ingresso').href = evento.link_ingresso;
+    // Funções para salvar evento
+    async function verificarEventoSalvo() {
+      if (!usuarioLogado?.cpf) return false;
+      
+      try {
+        const response = await fetch(`/api/eventos-salvos?usuario_cpf=${usuarioLogado.cpf}`);
+        
+        if (!response.ok) throw new Error('Erro ao verificar evento salvo');
+        
+        const eventosSalvos = await response.json();
+        return eventosSalvos.some(evento => evento.evento_id == id_evento);
+      } catch (error) {
+        console.error('Erro ao verificar evento salvo:', error);
+        mostrarToast('Erro ao verificar evento salvo', 'error');
+        return false;
+      }
+    }
 
-        // Obter as coordenadas do evento
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${evento.endereco}, Brasil`)
-          .then(res => res.json())
-          .then(locations => {
-            if (locations.length > 0) {
-              coordenadasEvento.lat = parseFloat(locations[0].lat);
-              coordenadasEvento.lon = parseFloat(locations[0].lon);
-
-              // Mapa
-              const map = L.map('map').setView([coordenadasEvento.lat, coordenadasEvento.lon], 15);
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-              }).addTo(map);
-
-              L.marker([coordenadasEvento.lat, coordenadasEvento.lon]).addTo(map)
-                .bindPopup(evento.nome)
-                .openPopup();
-
-              // Links dinâmicos
-              document.getElementById("link_uber").href = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${coordenadasEvento.lat}&dropoff[longitude]=${coordenadasEvento.lon}`;
-              document.getElementById("link_99").href = `https://99app.com/`;
-              document.getElementById("link_airbnb").href = `https://www.airbnb.com.br/s/homes?lat=${coordenadasEvento.lat}&lng=${coordenadasEvento.lon}`;
-            } else {
-              console.error("Localização do evento não encontrada.");
-            }
+    async function alternarSalvarEvento() {
+      if (!usuarioLogado?.cpf) {
+        mostrarToast('Você precisa estar logado para salvar eventos', 'warning');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+        return;
+      }
+      
+      // Mostrar estado de carregamento
+      btnSalvarEvento.disabled = true;
+      spinner.style.display = 'inline-block';
+      btnTexto.textContent = eventoSalvo ? 'Removendo...' : 'Salvando...';
+      
+      try {
+        const response = await fetch('/api/eventos-salvos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'usuario-logado': JSON.stringify(usuarioLogado)
+          },
+          body: JSON.stringify({ 
+            evento_id: id_evento,
+            acao: eventoSalvo ? 'remover' : 'salvar'
           })
-          .catch(error => console.error("Erro ao buscar localização do evento:", error));
-      })
-      .catch(error => {
-        console.error('Erro ao carregar evento:', error);
-        document.getElementById('titulo').textContent = "Evento não encontrado";
-      });
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.erro || 'Erro ao atualizar evento salvo');
+        }
+        
+        // Atualizar estado local
+        eventoSalvo = !eventoSalvo;
+        atualizarBotaoSalvar();
+        
+        // Feedback visual
+        mostrarToast(
+          eventoSalvo ? 'Evento salvo com sucesso!' : 'Evento removido dos salvos',
+          eventoSalvo ? 'success' : 'error'
+        );
+        
+      } catch (error) {
+        console.error('Erro ao alternar evento salvo:', error);
+        mostrarToast(`Erro: ${error.message}`, 'error');
+      } finally {
+        // Restaurar estado do botão
+        btnSalvarEvento.disabled = false;
+        spinner.style.display = 'none';
+        atualizarBotaoSalvar();
+      }
+    }
+
+    function atualizarBotaoSalvar() {
+      if (eventoSalvo) {
+        btnTexto.textContent = '✔ Evento Salvo';
+        btnSalvarEvento.classList.add('salvo');
+      } else {
+        btnTexto.textContent = 'Salvar Evento';
+        btnSalvarEvento.classList.remove('salvo');
+      }
+    }
+
+    function mostrarToast(mensagem, tipo) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${tipo}`;
+      toast.textContent = mensagem;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    }
+
+    // Carregar informações do evento
+    async function carregarPaginaEvento() {
+      // Verificar login e estado do evento
+      if (!usuarioLogado?.cpf) {
+        btnTexto.textContent = 'Login para Salvar';
+        btnSalvarEvento.onclick = () => window.location.href = 'login.html';
+      } else {
+        eventoSalvo = await verificarEventoSalvo();
+        atualizarBotaoSalvar();
+        btnSalvarEvento.onclick = alternarSalvarEvento;
+      }
+      
+      // Carregar dados do evento
+      fetch(`/api/pagina_evento?id_evento=${id_evento}`)
+        .then(res => res.json())
+        .then(evento => {
+          document.getElementById('imagem').src = `data:image/jpeg;base64,${evento.imagem}`;
+          document.getElementById('titulo').textContent = evento.nome;
+          document.getElementById('lineup').textContent = evento.line_up;
+          document.getElementById('data').textContent = new Date(evento.data).toLocaleString('pt-BR');
+          document.getElementById('endereco').textContent = evento.endereco;
+          document.getElementById('descricao').textContent = evento.descricao;
+          document.getElementById('link_ingresso').href = evento.link_ingresso;
+
+          // Obter coordenadas do evento
+          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(evento.endereco)}, Brasil`)
+            .then(res => res.json())
+            .then(locations => {
+              if (locations.length > 0) {
+                coordenadasEvento.lat = parseFloat(locations[0].lat);
+                coordenadasEvento.lon = parseFloat(locations[0].lon);
+
+                // Inicializar mapa
+                const map = L.map('map').setView([coordenadasEvento.lat, coordenadasEvento.lon], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                L.marker([coordenadasEvento.lat, coordenadasEvento.lon]).addTo(map)
+                  .bindPopup(evento.nome)
+                  .openPopup();
+
+                // Links dinâmicos
+                document.getElementById("link_uber").href = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${coordenadasEvento.lat}&dropoff[longitude]=${coordenadasEvento.lon}`;
+                document.getElementById("link_99").href = `https://99app.com/`;
+                document.getElementById("link_airbnb").href = `https://www.airbnb.com.br/s/homes?lat=${coordenadasEvento.lat}&lng=${coordenadasEvento.lon}`;
+              }
+            })
+            .catch(error => console.error("Erro ao buscar localização:", error));
+        })
+        .catch(error => {
+          console.error('Erro ao carregar evento:', error);
+          document.getElementById('titulo').textContent = "Evento não encontrado";
+          mostrarToast('Erro ao carregar detalhes do evento', 'error');
+        });
+    }
 
     // Função para calcular distância
     function calcularDistancia() {
       const endereco = document.getElementById("endereco_usuario").value;
-      if (!endereco) return;
+      if (!endereco) {
+        mostrarToast('Por favor, informe seu endereço', 'warning');
+        return;
+      }
 
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}, Brasil`)
         .then(res => res.json())
         .then(result => {
           if (result.length === 0) {
-            document.getElementById("resultado_distancia").textContent = "Endereço não encontrado.";
+            mostrarToast('Endereço não encontrado', 'error');
             return;
           }
 
@@ -268,11 +460,12 @@
             coordenadasEvento.lat, coordenadasEvento.lon
           );
 
-          document.getElementById("resultado_distancia").textContent = `Você está a aproximadamente ${distancia.toFixed(2)} km do evento.`;
+          document.getElementById("resultado_distancia").textContent = 
+            `Você está a aproximadamente ${distancia.toFixed(2)} km do evento.`;
         })
         .catch(err => {
           console.error(err);
-          document.getElementById("resultado_distancia").textContent = "Erro ao buscar endereço.";
+          mostrarToast('Erro ao calcular distância', 'error');
         });
     }
 
@@ -289,15 +482,18 @@
       return R * c;
     }
 
+    // Event listeners
     document.getElementById("calcular_distancia").addEventListener("click", calcularDistancia);
     document.getElementById('btn-voltar').addEventListener('click', () => {
-    if (document.referrer) {
-      history.back();
-    } else {
-      // Caso não tenha página anterior, redireciona para a home
-      window.location.href = 'index.html';
-    }
-   });
+      if (document.referrer) {
+        history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
+    });
+
+    // Iniciar
+    carregarPaginaEvento();
   </script>
 </body>
 </html>
