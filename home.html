@@ -296,34 +296,44 @@
 
 async function alternarSalvarEvento(idEvento, botao) {
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  
   if (!usuarioLogado?.email) {
     alert("Você precisa estar logado para salvar eventos");
     return;
   }
 
   try {
-    // 1. Busca o CPF do usuário
+    // 1. Buscar dados completos do usuário
     const userResponse = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-    if (!userResponse.ok) throw new Error('Erro ao buscar dados do usuário');
     
-    const usuario = await userResponse.json();
-    const cpfUsuario = usuario.cpf;
+    if (!userResponse.ok) {
+      throw new Error('Erro ao buscar dados do usuário');
+    }
+    
+    const userData = await userResponse.json();
+    
+    if (!userData.success || !userData.data?.cpf) {
+      throw new Error('CPF do usuário não encontrado');
+    }
 
-    // 2. Verifica se o evento já está salvo
-    const isSaved = await verificarEventoSalvo(idEvento);
+    const cpfUsuario = userData.data.cpf;
+    const isSaved = botao.textContent.trim() === 'Salvo';
 
     if (isSaved) {
-      // Remove o evento salvo
+      // Remover evento salvo
       const deleteResponse = await fetch(`/api/eventos-salvos?cpf=${cpfUsuario}&evento_id=${idEvento}`, {
         method: 'DELETE'
       });
       
-      if (!deleteResponse.ok) throw new Error('Erro ao remover evento salvo');
+      if (!deleteResponse.ok) {
+        const errorData = await deleteResponse.json();
+        throw new Error(errorData.error || 'Erro ao remover evento salvo');
+      }
       
       botao.textContent = 'Salvar';
       botao.classList.remove('botao-salvo');
     } else {
-      // Adiciona novo evento salvo
+      // Salvar novo evento
       const postResponse = await fetch('/api/eventos-salvos', {
         method: 'POST',
         headers: {
@@ -335,14 +345,20 @@ async function alternarSalvarEvento(idEvento, botao) {
         })
       });
       
-      if (!postResponse.ok) throw new Error('Erro ao salvar evento');
+      if (!postResponse.ok) {
+        const errorData = await postResponse.json();
+        throw new Error(errorData.error || 'Erro ao salvar evento');
+      }
       
       botao.textContent = 'Salvo';
       botao.classList.add('botao-salvo');
     }
   } catch (error) {
-    console.error("Erro:", error);
-    alert(error.message || "Erro ao alternar estado do evento");
+    console.error("Erro ao alternar estado do evento:", error);
+    alert(error.message || "Erro ao salvar/remover evento");
+    
+    // Forçar recarregamento dos eventos em caso de erro
+    buscarEventos();
   }
 }
   </script>
