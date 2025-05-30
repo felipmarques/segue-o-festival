@@ -75,6 +75,10 @@
         <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
       </ul>
     </div>
+    <div class="search-bar">
+      <input type="text" id="dataInput" name="data" placeholder="📅Buscar por data" readonly />
+      <button onclick="limparFiltros()">Limpar</button>
+    </div>
   </nav>
   
   <main class="conteudo">
@@ -271,137 +275,26 @@
     window.location.href = "index.html";
   }
 
- async function verificarEventoSalvo(idEvento) {
-  try {
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    if (!usuarioLogado?.email) return false;
-
-    // 1. Buscar CPF do usuário
-    const userResponse = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-    if (!userResponse.ok) return false;
-    
-    const userData = await userResponse.json();
-    if (!userData.success || !userData.data?.cpf) return false;
-
-    // 2. Verificar se o evento está salvo
-    const eventoResponse = await fetch(`/api/eventos-salvos?cpf=${userData.data.cpf}&evento_id=${idEvento}`);
-    if (!eventoResponse.ok) return false;
-    
-    const eventoData = await eventoResponse.json();
-    return eventoData.success && eventoData.data.length > 0;
-  } catch (error) {
-    console.error("Erro ao verificar evento salvo:", error);
-    return false;
-  }
-}
-
-async function exibirEventosFiltrados() {
-  const container = document.getElementById('eventos-lista');
-  container.innerHTML = '';
-
-  const eventosFiltrados = todosEventos.filter(evento => {
-    return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-           (!tipoSelecionado || evento.tipo === tipoSelecionado);
-  });
-
-  if (eventosFiltrados.length === 0) {
-    container.innerHTML = '<p>Nenhum evento encontrado.</p>';
-    return;
-  }
-
-  // Usar Promise.all para verificar todos os eventos simultaneamente
-  const eventosComStatus = await Promise.all(
-    eventosFiltrados.map(async evento => {
-      const estaSalvo = await verificarEventoSalvo(evento.id_evento);
-      return { ...evento, estaSalvo };
-    })
-  );
-
-  eventosComStatus.forEach(evento => {
-    const div = document.createElement('div');
-    div.className = 'conteudo-secundario-item';
-    div.setAttribute("data-id", evento.id_evento);
-    
-    // ... (código existente para criar a estrutura do evento)
-
-    const botaoSalvar = document.createElement('button');
-    botaoSalvar.className = evento.estaSalvo ? 'botao-salvar botao-salvo' : 'botao-salvar';
-    botaoSalvar.textContent = evento.estaSalvo ? 'Salvo' : 'Salvar';
-    
-    botaoSalvar.onclick = async (e) => {
-      e.stopPropagation();
-      await alternarSalvarEvento(evento.id_evento, botaoSalvar);
-    };
-
-    div.appendChild(botaoSalvar);
-    container.appendChild(div);
-  });
-}
-
-async function alternarSalvarEvento(idEvento, botao) {
-  try {
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    if (!usuarioLogado?.email) {
-      alert("Você precisa estar logado para salvar eventos");
-      window.location.href = "login.html";
-      return;
+    function verificarEventoSalvo(idEvento) {
+      const salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
+      return salvos.includes(idEvento);
     }
 
-    // 1. Buscar dados completos do usuário
-    const userResponse = await fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-    if (!userResponse.ok) {
-      throw new Error('Erro ao buscar dados do usuário');
-    }
+    function alternarSalvarEvento(idEvento, botao) {
+      let salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
+      const index = salvos.indexOf(idEvento);
     
-    const userData = await userResponse.json();
-    if (!userData.success || !userData.data?.cpf) {
-      throw new Error('Não foi possível obter o CPF do usuário');
-    }
-
-    const cpfUsuario = userData.data.cpf;
-    const estaSalvo = botao.classList.contains('botao-salvo');
-
-    if (estaSalvo) {
-      // Remover evento salvo
-      const deleteResponse = await fetch(`/api/eventos-salvos?cpf=${cpfUsuario}&evento_id=${idEvento}`, {
-        method: 'DELETE'
-      });
-      
-      if (!deleteResponse.ok) {
-        const error = await deleteResponse.json();
-        throw new Error(error.message || 'Erro ao remover evento salvo');
+      if (index > -1) {
+        salvos.splice(index, 1);
+        botao.textContent = 'Salvar';
+        botao.classList.remove('botao-salvo');
+      } else {
+        salvos.push(idEvento);
+        botao.textContent = 'Salvo';
+        botao.classList.add('botao-salvo');
       }
-      
-      botao.textContent = 'Salvar';
-      botao.classList.remove('botao-salvo');
-    } else {
-      // Salvar novo evento
-      const postResponse = await fetch('/api/eventos-salvos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          usuario_cpf: cpfUsuario,
-          evento_id: idEvento
-        })
-      });
-      
-      if (!postResponse.ok) {
-        const error = await postResponse.json();
-        throw new Error(error.message || 'Erro ao salvar evento');
-      }
-      
-      botao.textContent = 'Salvo';
-      botao.classList.add('botao-salvo');
-    }
-  } catch (error) {
-    console.error("Erro ao alternar estado do evento:", error);
-    alert(error.message || "Ocorreu um erro. Por favor, tente novamente.");
     
-    // Recarregar a página para garantir consistência
-    window.location.reload();
-  }
+      localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
 }
   </script>
   <script src="js/filtros-logado.js"></script>
