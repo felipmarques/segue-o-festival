@@ -1,11 +1,9 @@
 const { Pool } = require('pg');
 
-// Configuração com fallback explícito
+// Configuração do banco
 const poolConfig = {
   connectionString: process.env.DATABASE_URL || 'sua-string-de-conexao-local',
-  ssl: process.env.NODE_ENV === 'production' ? { 
-    rejectUnauthorized: false 
-  } : false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 };
 
 const pool = new Pool(poolConfig);
@@ -17,7 +15,7 @@ export const config = {
 
 export default async (req, res) => {
   console.log('--- INÍCIO DA REQUISIÇÃO ---');
-  
+
   try {
     // 1. Verifique o método HTTP
     if (!['GET', 'POST'].includes(req.method)) {
@@ -49,13 +47,37 @@ export default async (req, res) => {
     }
 
     // 4. Lógica principal
-    if (req.method === 'GET') {
-      console.log('Processando GET...');
-      // ... (seu código existente)
-      
-    } else if (req.method === 'POST') {
+    if (req.method === 'POST') {
       console.log('Processando POST...');
-      // ... (seu código existente)
+
+      const { id_evento, acao } = req.body;
+
+      if (!id_evento || !acao) {
+        return res.status(400).json({ erro: 'Campos obrigatórios ausentes' });
+      }
+
+      try {
+        const resultado = await pool.query(
+          'INSERT INTO eventos_salvos (cpf_usuario, id_evento, acao) VALUES ($1, $2, $3) RETURNING *',
+          [usuario.cpf, id_evento, acao]
+        );
+
+        return res.status(201).json({ 
+          sucesso: true, 
+          dados: resultado.rows[0] 
+        });
+      } catch (erroDB) {
+        console.error('Erro ao salvar no banco:', erroDB);
+        return res.status(500).json({ 
+          erro: 'Erro ao salvar no banco', 
+          detalhes: erroDB.message 
+        });
+      }
+    }
+
+    if (req.method === 'GET') {
+      // Se quiser adicionar a lógica de GET futuramente
+      return res.status(200).json({ mensagem: 'GET implementado futuramente' });
     }
 
   } catch (error) {
@@ -65,7 +87,7 @@ export default async (req, res) => {
       detalhes: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   } finally {
-    await pool.end().catch(e => console.error('Erro ao fechar pool:', e));
+    // ⚠️ NÃO usar pool.end() aqui!
     console.log('--- FIM DA REQUISIÇÃO ---');
   }
 };
