@@ -17,7 +17,7 @@
       background-color: #ccc;
       border-radius: 4px;
     }
-</style>
+  </style>
 </head>
 <body>
   <header class="cabecalho">
@@ -96,8 +96,8 @@
   </main>
 
   <script>
-     if (!localStorage.getItem("usuarioLogado")) {
-       window.location.replace("index.html");
+    if (!localStorage.getItem("usuarioLogado")) {
+      window.location.replace("index.html");
     }
     let todosEventos = [];
     let estadoSelecionado = null;
@@ -141,10 +141,9 @@
       }
 
       eventosFiltrados.forEach(evento => {
-        
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
-        div.style.cursor = 'pointer'; // opcional, para mostrar que é clicável
+        div.style.cursor = 'pointer';
         div.setAttribute("data-id", evento.id_evento);
         
         div.onclick = () => {
@@ -164,42 +163,28 @@
         if (evento.data) {
           const dataEvento = new Date(evento.data);
         
-        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        });
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
 
-        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
-          weekday: 'long'
-        });
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+            weekday: 'long'
+          });
 
-        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
         } else {
-        data.textContent = 'Data não informada';
+          data.textContent = 'Data não informada';
         }
 
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
 
-        const botaoSalvar = document.createElement('button');
-          botaoSalvar.className = 'botao-salvar';
-          botaoSalvar.textContent = verificarEventoSalvo(evento.id_evento) ? 'Salvo' : 'Salvar';
-          if (verificarEventoSalvo(evento.id_evento)) {
-            botaoSalvar.classList.add('botao-salvo');
-          }
-        
-          botaoSalvar.onclick = (e) => {
-            e.stopPropagation(); // evitar redirecionamento
-            alternarSalvarEvento(evento.id_evento, botaoSalvar);
-          };
-          
-
         div.appendChild(imagem);
         div.appendChild(titulo);
         div.appendChild(data);
         div.appendChild(local);
-        div.appendChild(botaoSalvar);
         container.appendChild(div);
       });
     }
@@ -242,66 +227,22 @@
       atualizarCarrossel();
     }
 
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
-    if (usuarioLogado?.email) {
-      fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`)
-        .then(response => {
-          if (!response.ok) throw new Error('Erro ao buscar nome do usuário');
-          return response.json();
-        })
-        .then(data => {
-          const nome = data.nome;
-          const header = document.querySelector(".cabecalho");
-          const saudacao = document.createElement("p");
-          saudacao.textContent = `Olá, ${nome}!`;
-          saudacao.style.marginLeft = "1rem";
-          saudacao.style.fontWeight = "bold";
-          header.appendChild(saudacao);
-        })
-        .catch(error => {
-          console.error("Erro ao buscar nome do usuário:", error);
-        });
-   }
-  function logout() {
-    localStorage.clear();
-    window.location.href = "login.html";
-  }
-  if (!localStorage.getItem("usuarioLogado")) {
-    window.location.href = "index.html";
-  }
-
-    function verificarEventoSalvo(idEvento) {
-      const salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
-      return salvos.includes(idEvento);
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
     }
 
-    function alternarSalvarEvento(idEvento, botao) {
-      let salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
-      const index = salvos.indexOf(idEvento);
-    
-      if (index > -1) {
-        salvos.splice(index, 1);
-        botao.textContent = 'Salvar';
-        botao.classList.remove('botao-salvo');
-      } else {
-        salvos.push(idEvento);
-        botao.textContent = 'Salvo';
-        botao.classList.add('botao-salvo');
-      }
-    
-      localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
-}
+    if (!localStorage.getItem("usuarioLogado")) {
+      window.location.href = "index.html";
+    }
   </script>
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
 </body>
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
-  <button class="logout-botao" onclick="logout()">
-    <span class="logout-icone">↩️</span>
-    Sair
-  </button>
-</footer>
-
+    <button class="logout-botao" onclick="logout()">
+      <span class="logout-icone">↩️</span>
+      Sair
+    </button>
+  </footer>
 </html>
-
