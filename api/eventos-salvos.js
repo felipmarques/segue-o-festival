@@ -58,7 +58,7 @@ export default async (req, res) => {
 
       try {
         const resultado = await pool.query(
-          'INSERT INTO eventos_salvos (cpf_usuario, id_evento, acao) VALUES ($1, $2, $3) RETURNING *',
+          'INSERT INTO eventos_salvos (usuario_cpf, id_evento, acao) VALUES ($1, $2, $3) RETURNING *',
           [usuario.cpf, id_evento, acao]
         );
 
