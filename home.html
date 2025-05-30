@@ -277,14 +277,14 @@
     try {
       const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
       if (!usuario?.cpf) return false;
-  
+    
       const response = await fetch(`/api/eventos-salvos?evento_id=${idEvento}`, {
         method: 'GET',
         headers: {
           'usuario-logado': localStorage.getItem("usuarioLogado")
         }
       });
-  
+    
       if (!response.ok) return false;
       
       const data = await response.json();
@@ -293,7 +293,7 @@
       console.error('Erro ao verificar evento salvo:', error);
       return false;
     }
-  }
+    }
   async function alternarSalvarEvento(idEvento, botao) {
     try {
       const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -350,7 +350,6 @@
       alert(error.message || 'Ocorreu um erro ao processar sua solicitação');
     }
   }
-
   </script>
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
