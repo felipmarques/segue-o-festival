@@ -105,7 +105,7 @@
     
                 <div class="dados-pessoais-datanascimento">
                     <p>Data de Nascimento</p>
-                    <input class="dados-pessoais-datanascimento-formulario" type="date" id="dateNascimento" placeholder="AAAA-MM-DD">
+                    <input class="dados-pessoais-datanascimento-formulario" type="text" id="dateNascimento" placeholder="dd/mm/aaaa">
                 </div>
     
                 <div class="dados-pessoais-sexo">
@@ -176,6 +176,11 @@
                         <p>Confirmar Senha:</p>
                         <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
                     </div>
+
+                    <div class="campo-senha">
+                        <p>Confirmação (digite sua senha atual):</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="senhaAtual" placeholder="Digite sua senha atual">
+                    </div>
                 </div>
             </div> 
 
@@ -217,6 +222,22 @@
             return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
 
+        // Função para converter data brasileira (dd/mm/aaaa) para o formato do banco (mmmm/aa/dd)
+        function formatarDataParaBanco(dataBr) {
+            if (!dataBr) return null;
+            
+            const [dia, mes, ano] = dataBr.split('/');
+            const meses = [
+                'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+                'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+            ];
+            
+            const nomeMes = meses[parseInt(mes) - 1];
+            const anoAbreviado = ano.slice(-2);
+            
+            return `${nomeMes}/${anoAbreviado}/${dia}`;
+        }
+
         // Carregar dados do usuário ao abrir a página
         document.addEventListener("DOMContentLoaded", async () => {
             const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -248,11 +269,6 @@
                 document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
                 document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
                 
-                // Preencher data de nascimento (formato YYYY-MM-DD)
-                if (dados.data_nascimento) {
-                    document.getElementById("dateNascimento").value = dados.data_nascimento;
-                }
-
                 // Preencher os demais campos
                 if (dados.sexo) document.getElementById("sexo").value = dados.sexo;
                 if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
@@ -285,11 +301,18 @@
         async function salvarPerfil() {
             const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
+            // Verificar senha atual
+            const senhaAtual = document.getElementById("senhaAtual").value;
+            if (!senhaAtual) {
+                alert("Por favor, digite sua senha atual para confirmar as alterações");
+                return;
+            }
+
             // Coletar todos os dados do formulário
             const dadosAtualizados = {
                 nome: document.getElementById("txtNome").value,
                 cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
-                data_nascimento: document.getElementById("dateNascimento").value, // Já no formato YYYY-MM-DD
+                data_nascimento: formatarDataParaBanco(document.getElementById("dateNascimento").value),
                 sexo: document.getElementById("sexo").value,
                 endereco: document.getElementById("txtEndereço").value,
                 cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
@@ -298,8 +321,7 @@
                 municipio: document.getElementById("municipio").value,
                 uf: document.getElementById("uf").value,
                 email: document.getElementById("emailEm").value,
-                senha: document.getElementById("novaSenha").value || usuarioLogado.senha,
-                telefone: document.getElementById("telTelefone").value.replace(/\D/g, '')
+                senha_atual: senhaAtual
             };
 
             // Verificar e atualizar senha se os campos estiverem preenchidos
@@ -308,26 +330,10 @@
             
             if (novaSenha || confirmarSenha) {
                 if (novaSenha !== confirmarSenha) {
-                    alert("As senhas não coincidem");
+                    alert("As novas senhas não coincidem");
                     return;
                 }
-                dadosAtualizados.senha = novaSenha;
-            }
-
-            // Validações básicas
-            if (!dadosAtualizados.nome) {
-                alert("O nome é obrigatório");
-                return;
-            }
-
-            if (!/^\d{11}$/.test(dadosAtualizados.cpf)) {
-                alert("CPF deve conter 11 dígitos numéricos");
-                return;
-            }
-
-            if (!dadosAtualizados.data_nascimento) {
-                alert("A data de nascimento é obrigatória");
-                return;
+                dadosAtualizados.nova_senha = novaSenha;
             }
 
             try {
@@ -352,6 +358,11 @@
                     nome: dadosAtualizados.nome,
                     email: dadosAtualizados.email
                 };
+                
+                if (novaSenha) {
+                    usuarioAtualizado.senha = novaSenha;
+                }
+                
                 localStorage.setItem("usuarioLogado", JSON.stringify(usuarioAtualizado));
                 
                 // Atualizar nome na sidebar
@@ -362,11 +373,10 @@
                 
                 alert("Perfil atualizado com sucesso!");
                 
-                // Limpar campos de senha se foram alterados
-                if (novaSenha) {
-                    document.getElementById("novaSenha").value = "";
-                    document.getElementById("confirmarSenha").value = "";
-                }
+                // Limpar campos de senha
+                document.getElementById("novaSenha").value = "";
+                document.getElementById("confirmarSenha").value = "";
+                document.getElementById("senhaAtual").value = "";
                 
             } catch (error) {
                 console.error("Erro:", error);
