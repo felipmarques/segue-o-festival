@@ -24,10 +24,26 @@ export default async function handler(req, res) {
     numero,
     complemento,
     municipio,
-    uf
+    uf,
+    novaSenha,
+    confirmarSenha
   } = req.body;
 
   try {
+    // Verificação de senha (se foi fornecida)
+    if (novaSenha || confirmarSenha) {
+      if (novaSenha !== confirmarSenha) {
+        return res.status(400).json({ success: false, message: 'As senhas não coincidem' });
+      }
+      if (novaSenha.length < 6) {
+        return res.status(400).json({ success: false, message: 'A senha deve ter pelo menos 6 caracteres' });
+      }
+    }
+
+    // Inicia a transação
+    await pool.query('BEGIN');
+
+    // Atualiza os dados básicos do usuário
     const result = await pool.query(
       `UPDATE usuario SET
         nome = $1,
@@ -58,6 +74,17 @@ export default async function handler(req, res) {
       ]
     );
 
+    // Se foi fornecida uma nova senha, atualiza também
+    if (novaSenha) {
+      await pool.query(
+        'UPDATE usuario SET senha = $1 WHERE cpf = $2',
+        [novaSenha, cpf]
+      );
+    }
+
+    // Commit da transação
+    await pool.query('COMMIT');
+
     if (result.rowCount === 0) {
       return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
     }
@@ -69,6 +96,8 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
+    // Rollback em caso de erro
+    await pool.query('ROLLBACK');
     console.error('Erro ao atualizar perfil:', error);
     return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
   }
