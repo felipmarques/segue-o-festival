@@ -188,16 +188,14 @@
 
         const botaoSalvar = document.createElement('button');
           botaoSalvar.className = 'botao-salvar';
-          botaoSalvar.textContent = verificarEventoSalvo(evento.id_evento) ? 'Salvo' : 'Salvar';
-          if (verificarEventoSalvo(evento.id_evento)) {
-            botaoSalvar.classList.add('botao-salvo');
-          }
-        
+          const jaSalvo = await verificarEventoSalvo(evento.id_evento);
+          botaoSalvar.textContent = jaSalvo ? 'Salvo' : 'Salvar';
+          if (jaSalvo) botaoSalvar.classList.add('botao-salvo');
+          
           botaoSalvar.onclick = (e) => {
-            e.stopPropagation(); // evitar redirecionamento
+            e.stopPropagation();
             alternarSalvarEvento(evento.id_evento, botaoSalvar);
           };
-          
 
         div.appendChild(imagem);
         div.appendChild(titulo);
@@ -275,67 +273,84 @@
     window.location.href = "index.html";
   }
 
-async function verificarEventoSalvo(idEvento) {
-  try {
-    const response = await fetch(`/api/verificar-evento-salvo?id_evento=${idEvento}`, {
-      headers: {
-        'usuario-logado': localStorage.getItem("usuarioLogado")
+  async function verificarEventoSalvo(idEvento) {
+    try {
+      const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+      if (!usuario?.cpf) return false;
+  
+      const response = await fetch(`/api/eventos-salvos?evento_id=${idEvento}`, {
+        method: 'GET',
+        headers: {
+          'usuario-logado': localStorage.getItem("usuarioLogado")
+        }
+      });
+  
+      if (!response.ok) return false;
+      
+      const data = await response.json();
+      return data.salvo || false;
+    } catch (error) {
+      console.error('Erro ao verificar evento salvo:', error);
+      return false;
+    }
+  }
+  async function alternarSalvarEvento(idEvento, botao) {
+    try {
+      const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+      if (!usuario?.cpf) {
+        alert('Faça login para salvar eventos');
+        window.location.href = 'login.html';
+        return;
       }
-    });
-    
-    if (!response.ok) return false;
-    
-    const data = await response.json();
-    return data.salvo;
-  } catch (error) {
-    console.error('Erro:', error);
-    return false;
+  
+      const estaSalvo = botao.textContent === 'Salvo';
+      
+      const response = await fetch('/api/eventos-salvos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'usuario-logado': localStorage.getItem("usuarioLogado")
+        },
+        body: JSON.stringify({ 
+          evento_id: idEvento,
+          acao: estaSalvo ? 'remover' : 'salvar' 
+        })
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.erro || 'Erro na requisição');
+      }
+  
+      // Atualiza o botão visualmente
+      botao.textContent = estaSalvo ? 'Salvar' : 'Salvo';
+      botao.classList.toggle('botao-salvo', !estaSalvo);
+      
+      // Feedback visual para o usuário
+      const feedback = document.createElement('span');
+      feedback.textContent = estaSalvo ? 'Removido dos favoritos' : 'Salvo nos favoritos!';
+      feedback.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${estaSalvo ? '#e74c3c' : '#2ecc71'};
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        animation: fadeInOut 2.5s ease-in-out;
+      `;
+      
+      document.body.appendChild(feedback);
+      setTimeout(() => feedback.remove(), 2500);
+      
+    } catch (error) {
+      console.error('Erro:', error);
+      alert(error.message || 'Ocorreu um erro ao processar sua solicitação');
+    }
   }
-}
 
-async function alternarSalvarEvento(idEvento, botao) {
-  try {
-    const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
-    if (!usuario) {
-      alert('Faça login para salvar eventos');
-      return;
-    }
-
-    const estaSalvo = botao.textContent === 'Salvo';
-    
-    const response = await fetch('/api/eventos-salvos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'usuario-logado': localStorage.getItem("usuarioLogado")
-      },
-      body: JSON.stringify({ 
-        id_evento: idEvento, 
-        acao: estaSalvo ? 'remover' : 'salvar'
-      })
-    });
-
-    // Verifica primeiro o tipo de conteúdo
-    const contentType = response.headers.get('content-type');
-    
-    if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text();
-      throw new Error(text || 'Resposta inválida do servidor');
-    }
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.message || 'Erro na requisição');
-    }
-    
-    botao.textContent = estaSalvo ? 'Salvar' : 'Salvo';
-    botao.classList.toggle('botao-salvo', !estaSalvo);
-  } catch (error) {
-    console.error('Erro:', error);
-    alert(error.message || 'Ocorreu um erro');
-  }
-}
   </script>
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
