@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="src/css/paginaperfiledicao.css">
     <title>Segue o Festival</title>
 </head>
@@ -80,7 +80,6 @@
     </nav>
 </header>
 
-
     <main>        
         <h1 class="cabecalho-titulo">Segue<br>O Festival</h1>
 
@@ -90,7 +89,7 @@
                 <i class="fa-solid fa-pen"></i>
                 <div class="dados-pessoais-nome">
                 <p>Nome Completo</p>
-                <input class="dados-pessoais-nome-formulario" type="text" id="txtNome" placeholder="Nome Completo"/>
+                <input class="dados-pessoais-nome-formulario" type="text" id="txtNome" placeholder="Nome Completo">
                 </div>
     
                 <div class="dados-pessoais-baixo">
@@ -120,10 +119,10 @@
                     <h2 class="subtitulo">Endereço</h2>
                     <i class="fa-solid fa-pen"></i>
                     <p>Endereço</p>
-                    <input class="dados-pessoais-endereco-formulario" type="text" id="txtEndereço" placeholder="Insira o Endereço"/>
+                    <input class="dados-pessoais-endereco-formulario" type="text" id="txtEndereço" placeholder="Insira o Endereço">
                 </div>
     
-                <div class="dados-endereco-abaixo" >
+                <div class="dados-endereco-abaixo">
                 <div class="dados-pessoais-cep">
                     <p>CEP</p>
                     <input class="dados-pessoais-cep-formulario" type="tel" id="telCEP" placeholder="00000-000">
@@ -134,14 +133,14 @@
                     <input class="dados-pessoais-numero-formulario" type="tel" id="telNum" placeholder="Número da Residência">
                 </div>
     
-                <div class="dados-pessoais-complemento" >
+                <div class="dados-pessoais-complemento">
                     <p>Complemento</p>
                     <input class="dados-pessoais-complemento-formulario" type="tel" id="telCom" placeholder="Complemento">
                 </div>
                 </div>
     
-                <div class="dados-endereco-abaixo-secundario" >
-                <div class="dados-pessoais-municipio" >
+                <div class="dados-endereco-abaixo-secundario">
+                <div class="dados-pessoais-municipio">
                     <p>Município</p>
                     <input class="dados-pessoais-municipio-formulario" type="text" id="municipio" placeholder="Nome do Município">
                 </div>
@@ -161,7 +160,7 @@
                 </h2>
                 <div class="dados-pessoais-email">
                     <p>E-mail</p>
-                    <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly/>
+                    <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly>
                 </div>
             
                 <div class="dados-pessoais-senha">
@@ -169,11 +168,11 @@
                     
                     <div class="campo-senha">
                         <p>Nova Senha:</p>
-                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
+                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Deixe em branco para não alterar">
                     </div>
                     
                     <div class="campo-senha">
-                        <p>Confirmar Senha:</p>
+                        <p>Confirmar Nova Senha:</p>
                         <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
                     </div>
 
@@ -187,19 +186,14 @@
             <div>
                 <button class="botao-salvar" onclick="salvarPerfil()">Salvar</button>
             </div>
-    
-            </section>
-
-          
+        </section>
              
         <footer class="rodape">
             <h3 class="titulo-rodape">Segue<br>O Festival!</h3>           
-            </div>           
             <div class="direitos-reservados">
               &copy; 2025 Segue o Festival. Todos os direitos reservados.
             </div>            
-          </footer>
-          
+        </footer>
     </main>
 
     <script>
@@ -222,20 +216,11 @@
             return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
 
-        // Função para converter data brasileira (dd/mm/aaaa) para o formato do banco (mmmm/aa/dd)
-        function formatarDataParaBanco(dataBr) {
-            if (!dataBr) return null;
-            
-            const [dia, mes, ano] = dataBr.split('/');
-            const meses = [
-                'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-                'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
-            ];
-            
-            const nomeMes = meses[parseInt(mes) - 1];
-            const anoAbreviado = ano.slice(-2);
-            
-            return `${nomeMes}/${anoAbreviado}/${dia}`;
+        // Função para formatar data do banco para exibição (YYYY-MM-DD para DD/MM/YYYY)
+        function formatarDataParaExibicao(dataISO) {
+            if (!dataISO) return '';
+            const [ano, mes, dia] = dataISO.split('-');
+            return `${dia}/${mes}/${ano}`;
         }
 
         // Carregar dados do usuário ao abrir a página
@@ -254,7 +239,7 @@
             }
             
             try {
-                // Buscar dados do usuário na API
+                // Buscar dados completos do usuário na API
                 const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
                 
                 if (!response.ok) {
@@ -263,20 +248,29 @@
                 
                 const dados = await response.json();
                 
-                // Preencher os campos do formulário
+                // Preencher todos os campos do formulário
                 document.getElementById("txtNome").value = dados.nome || "";
                 document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
                 document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
                 document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
                 
-                // Preencher os demais campos
-                if (dados.sexo) document.getElementById("sexo").value = dados.sexo;
-                if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
-                if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
-                if (dados.numero) document.getElementById("telNum").value = dados.numero;
-                if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
-                if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
-                if (dados.uf) document.getElementById("uf").value = dados.uf;
+                // Preencher data de nascimento (convertendo formato)
+                if (dados.data_nascimento) {
+                    document.getElementById("dateNascimento").value = formatarDataParaExibicao(dados.data_nascimento);
+                }
+                
+                // Preencher sexo
+                if (dados.sexo) {
+                    document.getElementById("sexo").value = dados.sexo;
+                }
+                
+                // Preencher dados de endereço
+                document.getElementById("txtEndereço").value = dados.endereco || "";
+                document.getElementById("telCEP").value = formatarCEP(dados.cep || "");
+                document.getElementById("telNum").value = dados.numero || "";
+                document.getElementById("telCom").value = dados.complemento || "";
+                document.getElementById("municipio").value = dados.municipio || "";
+                document.getElementById("uf").value = dados.uf || "";
                 
                 // Adicionar máscaras aos campos
                 document.getElementById("telCPF").addEventListener("input", function(e) {
@@ -297,11 +291,11 @@
             }
         });
 
-        // Função principal para salvar o perfil - SEM VALIDAÇÃO DE FORMATO DE SENHA
+        // Função principal para salvar o perfil
         async function salvarPerfil() {
             const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
-            // Verificar senha atual
+            // Verificar senha atual (obrigatória para qualquer alteração)
             const senhaAtual = document.getElementById("senhaAtual").value;
             if (!senhaAtual) {
                 alert("Por favor, digite sua senha atual para confirmar as alterações");
@@ -310,18 +304,18 @@
 
             // Coletar todos os dados do formulário
             const dadosAtualizados = {
+                email: usuarioLogado.email,
+                senha_atual: senhaAtual,
                 nome: document.getElementById("txtNome").value,
-                cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
-                data_nascimento: formatarDataParaBanco(document.getElementById("dateNascimento").value),
+                telefone: document.getElementById("telTelefone").value.replace(/\D/g, ''),
+                data_nascimento: document.getElementById("dateNascimento").value,
                 sexo: document.getElementById("sexo").value,
                 endereco: document.getElementById("txtEndereço").value,
                 cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
                 numero: document.getElementById("telNum").value,
                 complemento: document.getElementById("telCom").value,
                 municipio: document.getElementById("municipio").value,
-                uf: document.getElementById("uf").value,
-                email: document.getElementById("emailEm").value,
-                senha_atual: senhaAtual
+                uf: document.getElementById("uf").value
             };
 
             // Verificar se o usuário quer alterar a senha
@@ -337,9 +331,9 @@
             }
 
             try {
-                // Chamada para sua API para atualizar os dados
-                const response = await fetch('/api/usuario', {
-                    method: 'POST',
+                // Chamada para API de atualização
+                const response = await fetch('/api/atualizar-perfil', {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
