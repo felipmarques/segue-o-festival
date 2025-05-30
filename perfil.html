@@ -26,7 +26,7 @@
           window.location.href = "login.html";
         }
       });
-</script>
+    </script>
     <header>
     <nav id="sidebar" class="open-sidebar">
         <div id="sidebar_content">
@@ -96,7 +96,7 @@
                 <div class="dados-pessoais-baixo">
                 <div class="dados-pessoais-telefone">
                     <p>CPF</p>
-                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF">
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF" readonly>
                 </div>
                 <div class="dados-pessoais-telefone">
                     <p>Telefone</p>
@@ -260,136 +260,197 @@
           
     </main>
 
-         <script>
-            document.addEventListener("DOMContentLoaded", async () => {
-              const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    <script>
+        // Funções auxiliares para formatação
+        function formatarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        
+        function formatarTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, '');
+            if (telefone.length === 11) {
+                return telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+            return telefone;
+        }
+        
+        function formatarCEP(cep) {
+            cep = cep.replace(/\D/g, '');
+            return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+
+        // Função para converter data ISO (yyyy-mm-dd) para formato brasileiro (dd/mm/aaaa)
+        function formatarDataBrasil(dataISO) {
+            if (!dataISO) return '';
+            const [ano, mes, dia] = dataISO.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        // Função para converter data brasileira (dd/mm/aaaa) para ISO (yyyy-mm-dd)
+        function formatarDataISO(dataBr) {
+            if (!dataBr) return '';
+            const [dia, mes, ano] = dataBr.split('/');
+            return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+        }
+
+        // Carregar dados do usuário ao abrir a página
+        document.addEventListener("DOMContentLoaded", async () => {
+            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
-              if (!usuarioLogado) {
+            if (!usuarioLogado) {
                 window.location.href = "login.html";
                 return;
-              }
+            }
             
-              // Preencher nome do usuário na sidebar
-              const nomeUsuario = document.querySelector("#user_infos .item-description");
-              if (nomeUsuario) {
+            // Preencher nome do usuário na sidebar
+            const nomeUsuario = document.querySelector("#user_infos .item-description");
+            if (nomeUsuario) {
                 nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
-              }
+            }
             
-              try {
-     
+            try {
+                // Buscar dados do usuário na API
                 const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-                if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
-            
+                
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+                
                 const dados = await response.json();
-            
-       
+                
+                // Preencher os campos do formulário
                 document.getElementById("txtNome").value = dados.nome || "";
                 document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
                 document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
                 document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
                 
+                // Formatando a data de nascimento
                 if (dados.data_nascimento) {
-                  let dataFormatada;
-            
-                  if (/^\d{4}-\d{2}-\d{2}$/.test(dados.data_nascimento)) {
-                    dataFormatada = dados.data_nascimento;
-                  } 
-    
-                  else if (/\d{2}\/\d{2}\/\d{4}/.test(dados.data_nascimento)) {
-                    const [dia, mes, ano] = dados.data_nascimento.split('/');
-                    dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-                  }
-                  
-                  if (dataFormatada) {
-                    document.getElementById("dateNascimento").value = dataFormatada;
-                  }
+                    const dataFormatada = formatarDataBrasil(dados.data_nascimento);
+                    document.getElementById("dateNascimento").value = formatarDataISO(dataFormatada);
                 }
 
-                if (dados.sexo) {
-                  const selectSexo = document.getElementById("sexo");
-                  selectSexo.value = dados.sexo;
-                  selectSexo.dispatchEvent(new Event('change'));
-                }
+                // Preencher os demais campos
+                if (dados.sexo) document.getElementById("sexo").value = dados.sexo;
                 if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
                 if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
                 if (dados.numero) document.getElementById("telNum").value = dados.numero;
                 if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
                 if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
                 if (dados.uf) document.getElementById("uf").value = dados.uf;
-            
-              } catch (error) {
-                console.error("Erro ao carregar perfil:", error);
-                alert("Erro ao carregar dados do perfil.");
-              }
-            });
-            
-
-            function formatarCPF(cpf) {
-              cpf = cpf.replace(/\D/g, '');
-              return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-            }
-            
-            function formatarTelefone(telefone) {
-              telefone = telefone.replace(/\D/g, '');
-              if (telefone.length === 11) {
-                return telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-              }
-              return telefone;
-            }
-            
-            function formatarCEP(cep) {
-              cep = cep.replace(/\D/g, '');
-              return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
-            }
-             
-           async function alterarSenha() {
-              const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-              const novaSenha = document.getElementById("novaSenha").value;
-              const confirmarSenha = document.getElementById("confirmarSenha").value;
-            
-              if (!novaSenha || !confirmarSenha) {
-                alert("Por favor, preencha todos os campos");
-                return;
-              }
-            
-              if (novaSenha !== confirmarSenha) {
-                alert("As senhas não coincidem");
-                return;
-              }
-            
-              try {
-                const response = await fetch('/api/alterar_senha', {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    email: usuarioLogado.email,
-                    novaSenha: novaSenha
-                  })
+                
+                // Adicionar máscaras aos campos
+                document.getElementById("telCPF").addEventListener("input", function(e) {
+                    e.target.value = formatarCPF(e.target.value);
                 });
-            
-                const result = await response.json();
-            
-                if (!response.ok) {
-                  throw new Error(result.message || 'Erro ao alterar senha');
-                }
-            
-                alert("Senha alterada com sucesso!");
-                // Limpa os campos após sucesso
-                document.getElementById("novaSenha").value = "";
-                document.getElementById("confirmarSenha").value = "";
-            
-              } catch (error) {
-                console.error("Erro:", error);
-                alert(error.message || "Erro ao alterar senha");
-              }
+                
+                document.getElementById("telTelefone").addEventListener("input", function(e) {
+                    e.target.value = formatarTelefone(e.target.value);
+                });
+                
+                document.getElementById("telCEP").addEventListener("input", function(e) {
+                    e.target.value = formatarCEP(e.target.value);
+                });
+                
+            } catch (error) {
+                console.error("Erro ao carregar perfil:", error);
+                alert("Erro ao carregar dados do perfil: " + error.message);
             }
+        });
+
+        // Função principal para salvar o perfil
+        async function salvarPerfil() {
+            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
-            // Adicione esta linha para vincular a função ao botão Salvar
-            document.querySelector('.botao-salvar').addEventListener('click', alterarSenha);
-         </script>
-    </body>
+            // Coletar todos os dados do formulário
+            const dadosAtualizados = {
+                nome: document.getElementById("txtNome").value,
+                cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
+                data_nascimento: formatarDataBrasil(document.getElementById("dateNascimento").value),
+                sexo: document.getElementById("sexo").value,
+                endereco: document.getElementById("txtEndereço").value,
+                cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
+                numero: document.getElementById("telNum").value,
+                complemento: document.getElementById("telCom").value,
+                municipio: document.getElementById("municipio").value,
+                uf: document.getElementById("uf").value,
+                email: document.getElementById("emailEm").value,
+                senha: document.getElementById("novaSenha").value || usuarioLogado.senha,
+                telefone: document.getElementById("telTelefone").value.replace(/\D/g, '')
+            };
+
+            // Verificar se há nova senha para atualizar
+            const novaSenha = document.getElementById("novaSenha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+            
+            if (novaSenha || confirmarSenha) {
+                if (novaSenha !== confirmarSenha) {
+                    alert("As senhas não coincidem");
+                    return;
+                }
+                dadosAtualizados.senha = novaSenha;
+            }
+
+            // Validações adicionais conforme sua API
+            if (!/^\d{11}$/.test(dadosAtualizados.cpf)) {
+                alert("CPF deve conter 11 dígitos numéricos.");
+                return;
+            }
+
+            if (!/^\d{8}$/.test(dadosAtualizados.cep)) {
+                alert("CEP deve conter 8 dígitos numéricos.");
+                return;
+            }
+
+            if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dadosAtualizados.data_nascimento)) {
+                alert("Data deve estar no formato dd/mm/aaaa.");
+                return;
+            }
+
+            try {
+                // Chamada para sua API para atualizar os dados
+                const response = await fetch('/api/usuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.message || 'Erro ao atualizar perfil');
+                }
+                
+                // Atualizar dados no localStorage
+                const usuarioAtualizado = {
+                    ...usuarioLogado,
+                    nome: dadosAtualizados.nome,
+                    email: dadosAtualizados.email
+                };
+                localStorage.setItem("usuarioLogado", JSON.stringify(usuarioAtualizado));
+                
+                // Atualizar nome na sidebar
+                const nomeUsuario = document.querySelector("#user_infos .item-description");
+                if (nomeUsuario) {
+                    nomeUsuario.textContent = `Olá, ${dadosAtualizados.nome || "Usuário"}!`;
+                }
+                
+                alert("Perfil atualizado com sucesso!");
+                
+                // Limpar campos de senha se foram alterados
+                if (novaSenha) {
+                    document.getElementById("novaSenha").value = "";
+                    document.getElementById("confirmarSenha").value = "";
+                }
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao atualizar perfil: " + error.message);
+            }
+        }
+    </script>
+</body>
 </html>
-
-
