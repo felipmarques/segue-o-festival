@@ -18,234 +18,10 @@
       border-radius: 4px;
     }
 
-    /* Novo estilo para o menu de usuário */
-    .cabecalho {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background-color: #fff;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .cabecalho-titulo {
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 2em;
-      color: #2c3e50;
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    .cabecalho-usuario {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    
-    .usuario-saudacao {
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 1.1em;
-      color: #2c3e50;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      background: #f8f9fa;
-      padding: 8px 15px;
-      border-radius: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .cabecalho-botoes {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .cabecalho-botao-entrar {
-      background: #3498db;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      font-size: 0.9em;
-      letter-spacing: 0.5px;
-    }
-    
-    .cabecalho-botao-entrar:hover {
-      background: #2980b9;
-      transform: translateY(-2px);
-    }
-
-    /* Estilos para o menu de filtros */
-    .menu {
-      display: flex;
-      gap: 20px;
-      padding: 1rem 2rem;
-      background: #f8f9fa;
-    }
-
-    .menu-item {
-      position: relative;
-    }
-
-    .menu-botao {
-      background: #3498db;
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .menu-lista {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 10px 0;
-      min-width: 200px;
-      z-index: 100;
-      display: none;
-    }
-
-    .menu-lista li {
-      padding: 8px 20px;
-      cursor: pointer;
-    }
-
-    .menu-lista li:hover {
-      background: #f1f1f1;
-    }
-
-    .menu-item:hover .menu-lista {
-      display: block;
-    }
-
-    .scroll-limitada {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    /* Estilos para o conteúdo principal */
-    .conteudo {
-      padding: 2rem;
-    }
-
-    .carrossel-container {
-      position: relative;
-      margin-bottom: 2rem;
-    }
-
-    .carrossel {
-      display: flex;
-      overflow: hidden;
-    }
-
-    .carrossel img {
-      width: 100%;
-      flex-shrink: 0;
-      transition: transform 0.5s ease;
-    }
-
-    .botao {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      font-size: 1.2em;
-      cursor: pointer;
-    }
-
-    .botao:hover {
-      background: rgba(0,0,0,0.7);
-    }
-
-    .botao:nth-child(2) {
-      left: 10px;
-    }
-
-    .botao:nth-child(3) {
-      right: 10px;
-    }
-
-    .conteudo-secundario-destaque {
-      margin-bottom: 1.5rem;
-    }
-
-    .conteudo-secundario-destaque h1 {
-      font-size: 1.8em;
-      color: #2c3e50;
-    }
-
-    .conteudo-secundario-linha {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .conteudo-secundario-item {
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
-
-    .conteudo-secundario-item:hover {
-      transform: translateY(-5px);
-    }
-
-    .conteudo-secundario-item img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .conteudo-secundario-item h3 {
-      padding: 0 15px;
-      margin: 10px 0;
-      color: #2c3e50;
-    }
-
-    .conteudo-secundario-item p {
-      padding: 0 15px 15px;
-      margin: 0;
-      color: #666;
-    }
-
-    /* Rodapé */
-    footer {
-      display: flex;
-      justify-content: flex-end;
-      padding: 1rem 2rem;
-      background: #f8f9fa;
-    }
-
-    .logout-botao {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .logout-botao:hover {
-      background: #c0392b;
+    .cabecalho-saudacao {
+      margin-left: 1rem;
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
@@ -255,14 +31,11 @@
     <h3 class="cabecalho-titulo">
       Segue<br>O Festival!
     </h3>
-    
-    <div class="cabecalho-usuario">
-      <span class="usuario-saudacao" id="saudacaoUsuario"></span>
-      <div class="cabecalho-botoes">
-        <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
-        <button class="cabecalho-botao-entrar" onclick="location.href='eventossalvos.html'">Meus Eventos</button>
-        <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
-      </div>
+    <div class="cabecalho-botoes">
+      <span class="cabecalho-saudacao" id="saudacaoUsuario"></span>
+      <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='eventossalvos.html'">Meus Eventos</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
     </div>
   </header>
 
@@ -342,4 +115,157 @@
     // Exibe saudação com nome do usuário
     function exibirSaudacaoUsuario() {
       const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-      const elementoSaudacao = document.getElementById('sa
+      const elementoSaudacao = document.getElementById('saudacaoUsuario');
+      
+      if (usuarioLogado?.nome) {
+        elementoSaudacao.textContent = `Olá, ${usuarioLogado.nome}!`;
+      } else if (usuarioLogado?.email) {
+        // Se não tiver nome, usa parte antes do @ no email
+        const nome = usuarioLogado.email.split('@')[0];
+        elementoSaudacao.textContent = `Olá, ${nome}!`;
+      }
+    }
+
+    async function buscarEventos() {
+      try {
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+
+        todosEventos = await response.json();
+        exibirEventosFiltrados();
+        exibirCarrossel(todosEventos);
+      } catch (error) {
+        document.getElementById('eventos-lista').innerHTML = 'Erro ao carregar eventos.';
+        console.error(error);
+      }
+    }
+
+    function filtrarEventos(tipo, valor) {
+      if (tipo === 'estado') {
+        estadoSelecionado = valor;
+      } else if (tipo === 'tipo') {
+        tipoSelecionado = valor;
+      }
+      exibirEventosFiltrados();
+    }
+
+    function exibirEventosFiltrados() {
+      const container = document.getElementById('eventos-lista');
+      container.innerHTML = '';
+
+      const eventosFiltrados = todosEventos.filter(evento => {
+        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+      });
+
+      if (eventosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+        return;
+      }
+
+      eventosFiltrados.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'conteudo-secundario-item';
+        div.style.cursor = 'pointer';
+        div.setAttribute("data-id", evento.id_evento);
+        
+        div.onclick = () => {
+          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+        };
+
+        const imagem = document.createElement('img');
+        imagem.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        imagem.alt = evento.nome;
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = evento.nome;
+
+        const data = document.createElement('p');
+        if (evento.data) {
+          const dataEvento = new Date(evento.data);
+        
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+            weekday: 'long'
+          });
+
+          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+        } else {
+          data.textContent = 'Data não informada';
+        }
+
+        const local = document.createElement('p');
+        local.textContent = evento.endereco || 'Local não informado';
+
+        div.appendChild(imagem);
+        div.appendChild(titulo);
+        div.appendChild(data);
+        div.appendChild(local);
+        container.appendChild(div);
+      });
+    }
+
+    let index = 0;
+
+    function exibirCarrossel(eventos) {
+      const carrossel = document.getElementById("carrossel");
+      carrossel.innerHTML = '';
+
+      eventos.forEach(evento => {
+        const img = document.createElement("img");
+        img.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        img.alt = evento.nome;
+        carrossel.appendChild(img);
+      });
+
+      index = 0;
+      atualizarCarrossel();
+    }
+
+    function atualizarCarrossel() {
+      const carrossel = document.getElementById("carrossel");
+      carrossel.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function avancar() {
+      const total = document.querySelectorAll('#carrossel img').length;
+      index = (index + 1) % total;
+      atualizarCarrossel();
+    }
+
+    function voltar() {
+      const total = document.querySelectorAll('#carrossel img').length;
+      index = (index - 1 + total) % total;
+      atualizarCarrossel();
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    // Inicialização
+    exibirSaudacaoUsuario();
+    buscarEventos();
+  </script>
+  <script src="js/filtros-logado.js"></script>
+  <script src="js/calendario.js"></script>
+</body>
+
+<footer style="display: flex; justify-content: flex-end; padding: 1rem;">
+  <button class="logout-botao" onclick="logout()">
+    <span class="logout-icone">↩️</span>
+    Sair
+  </button>
+</footer>
+
+</html>
