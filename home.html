@@ -275,26 +275,59 @@
     window.location.href = "index.html";
   }
 
-    function verificarEventoSalvo(idEvento) {
-      const salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
-      return salvos.includes(idEvento);
+  async function verificarEventoSalvo(idEvento) {
+  try {
+    const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+    if (!usuario) return false;
+
+    const response = await fetch(`/api/eventos-salvos`, {
+      headers: {
+        'usuario-logado': localStorage.getItem("usuarioLogado")
+      }
+    });
+    
+    if (!response.ok) return false;
+    
+    const eventos = await response.json();
+    return eventos.some(evento => evento.id_evento === idEvento);
+  } catch (error) {
+    console.error('Erro:', error);
+    return false;
+  }
+}
+
+// Alternar entre salvar/remover (atualize sua função existente)
+async function alternarSalvarEvento(idEvento, botao) {
+  try {
+    const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+    if (!usuario) {
+      alert('Faça login para salvar eventos');
+      return;
     }
 
-    function alternarSalvarEvento(idEvento, botao) {
-      let salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
-      const index = salvos.indexOf(idEvento);
+    const estaSalvo = botao.textContent === 'Salvo';
+    const acao = estaSalvo ? 'remover' : 'salvar';
     
-      if (index > -1) {
-        salvos.splice(index, 1);
-        botao.textContent = 'Salvar';
-        botao.classList.remove('botao-salvo');
-      } else {
-        salvos.push(idEvento);
-        botao.textContent = 'Salvo';
-        botao.classList.add('botao-salvo');
-      }
+    const response = await fetch('/api/eventos-salvos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'usuario-logado': localStorage.getItem("usuarioLogado")
+      },
+      body: JSON.stringify({ 
+        id_evento: idEvento, 
+        acao 
+      })
+    });
     
-      localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
+    if (!response.ok) throw new Error('Erro na requisição');
+    
+    botao.textContent = estaSalvo ? 'Salvar' : 'Salvo';
+    botao.classList.toggle('botao-salvo', !estaSalvo);
+  } catch (error) {
+    console.error('Erro:', error);
+    alert('Ocorreu um erro');
+  }
 }
   </script>
   <script src="js/filtros-logado.js"></script>
