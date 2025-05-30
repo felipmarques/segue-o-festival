@@ -90,7 +90,7 @@
                 <i class="fa-solid fa-pen"></i>
                 <div class="dados-pessoais-nome">
                 <p>Nome Completo</p>
-                <input class="dados-pessoais-nome-formulario" type="text" id="txtNome" placeholder="Nome Completo">
+                <input class="dados-pessoais-nome-formulario" type="text" id="txtNome" placeholder="Nome Completo"/>
                 </div>
     
                 <div class="dados-pessoais-baixo">
@@ -120,10 +120,10 @@
                     <h2 class="subtitulo">Endereço</h2>
                     <i class="fa-solid fa-pen"></i>
                     <p>Endereço</p>
-                    <input class="dados-pessoais-endereco-formulario" type="text" id="txtEndereço" placeholder="Insira o Endereço">
+                    <input class="dados-pessoais-endereco-formulario" type="text" id="txtEndereço" placeholder="Insira o Endereço"/>
                 </div>
     
-                <div class="dados-endereco-abaixo">
+                <div class="dados-endereco-abaixo" >
                 <div class="dados-pessoais-cep">
                     <p>CEP</p>
                     <input class="dados-pessoais-cep-formulario" type="tel" id="telCEP" placeholder="00000-000">
@@ -134,14 +134,14 @@
                     <input class="dados-pessoais-numero-formulario" type="tel" id="telNum" placeholder="Número da Residência">
                 </div>
     
-                <div class="dados-pessoais-complemento">
+                <div class="dados-pessoais-complemento" >
                     <p>Complemento</p>
                     <input class="dados-pessoais-complemento-formulario" type="tel" id="telCom" placeholder="Complemento">
                 </div>
                 </div>
     
-                <div class="dados-endereco-abaixo-secundario">
-                <div class="dados-pessoais-municipio">
+                <div class="dados-endereco-abaixo-secundario" >
+                <div class="dados-pessoais-municipio" >
                     <p>Município</p>
                     <input class="dados-pessoais-municipio-formulario" type="text" id="municipio" placeholder="Nome do Município">
                 </div>
@@ -161,7 +161,7 @@
                 </h2>
                 <div class="dados-pessoais-email">
                     <p>E-mail</p>
-                    <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly>
+                    <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly/>
                 </div>
             
                 <div class="dados-pessoais-senha">
@@ -169,17 +169,17 @@
                     
                     <div class="campo-senha">
                         <p>Nova Senha:</p>
-                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Deixe em branco para não alterar">
+                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
                     </div>
                     
                     <div class="campo-senha">
-                        <p>Confirmar Nova Senha:</p>
+                        <p>Confirmar Senha:</p>
                         <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
                     </div>
 
                     <div class="campo-senha">
                         <p>Confirmação (digite sua senha atual):</p>
-                        <input class="dados-pessoais-senha-formulario" type="password" id="senhaAtual" placeholder="Obrigatório para confirmar alterações" required>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="senhaAtual" placeholder="Obrigatório para confirmar alterações">
                     </div>
                 </div>
             </div> 
@@ -297,11 +297,11 @@
             }
         });
 
-        // Função principal para salvar o perfil
+        // Função principal para salvar o perfil - SEM VALIDAÇÃO DE FORMATO DE SENHA
         async function salvarPerfil() {
             const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
             
-            // Verificar senha atual (obrigatória para qualquer alteração)
+            // Verificar senha atual
             const senhaAtual = document.getElementById("senhaAtual").value;
             if (!senhaAtual) {
                 alert("Por favor, digite sua senha atual para confirmar as alterações");
@@ -328,24 +328,12 @@
             const novaSenha = document.getElementById("novaSenha").value;
             const confirmarSenha = document.getElementById("confirmarSenha").value;
             
-            // Só valida a senha se ambos os campos estiverem preenchidos
-            if (novaSenha && confirmarSenha) {
+            if (novaSenha || confirmarSenha) {
                 if (novaSenha !== confirmarSenha) {
-                    alert("As novas senhas não coincidem");
+                    alert("As senhas não coincidem");
                     return;
                 }
-                
-                // Aplica regras de validação apenas se estiver alterando a senha
-                const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
-                if (!senhaRegex.test(novaSenha)) {
-                    alert("A nova senha deve ter no mínimo 8 caracteres, com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial");
-                    return;
-                }
-                
                 dadosAtualizados.nova_senha = novaSenha;
-            } else if ((novaSenha && !confirmarSenha) || (!novaSenha && confirmarSenha)) {
-                alert("Por favor, preencha ambos os campos de senha se desejar alterá-la");
-                return;
             }
 
             try {
