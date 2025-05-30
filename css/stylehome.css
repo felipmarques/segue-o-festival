@@ -137,7 +137,7 @@ border: 1px solid #eeee99;
 padding: 8px 15px;
 border-radius: 2px;
 font-size: 14px;
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 cursor: pointer;
 transition: all 0.2s ease-in-out;
 }
@@ -247,7 +247,7 @@ gap: 20px;
 position: relative;
 width: 170px;
 height: 50px;
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 font-style: normal;
 font-weight: 400;
 font-size: 15px;
@@ -290,7 +290,7 @@ align-items: center;
 justify-content: space-around;
 padding: 10px;
 background: linear-gradient(90deg, #08C2FF 0%, #A0DEFF 100%);
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 font-style: normal;
 font-weight: 100;
 font-size: 25px;
@@ -379,7 +379,7 @@ align-self: center; /* Centraliza o ícone verticalmente */
 
 /* Estilo do título "Destaques" */
 .conteudo-secundario-destaque {
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 font-style: normal;
 font-weight: 500;
 font-size: 15px;
@@ -435,7 +435,7 @@ height: 70%;
 font-size: 1.1em;
 margin: 7px 0 5px;
 color: #000000;
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 font-style: normal;
 }
 
@@ -444,7 +444,7 @@ font-style: normal;
 font-size: 0.9em;
 color: #000000;
 margin: 5px 0;
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 font-style: normal;
 }
 
@@ -475,7 +475,7 @@ justify-content: flex-start; /* Alinha à esquerda */
 }
 
 .lista-eventos a {
-font-family: 'Times New Roman', Times, serif;
+font-family: 'Raleway', sans-serif;
 font-weight: 700; /* Título mais destacado */
 font-size: 1.5rem; /* Tamanho da fonte maior */
 color: #000; /* Cor preta */
