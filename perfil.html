@@ -218,29 +218,29 @@
             </div>
     
             
-           <div class="dados-pessoais-usuario">
-               <h2 class="subtitulo-pen">
-                   Login <i class="fa-solid fa-pen"></i>
-               </h2>
-           <div class="dados-pessoais-email">
-               <p>E-mail</p>
-               <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly/>
-          </div>
-
-        <div class="dados-pessoais-senha">
-            <h3>Alterar Senha</h3>
-        
-            <div class="campo-senha">
-                <p>Nova Senha:</p>
-                <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
-            </div>
-        
-            <div class="campo-senha">
-                <p>Confirmar Senha:</p>
-                <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
-            </div>
-          </div>
-      </div>  
+            <div class="dados-pessoais-usuario">
+                <h2 class="subtitulo-pen">
+                    Login <i class="fa-solid fa-pen"></i>
+                </h2>
+                <div class="dados-pessoais-email">
+                    <p>E-mail</p>
+                    <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly/>
+                </div>
+            
+                <div class="dados-pessoais-senha">
+                    <h3>Alterar Senha</h3>
+                    
+                    <div class="campo-senha">
+                        <p>Nova Senha:</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
+                    </div>
+                    
+                    <div class="campo-senha">
+                        <p>Confirmar Senha:</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+                    </div>
+                </div>
+            </div> 
 
             <div>
                 <button class="botao-salvar" onclick="salvarPerfil()">Salvar</button>
@@ -420,118 +420,52 @@
             window.location.href = "login.html";
             });
              
-           async function salvarPerfil() {
+           async function alterarSenha() {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-              
-              // Coletar todos os dados do formulário
-              const dadosPerfil = {
-                cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
-                nome: document.getElementById("txtNome").value,
-                data_nascimento: document.getElementById("dateNascimento").value,
-                email_usuario: document.getElementById("emailEm").value,
-                telefone: document.getElementById("telTelefone").value.replace(/\D/g, ''),
-                sexo: document.getElementById("sexo").value,
-                endereco: document.getElementById("txtEndereço").value,
-                cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
-                numero: document.getElementById("telNum").value,
-                complemento: document.getElementById("telCom").value,
-                municipio: document.getElementById("municipio").value,
-                uf: document.getElementById("uf").value,
-                // Campos de senha (opcionais)
-                novaSenha: document.getElementById("novaSenha").value,
-                confirmarSenha: document.getElementById("confirmarSenha").value
-              };
+              const novaSenha = document.getElementById("novaSenha").value;
+              const confirmarSenha = document.getElementById("confirmarSenha").value;
             
-         
-              if (!dadosPerfil.nome || !dadosPerfil.email_usuario || !dadosPerfil.cpf) {
-                alert("Nome, CPF e e-mail são obrigatórios");
+              if (!novaSenha || !confirmarSenha) {
+                alert("Por favor, preencha todos os campos");
                 return;
               }
             
-    
-              if (dadosPerfil.novaSenha || dadosPerfil.confirmarSenha) {
-                if (dadosPerfil.novaSenha !== dadosPerfil.confirmarSenha) {
-                  alert("As senhas não coincidem");
-                  return;
-                }
-                if (dadosPerfil.novaSenha.length < 6) {
-                  alert("A senha deve ter pelo menos 6 caracteres");
-                  return;
-                }
+              if (novaSenha !== confirmarSenha) {
+                alert("As senhas não coincidem");
+                return;
               }
             
               try {
-         
-                const response = await fetch('/api/atualizar_perfil', {
+                const response = await fetch('/api/alterar_senha', {
                   method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify(dadosPerfil)
+                  body: JSON.stringify({
+                    email: usuarioLogado.email,
+                    novaSenha: novaSenha
+                  })
                 });
             
                 const result = await response.json();
             
                 if (!response.ok) {
-                  throw new Error(result.message || 'Erro ao salvar perfil');
+                  throw new Error(result.message || 'Erro ao alterar senha');
                 }
             
-         
-                if (result.usuario) {
-                  localStorage.setItem("usuarioLogado", JSON.stringify({
-                    ...usuarioLogado,
-                    nome: result.usuario.nome,
-                    email: result.usuario.email_usuario
-                  }));
-                }
-            
-                alert("Perfil atualizado com sucesso!");
-                
-
+                alert("Senha alterada com sucesso!");
+                // Limpa os campos após sucesso
                 document.getElementById("novaSenha").value = "";
                 document.getElementById("confirmarSenha").value = "";
             
               } catch (error) {
-                console.error("Erro ao salvar perfil:", error);
-                alert(error.message || "Erro ao salvar perfil");
+                console.error("Erro:", error);
+                alert(error.message || "Erro ao alterar senha");
               }
             }
             
-
-            document.querySelector('.botao-salvar').addEventListener('click', salvarPerfil); 
-
-            document.getElementById("telCPF").addEventListener('input', function(e) {
-              let value = e.target.value.replace(/\D/g, '');
-              if (value.length > 11) value = value.substring(0, 11);
-              
-              value = value.replace(/(\d{3})(\d)/, '$1.$2');
-              value = value.replace(/(\d{3})(\d)/, '$1.$2');
-              value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-              
-              e.target.value = value;
-            });
-            
-            // Formatação automática de Telefone
-            document.getElementById("telTelefone").addEventListener('input', function(e) {
-              let value = e.target.value.replace(/\D/g, '');
-              if (value.length > 11) value = value.substring(0, 11);
-              
-              if (value.length > 0) {
-                value = value.replace(/^(\d{0,2})(\d{0,5})(\d{0,4})/, '($1) $2-$3');
-              }
-              
-              e.target.value = value;
-            });
-            
-            // Formatação automática de CEP
-            document.getElementById("telCEP").addEventListener('input', function(e) {
-              let value = e.target.value.replace(/\D/g, '');
-              if (value.length > 8) value = value.substring(0, 8);
-              
-              value = value.replace(/^(\d{5})(\d)/, '$1-$2');
-              
-              e.target.value = value;
-            });
+            // Adicione esta linha para vincular a função ao botão Salvar
+            document.querySelector('.botao-salvar').addEventListener('click', alterarSenha);
          </script>
     </body>
 </html>
