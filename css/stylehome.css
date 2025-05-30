@@ -121,6 +121,7 @@
       padding: 15px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
       border-bottom: 1px solid #eee;
+      font-family: 'Raleway', sans-serif;
       gap: 15px;
       flex-wrap: wrap;
     }
@@ -136,7 +137,7 @@
       padding: 8px 15px;
       border-radius: 2px;
       font-size: 14px;
-      font-family: 'Open Sans', sans-serif; 
+      font-family: 'Raleway', sans-serif; 
       cursor: pointer;
       transition: all 0.2s ease-in-out;
     }
