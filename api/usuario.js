@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -6,38 +7,47 @@ const pool = new Pool({
 });
 
 module.exports = async (req, res) => {
+  // Configura CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method === 'GET') {
     const { email } = req.query;
 
     if (!email) {
-      return res.status(400).json({ message: 'Email é obrigatório' });
+      return res.status(400).json({ success: false, message: 'Email é obrigatório' });
     }
 
     try {
       const query = `
         SELECT nome, cpf, data_nascimento, sexo, endereco, cep, numero,
-               complemento, municipio, uf, email_usuario AS email, senha_usuario AS senha
+               complemento, municipio, uf, email_usuario AS email
         FROM usuario
         WHERE email_usuario = $1
       `;
       const result = await pool.query(query, [email]);
 
       if (result.rowCount === 0) {
-        return res.status(404).json({ message: 'Usuário não encontrado' });
+        return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
       }
 
-      return res.status(200).json(result.rows[0]);
+      return res.status(200).json({ success: true, usuario: result.rows[0] });
     } catch (err) {
       console.error('Erro ao consultar o usuário:', err);
-      return res.status(500).json({ message: 'Erro interno do servidor' });
+      return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
     }
   }
 
-  if (req.method === 'POST') {
+  if (req.method === 'PUT') {
     const {
       nome,
       cpf,
-      data_nascimento,
+      data_nascimento, // Esperado no formato YYYY-MM-DD
       sexo,
       endereco,
       cep,
@@ -45,81 +55,100 @@ module.exports = async (req, res) => {
       complemento,
       municipio,
       uf,
-      email,
-      senha
+      email_usuario,
+      novaSenha,
+      confirmarSenha
     } = req.body;
 
-    console.log("🔵 Dados recebidos no POST:", req.body);
+    console.log("🔵 Dados recebidos no PUT:", req.body);
 
-    const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
-    if (!senhaRegex.test(senha)) {
-      console.log("❌ Senha inválida:", senha);
-      return res.status(400).json({
-        message:
-          'A senha deve ter no mínimo 8 caracteres, com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.'
-      });
+    // Validação de senha (se fornecida)
+    if (novaSenha || confirmarSenha) {
+      if (novaSenha !== confirmarSenha) {
+        return res.status(400).json({ success: false, message: 'As senhas não coincidem' });
+      }
+      
+      const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+      if (!senhaRegex.test(novaSenha)) {
+        return res.status(400).json({
+          success: false,
+          message: 'A senha deve ter no mínimo 8 caracteres, com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.'
+        });
+      }
     }
 
-    if (!/^\d{11}$/.test(cpf)) {
-      console.log("❌ CPF inválido:", cpf);
-      return res.status(400).json({ message: 'CPF deve conter 11 dígitos numéricos.' });
+    // Validações básicas
+    if (!/^\d{11}$/.test(cpf.replace(/\D/g, ''))) {
+      return res.status(400).json({ success: false, message: 'CPF deve conter 11 dígitos numéricos.' });
     }
 
-    if (!/^\d{8}$/.test(cep)) {
-      console.log("❌ CEP inválido:", cep);
-      return res.status(400).json({ message: 'CEP deve conter 8 dígitos numéricos.' });
+    if (!/^\d{8}$/.test(cep.replace(/\D/g, ''))) {
+      return res.status(400).json({ success: false, message: 'CEP deve conter 8 dígitos numéricos.' });
     }
-
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(data_nascimento)) {
-      console.log("❌ Data de nascimento em formato inválido:", data_nascimento);
-      return res.status(400).json({ message: 'Data deve estar no formato dd/mm/aaaa.' });
-    }
-
-    const [dia, mes, ano] = data_nascimento.split('/');
-    const dataISO = `${ano}-${mes}-${dia}`;
-
-    console.log("✅ Data convertida para ISO:", dataISO);
 
     try {
-      const query = `
+      await pool.query('BEGIN');
+
+      // Atualiza dados básicos
+      const updateQuery = `
         UPDATE usuario
-        SET nome = $1, cpf = $2, data_nascimento = $3, sexo = $4, endereco = $5,
-            cep = $6, numero = $7, complemento = $8, municipio = $9, uf = $10, senha = $11
-        WHERE email_usuario = $12
+        SET nome = $1, 
+            cpf = $2, 
+            data_nascimento = $3, 
+            sexo = $4, 
+            endereco = $5,
+            cep = $6, 
+            numero = $7, 
+            complemento = $8, 
+            municipio = $9, 
+            uf = $10
+        WHERE email_usuario = $11
+        RETURNING *
       `;
 
       const values = [
         nome,
-        cpf,
-        dataISO,
+        cpf.replace(/\D/g, ''),
+        data_nascimento, // Já no formato correto
         sexo,
         endereco,
-        cep,
+        cep.replace(/\D/g, ''),
         numero,
         complemento,
         municipio,
         uf,
-        senha,
-        email
+        email_usuario
       ];
 
-      console.log("🟢 Executando UPDATE com valores:", values);
+      const result = await pool.query(updateQuery, values);
 
-      const result = await pool.query(query, values);
-
-      if (result.rowCount === 0) {
-        console.log("⚠️ Nenhum usuário encontrado para atualizar.");
-        return res.status(404).json({ message: 'Usuário não encontrado para atualizar.' });
+      // Atualiza senha se fornecida
+      if (novaSenha) {
+        const hashedPassword = await bcrypt.hash(novaSenha, 10);
+        await pool.query(
+          'UPDATE usuario SET senha_usuario = $1 WHERE email_usuario = $2',
+          [hashedPassword, email_usuario]
+        );
       }
 
-      console.log("✅ Dados atualizados com sucesso!");
-      return res.status(200).json({ message: 'Dados atualizados com sucesso!' });
+      await pool.query('COMMIT');
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
+      }
+
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Dados atualizados com sucesso!',
+        usuario: result.rows[0]
+      });
 
     } catch (err) {
-      console.error('❗ Erro ao atualizar o usuário:', err);
-      return res.status(500).json({ message: 'Erro interno ao atualizar o usuário.' });
+      await pool.query('ROLLBACK');
+      console.error('Erro ao atualizar o usuário:', err);
+      return res.status(500).json({ success: false, message: 'Erro interno ao atualizar o usuário.' });
     }
   }
 
-  return res.status(405).json({ message: 'Método não permitido' });
+  return res.status(405).json({ success: false, message: 'Método não permitido' });
 };
