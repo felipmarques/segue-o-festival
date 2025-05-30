@@ -330,61 +330,74 @@
             }
             
             async function salvarPerfil() {
-              const rawData = document.getElementById("dateNascimento").value;
-              const [ano, mes, dia] = rawData.split("-");
-              const dataBR = `${dia}/${mes}/${ano}`;
-            
-              const dados = {
-                nome: document.getElementById("txtNome").value.trim(),
-                cpf: document.getElementById("telCPF").value.replace(/\D/g, ""),
-                data_nascimento: dataBR,
+              const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+              
+              // Coletar dados do formulário (mantendo formato ISO para data)
+              const dadosPerfil = {
+                cpf: document.getElementById("telCPF").value.replace(/\D/g, ''),
+                nome: document.getElementById("txtNome").value,
+                data_nascimento: document.getElementById("dateNascimento").value, // Mantém formato ISO
+                email_usuario: document.getElementById("emailEm").value,
+                telefone: document.getElementById("telTelefone").value.replace(/\D/g, ''),
                 sexo: document.getElementById("sexo").value,
-                endereco: document.getElementById("txtEndereço").value.trim(),
-                cep: document.getElementById("telCEP").value.replace(/\D/g, ""),
-                numero: document.getElementById("telNum").value.trim(),
-                complemento: document.getElementById("telCom").value.trim(),
+                endereco: document.getElementById("txtEndereço").value,
+                cep: document.getElementById("telCEP").value.replace(/\D/g, ''),
+                numero: document.getElementById("telNum").value,
+                complemento: document.getElementById("telCom").value,
                 municipio: document.getElementById("municipio").value,
                 uf: document.getElementById("uf").value,
-                email: document.getElementById("emailEm").value.trim(),
-                senha: document.getElementById("passwordSen").value.trim(),
+                novaSenha: document.getElementById("novaSenha").value, // Nome correto para o backend
+                confirmarSenha: document.getElementById("confirmarSenha").value
               };
             
-              const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
-              if (!senhaRegex.test(dados.senha)) {
-                alert("A senha deve conter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.");
+              // Validações básicas
+              if (!dadosPerfil.nome || !dadosPerfil.email_usuario || !dadosPerfil.cpf) {
+                alert("Nome, CPF e e-mail são obrigatórios");
                 return;
               }
             
-              if (!/^\d{11}$/.test(dados.cpf)) {
-                alert("O CPF deve conter exatamente 11 dígitos numéricos.");
-                return;
-              }
-            
-                if (!/^\d{8}$/.test(dados.cep)) {
-                    alert("O CEP deve conter exatamente 8 dígitos numéricos.");
-                    return;
-               }
-
               try {
-                const response = await fetch("/api/usuario", {
-                  method: "PUT",
+                const response = await fetch('/api/alterar_perfil', { // Endpoint correto
+                  method: 'PUT',
                   headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify(dados),
+                  body: JSON.stringify(dadosPerfil)
                 });
-
-                if (!response.ok) {
-                  throw new Error("Erro ao salvar os dados");
+            
+                // Verifica se a resposta é JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                  const text = await response.text();
+                  throw new Error(`Resposta inesperada: ${text.substring(0, 50)}...`);
                 }
-
-                alert("Dados salvos com sucesso!");
+            
+                const result = await response.json();
+            
+                if (!response.ok) {
+                  throw new Error(result.message || 'Erro ao salvar perfil');
+                }
+            
+                // Atualiza localStorage se necessário
+                if (result.usuario) {
+                  localStorage.setItem("usuarioLogado", JSON.stringify({
+                    ...usuarioLogado,
+                    nome: result.usuario.nome,
+                    email: result.usuario.email_usuario
+                  }));
+                }
+            
+                alert("Perfil atualizado com sucesso!");
+                
+                // Limpa campos de senha
+                document.getElementById("novaSenha").value = "";
+                document.getElementById("confirmarSenha").value = "";
+            
               } catch (error) {
                 console.error("Erro ao salvar perfil:", error);
-                alert("Erro ao salvar os dados do perfil.");
+                alert(error.message || "Erro ao salvar perfil");
               }
             }
-
             function formatarCPF(cpf) {
               cpf = cpf.replace(/\D/g, "");
               return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
