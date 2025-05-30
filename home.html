@@ -117,14 +117,6 @@
       const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
       const elementoSaudacao = document.getElementById('saudacaoUsuario');
       
-      if (usuarioLogado?.nome) {
-        elementoSaudacao.textContent = `Olá, ${usuarioLogado.nome}!`;
-      } else if (usuarioLogado?.email) {
-        // Se não tiver nome, usa parte antes do @ no email
-        const nome = usuarioLogado.email.split('@')[0];
-        elementoSaudacao.textContent = `Olá, ${nome}!`;
-      }
-    }
 
     async function buscarEventos() {
       try {
