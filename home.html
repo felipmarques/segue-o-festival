@@ -112,12 +112,6 @@
     let estadoSelecionado = null;
     let tipoSelecionado = null;
 
-    // Exibe saudação com nome do usuário
-    function exibirSaudacaoUsuario() {
-      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-      const elementoSaudacao = document.getElementById('saudacaoUsuario');
-      
-
     async function buscarEventos() {
       try {
         const response = await fetch('/api/buscaeventos');
