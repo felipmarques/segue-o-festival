@@ -98,6 +98,10 @@
                     <p>CPF</p>
                     <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF">
                 </div>
+                <div class="dados-pessoais-telefone">
+                    <p>Telefone</p>
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telTelefone" placeholder="(00) 00000-0000">
+                </div>    
     
                 <div class="dados-pessoais-datanascimento">
                     <p>Data de Nascimento</p>
@@ -259,41 +263,68 @@
          <script>
             document.addEventListener("DOMContentLoaded", async () => {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
+            
+              if (!usuarioLogado) {
+                window.location.href = "login.html";
+                return;
+              }
+            
+              // Preencher nome do usuário na sidebar
               const nomeUsuario = document.querySelector("#user_infos .item-description");
               if (nomeUsuario) {
                 nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
               }
             
               try {
+                // Buscar dados completos do usuário
                 const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
                 if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
             
                 const dados = await response.json();
             
+                // Preencher todos os campos do formulário
                 document.getElementById("txtNome").value = dados.nome || "";
                 document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
+                document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
+                document.getElementById("emailEm").value = dados.email_usuario || "";
                 
                 if (dados.data_nascimento) {
-                  const dataISO = new Date(dados.data_nascimento).toISOString().split("T")[0]; // yyyy-mm-dd
-                  const [ano, mes, dia] = dataISO.split("-");
-                  document.getElementById("dateNascimento").value = `${ano}-${mes}-${dia}`; // valor para input
-                  document.getElementById("dateNascimento").setAttribute("data-br", `${dia}/${mes}/${ano}`); // visual opcional
+                  const [ano, mes, dia] = dados.data_nascimento.split('-');
+                  document.getElementById("dateNascimento").value = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
                 }
+                
+                if (dados.sexo) document.getElementById("sexo").value = dados.sexo;
+                if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
+                if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
+                if (dados.numero) document.getElementById("telNum").value = dados.numero;
+                if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
+                if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
+                if (dados.uf) document.getElementById("uf").value = dados.uf;
             
-                document.getElementById("sexo").value = dados.sexo || "nao_informar";
-                document.getElementById("txtEndereço").value = dados.endereco || "";
-                document.getElementById("telCEP").value = formatarCEP(dados.cep || "");
-                document.getElementById("telNum").value = dados.numero || "";
-                document.getElementById("telCom").value = dados.complemento || "";
-                document.getElementById("municipio").value = dados.municipio || "sao_paulo";
-                document.getElementById("uf").value = dados.uf || "SP";
-                document.getElementById("emailEm").value = dados.email || "";
               } catch (error) {
                 console.error("Erro ao carregar perfil:", error);
                 alert("Erro ao carregar dados do perfil.");
               }
             });
+            
+
+            function formatarCPF(cpf) {
+              cpf = cpf.replace(/\D/g, '');
+              return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            }
+            
+            function formatarTelefone(telefone) {
+              telefone = telefone.replace(/\D/g, '');
+              if (telefone.length === 11) {
+                return telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+              }
+              return telefone;
+            }
+            
+            function formatarCEP(cep) {
+              cep = cep.replace(/\D/g, '');
+              return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+            }
             
             async function salvarPerfil() {
               const rawData = document.getElementById("dateNascimento").value;
@@ -315,7 +346,6 @@
                 senha: document.getElementById("passwordSen").value.trim(),
               };
             
-              // Validações
               const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
               if (!senhaRegex.test(dados.senha)) {
                 alert("A senha deve conter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.");
@@ -373,8 +403,7 @@
             localStorage.removeItem("usuarioLogado");
             window.location.href = "login.html";
             });
-
-           async function alterarSenha() {
+             
            async function salvarPerfil() {
               const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
               
@@ -453,7 +482,40 @@
             }
             
 
-            document.querySelector('.botao-salvar').addEventListener('click', salvarPerfil);   
+            document.querySelector('.botao-salvar').addEventListener('click', salvarPerfil); 
+
+            document.getElementById("telCPF").addEventListener('input', function(e) {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length > 11) value = value.substring(0, 11);
+              
+              value = value.replace(/(\d{3})(\d)/, '$1.$2');
+              value = value.replace(/(\d{3})(\d)/, '$1.$2');
+              value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+              
+              e.target.value = value;
+            });
+            
+            // Formatação automática de Telefone
+            document.getElementById("telTelefone").addEventListener('input', function(e) {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length > 11) value = value.substring(0, 11);
+              
+              if (value.length > 0) {
+                value = value.replace(/^(\d{0,2})(\d{0,5})(\d{0,4})/, '($1) $2-$3');
+              }
+              
+              e.target.value = value;
+            });
+            
+            // Formatação automática de CEP
+            document.getElementById("telCEP").addEventListener('input', function(e) {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length > 8) value = value.substring(0, 8);
+              
+              value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+              
+              e.target.value = value;
+            });
          </script>
     </body>
 </html>
