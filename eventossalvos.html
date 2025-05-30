@@ -5,7 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="src/css/eventossalvos.css" />
-  <title>Segue o Festival</title>
+  <title>Meus Eventos Salvos | Segue o Festival</title>
+  <style>
+    /* Estilos adicionais para a versão completa */
+    .conteudo-secundario-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,0,0,0.7);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .remove-btn:hover {
+      background: rgba(255,0,0,0.9);
+    }
+    
+    .sem-eventos {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 1.2em;
+    }
+    
+    .erro-carregamento {
+      text-align: center;
+      padding: 40px;
+      color: #d32f2f;
+      font-size: 1.2em;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -43,7 +80,7 @@
 
     <section class="conteudo-secundario">
       <div class="conteudo-secundario-destaque">
-        <h1>Meus Eventos</h1>
+        <h1>Meus Eventos Salvos</h1>
         <a href="#">
           <div class="filtro">
             <i class="fa-solid fa-filter"></i>
@@ -52,14 +89,12 @@
       </div>
 
       <div class="conteudo-secundario-primeiralinha" id="eventosContainer">
-        <!-- Eventos dinâmicos serão inseridos aqui -->
+        <!-- Eventos serão carregados dinamicamente aqui -->
       </div>
     </section>
 
     <div class="paginacao">
-      <a href="pagina1.html" class="ativo">1</a>
-      <a href="pagina2.html">2</a>
-      <a href="pagina3.html">3</a>
+      <a href="#" class="ativo">1</a>
     </div>
 
     <footer class="rodape">
@@ -117,99 +152,132 @@
   </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-      if (!usuarioLogado?.cpf) {
-        console.warn("Usuário não logado ou CPF não disponível.");
-        return;
-      }
-
-      fetch(`/api/eventos-salvos?cpf=${encodeURIComponent(usuarioLogado.cpf)}`)
-        .then(response => {
-          if (!response.ok) throw new Error("Erro ao buscar eventos salvos");
-          return response.json();
-        })
-        .then(eventos => {
-          const container = document.getElementById("eventosContainer");
-          container.innerHTML = "";
-
-          if (eventos.length === 0) {
-            container.innerHTML = "<p>Você ainda não salvou nenhum evento.</p>";
-            return;
-          }
-
-          eventos.forEach(evento => {
-            const div = document.createElement("div");
-            div.innerHTML = `
-              <img class="conteudo-secundario-imagem" src="${evento.imagemUrl}" alt="Banner ${evento.titulo}">
-              <h3 class="conteudo-secundario-titulo">${evento.titulo}</h3>
-              <p class="conteudo-secundario-paragrafo">${evento.data}</p>
-              <p class="conteudo-secundario-paragrafo">${evento.endereco}</p>
-            `;
-            container.appendChild(div);
-          });
-        })
-        .catch(err => {
-          console.error("Erro ao carregar eventos salvos:", err);
-        });
-    });
-  
-  document.addEventListener("DOMContentLoaded", async () => {
-    try {
-      const response = await fetch('/api/buscaeventos'); // ou a rota que retorna todos os eventos
-      if (!response.ok) throw new Error('Erro ao buscar eventos');
-
-      const eventos = await response.json();
-
-      if (!eventos.length) return;
-      const eventosAleatorios = eventos.sort(() => 0.5 - Math.random()).slice(0, 2);
-      const container = document.getElementById("eventosContainer");
-      container.innerHTML = ''; 
-      eventosAleatorios.forEach(evento => {
-        const div = document.createElement("div");
-        div.className = 'conteudo-secundario-item';
-
-        const imagem = document.createElement("img");
-        imagem.className = "conteudo-secundario-imagem";
-        imagem.src = evento.imagem ? `data:image/jpeg;base64,${evento.imagem}` : "/img/default.jpg";
-        imagem.alt = evento.nome;
-
-        const titulo = document.createElement("h3");
-        titulo.className = "conteudo-secundario-titulo";
-        titulo.textContent = evento.nome;
-
-        const descricao = document.createElement("p");
-        descricao.className = "conteudo-secundario-paragrafo";
-        descricao.textContent = evento.descricao || "Sem descrição";
-
-        div.appendChild(imagem);
-        div.appendChild(titulo);
-        div.appendChild(descricao);
-        container.appendChild(div);
-      });
-
-    } catch (error) {
-      console.error("Erro ao carregar eventos aleatórios:", error);
+    // Função para alternar listas no footer
+    function toggleLista(id) {
+      const lista = document.getElementById(id);
+      lista.style.display = lista.style.display === 'none' ? 'block' : 'none';
     }
-  });
-    document.getElementById('logout_btn').addEventListener('click', () => {
-     localStorage.clear();
-     window.location.href = 'login.html';
-  });
-  const usuarioLogado = localStorage.getItem("usuarioLogado");
-  if (!usuarioLogado) {
-    window.location.href = "login.html";
-  } else {
-    try {
-      const dados = JSON.parse(usuarioLogado);
-      if (!dados.email || !dados.cpf) {
-        window.location.href = "login.html";
-      }
-    } catch (e) {
+
+    // Verifica se o usuário está logado
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    if (!usuarioLogado) {
       window.location.href = "login.html";
+    } else {
+      // Atualiza o nome do usuário na sidebar
+      const userInfos = document.getElementById("user_infos");
+      if (userInfos) {
+        userInfos.querySelector('.item-description').textContent = `Olá, ${usuarioLogado.nome || 'Usuário'}!`;
+      }
     }
-  }
-</script>
 
+    // Logout
+    document.getElementById('logout_btn').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    });
+
+    // Carrega os eventos salvos
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        if (!usuarioLogado?.cpf) {
+          document.getElementById("eventosContainer").innerHTML = `
+            <div class="sem-eventos">
+              <p>Você precisa estar logado para ver seus eventos salvos.</p>
+              <a href="login.html" class="btn-login">Fazer Login</a>
+            </div>
+          `;
+          return;
+        }
+
+        const response = await fetch(`/api/eventos-salvos-usuario?cpf=${encodeURIComponent(usuarioLogado.cpf)}`);
+        
+        if (!response.ok) {
+          throw new Error(`Erro: ${response.status}`);
+        }
+
+        const eventos = await response.json();
+        const container = document.getElementById("eventosContainer");
+
+        if (eventos.length === 0) {
+          container.innerHTML = `
+            <div class="sem-eventos">
+              <i class="fa-regular fa-star" style="font-size: 2em; margin-bottom: 15px;"></i>
+              <p>Você ainda não salvou nenhum evento.</p>
+              <a href="home.html" class="btn-explorar">Explorar Eventos</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = eventos.map(evento => `
+          <div class="conteudo-secundario-item">
+            <img class="conteudo-secundario-imagem" 
+                 src="${evento.imagemUrl || 'src/images/default-event.jpg'}" 
+                 alt="Banner ${evento.titulo}">
+            <h3 class="conteudo-secundario-titulo">${evento.titulo}</h3>
+            <p class="conteudo-secundario-paragrafo">
+              <i class="fa-regular fa-calendar"></i> ${evento.data}
+            </p>
+            <p class="conteudo-secundario-paragrafo">
+              <i class="fa-solid fa-location-dot"></i> ${evento.endereco}
+            </p>
+            <button class="remove-btn" data-id="${evento.id_evento}">
+              <i class="fa-solid fa-trash"></i> Remover
+            </button>
+          </div>
+        `).join('');
+
+        // Adiciona eventos de clique para os botões de remoção
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const eventoId = e.currentTarget.getAttribute('data-id');
+            try {
+              const deleteResponse = await fetch('/api/eventos-salvos-usuario', {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                  eventoId, 
+                  cpf: usuarioLogado.cpf 
+                })
+              });
+              
+              if (!deleteResponse.ok) {
+                throw new Error('Falha ao remover evento');
+              }
+              
+              // Recarrega a página para atualizar a lista
+              window.location.reload();
+            } catch (error) {
+              console.error('Erro ao remover evento:', error);
+              alert('Ocorreu um erro ao remover o evento. Tente novamente.');
+            }
+          });
+        });
+
+      } catch (error) {
+        console.error("Erro ao carregar eventos salvos:", error);
+        document.getElementById("eventosContainer").innerHTML = `
+          <div class="erro-carregamento">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <p>Ocorreu um erro ao carregar seus eventos salvos.</p>
+            <button onclick="window.location.reload()">Tentar novamente</button>
+          </div>
+        `;
+      }
+    });
+
+    // Sidebar toggle
+    const openBtn = document.getElementById('open_btn');
+    const sidebar = document.getElementById('sidebar');
+
+    openBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      const icon = document.getElementById('open_btn_icon');
+      icon.classList.toggle('fa-chevron-right');
+      icon.classList.toggle('fa-chevron-left');
+    });
+  </script>
 </body>
 </html>
