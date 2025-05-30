@@ -242,56 +242,151 @@
       atualizarCarrossel();
     }
 
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-    if (usuarioLogado?.email) {
-      fetch(`/api/buscarUsuario?email=${encodeURIComponent(usuarioLogado.email)}`)
-        .then(response => {
-          if (!response.ok) throw new Error('Erro ao buscar nome do usuário');
-          return response.json();
-        })
-        .then(data => {
-          const nome = data.nome;
-          const header = document.querySelector(".cabecalho");
-          const saudacao = document.createElement("p");
-          saudacao.textContent = `Olá, ${nome}!`;
-          saudacao.style.marginLeft = "1rem";
-          saudacao.style.fontWeight = "bold";
-          header.appendChild(saudacao);
-        })
-        .catch(error => {
-          console.error("Erro ao buscar nome do usuário:", error);
-        });
-   }
-  function logout() {
-    localStorage.clear();
-    window.location.href = "login.html";
-  }
-  if (!localStorage.getItem("usuarioLogado")) {
-    window.location.href = "index.html";
-  }
-
-    function verificarEventoSalvo(idEvento) {
-      const salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
-      return salvos.includes(idEvento);
+  // Função para verificar se um evento está salvo (agora consulta a API)
+  async function verificarEventoSalvo(idEvento) {
+    try {
+      const response = await fetch('/api/eventos-salvos', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'usuario-logado': JSON.stringify(usuarioLogado)
+        }
+      });
+      
+      if (!response.ok) throw new Error('Erro ao buscar eventos salvos');
+      
+      const eventosSalvos = await response.json();
+      return eventosSalvos.some(evento => evento.evento_id === idEvento);
+    } catch (error) {
+      console.error('Erro ao verificar evento salvo:', error);
+      return false;
     }
+  }
 
-    function alternarSalvarEvento(idEvento, botao) {
-      let salvos = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
-      const index = salvos.indexOf(idEvento);
-    
-      if (index > -1) {
-        salvos.splice(index, 1);
+  // Função para alternar o estado de salvamento do evento
+  async function alternarSalvarEvento(idEvento, botao) {
+    try {
+      const estaSalvo = botao.textContent === 'Salvo';
+      
+      const response = await fetch('/api/eventos-salvos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'usuario-logado': JSON.stringify(usuarioLogado)
+        },
+        body: JSON.stringify({ evento_id: idEvento })
+      });
+      
+      if (!response.ok) throw new Error('Erro ao atualizar evento salvo');
+      
+      // Atualiza visualmente o botão
+      if (estaSalvo) {
         botao.textContent = 'Salvar';
         botao.classList.remove('botao-salvo');
       } else {
-        salvos.push(idEvento);
         botao.textContent = 'Salvo';
         botao.classList.add('botao-salvo');
       }
+    } catch (error) {
+      console.error('Erro ao alternar evento salvo:', error);
+      alert('Ocorreu um erro ao salvar/remover o evento. Tente novamente.');
+    }
+  }
+
+  // Função para carregar eventos salvos ao iniciar a página
+  async function carregarEventosSalvos() {
+    const botoesSalvar = document.querySelectorAll('.botao-salvar');
     
-      localStorage.setItem("eventosSalvos", JSON.stringify(salvos));
-}
+    for (const botao of botoesSalvar) {
+      const idEvento = botao.closest('.conteudo-secundario-item').dataset.id;
+      const estaSalvo = await verificarEventoSalvo(idEvento);
+      
+      if (estaSalvo) {
+        botao.textContent = 'Salvo';
+        botao.classList.add('botao-salvo');
+      }
+    }
+  }
+
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  async function exibirEventosFiltrados() {
+    const container = document.getElementById('eventos-lista');
+    container.innerHTML = '';
+
+    const eventosFiltrados = todosEventos.filter(evento => {
+      return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+             (!tipoSelecionado || evento.tipo === tipoSelecionado);
+    });
+
+    if (eventosFiltrados.length === 0) {
+      container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+      return;
+    }
+
+    for (const evento of eventosFiltrados) {
+      const div = document.createElement('div');
+      div.className = 'conteudo-secundario-item';
+      div.style.cursor = 'pointer';
+      div.setAttribute("data-id", evento.id_evento);
+      
+      div.onclick = () => {
+        window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+      };
+
+      const imagem = document.createElement('img');
+      imagem.src = evento.imagem
+        ? `data:image/jpeg;base64,${evento.imagem}`
+        : '/img/default.jpg';
+      imagem.alt = evento.nome;
+
+      const titulo = document.createElement('h3');
+      titulo.textContent = evento.nome;
+
+      const data = document.createElement('p');
+      if (evento.data) {
+        const dataEvento = new Date(evento.data);
+        const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          weekday: 'long'
+        });
+        data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+      } else {
+        data.textContent = 'Data não informada';
+      }
+
+      const local = document.createElement('p');
+      local.textContent = evento.endereco || 'Local não informado';
+
+      const botaoSalvar = document.createElement('button');
+      botaoSalvar.className = 'botao-salvar';
+      botaoSalvar.textContent = 'Salvar';
+      
+      // Verifica se o evento está salvo
+      const estaSalvo = await verificarEventoSalvo(evento.id_evento);
+      if (estaSalvo) {
+        botaoSalvar.textContent = 'Salvo';
+        botaoSalvar.classList.add('botao-salvo');
+      }
+      
+      botaoSalvar.onclick = (e) => {
+        e.stopPropagation();
+        alternarSalvarEvento(evento.id_evento, botaoSalvar);
+      };
+
+      div.appendChild(imagem);
+      div.appendChild(titulo);
+      div.appendChild(data);
+      div.appendChild(local);
+      div.appendChild(botaoSalvar);
+      container.appendChild(div);
+    }
+  }
   </script>
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
