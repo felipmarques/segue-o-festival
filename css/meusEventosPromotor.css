@@ -1,7 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url("https://use.typekit.net/qrb0jox.css");
 
+.evento-container {
+    background: #FFF9C4; /* Fundo amarelo claro */
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative; /* Adicionado */
+    overflow: hidden; /* Garante que nada saia do container */
+}
 
+/* Ajuste para os botões */
+.evento-acoes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    background: #FFF9C4; /* Mesma cor do container */
+    border-radius: 0 0 8px 8px; /* Arredonda apenas as bordas inferiores */
+    margin: 1.5rem -1.5rem -1.5rem; /* Margens negativas para estender */
+}
+
+/* Ajuste para o conteúdo acima dos botões */
+.conteudo-evento {
+    flex: 1; /* Ocupa todo o espaço disponível */
+    padding-bottom: 1rem; /* Espaço antes dos botões */
+}
 /* Estilos gerais */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
