@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/meusEventosPromotor.css">
+    <title>Galeria de Eventos - Segue o Festival</title>
+    <style>
+        /* Estilos gerais da galeria */
+        .galeria-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .galeria-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .galeria-title {
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+        
+        .btn-adicionar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-adicionar:hover {
+            background-color: #3e8e41;
+        }
+        
+        /* Grid de imagens */
+        .galeria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .galeria-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .galeria-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .galeria-imagem-container {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .galeria-imagem {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .galeria-item:hover .galeria-imagem {
+            transform: scale(1.05);
+        }
+        
+        .galeria-info {
+            padding: 1rem;
+        }
+        
+        .galeria-item-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .galeria-item-desc {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .galeria-acoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+        
+        .btn-acao {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-editar {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .btn-excluir {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        /* Modal de upload */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+        
+        .close-modal {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-file {
+            width: 100%;
+            padding: 0.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-cancelar {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        
+        .btn-enviar {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .galeria-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .galeria-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="cabecalho">
+        <div class="cabecalho-botoes">
+            <button class="cabecalho-botao-entrar" onclick="location.href='inserir_eventos.html'">Cadastrar Eventos</button>
+            <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Meu Perfil</button>
+            <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+        </div>
+        <button class="botao-logout" onclick="fazerLogout()">
+            <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+    </header>
+
+    <main>
+        <a href="https://segue-o-festival.vercel.app/" class="titulo-link"><h1 class="cabecalho-titulo">Segue<br>O Festival!</h1></a>
+
+        <div class="galeria-container">
+            <div class="galeria-header">
+                <h1 class="galeria-title">Galeria de Eventos</h1>
+                <button class="btn-adicionar" id="btnAdicionarFoto">
+                    <i class="fas fa-plus"></i> Adicionar Fotos
+                </button>
+            </div>
+            
+            <div class="galeria-grid" id="galeriaGrid">
+                <!-- Fotos serão carregadas dinamicamente aqui -->
+            </div>
+        </div>
+
+        <!-- Modal para upload de fotos -->
+        <div id="uploadModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Adicionar Foto à Galeria</h2>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label for="eventoSelect" class="form-label">Evento</label>
+                        <select id="eventoSelect" class="form-input" required>
+                            <option value="">Selecione um evento</option>
+                            <!-- Opções serão preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fotoTitulo" class="form-label">Título</label>
+                        <input type="text" id="fotoTitulo" class="form-input" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fotoDescricao" class="form-label">Descrição</label>
+                        <textarea id="fotoDescricao" class="form-textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="fotoArquivo" class="form-label">Imagem</label>
+                        <input type="file" id="fotoArquivo" class="form-file" accept="image/*" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-acao btn-cancelar" id="btnCancelar">Cancelar</button>
+                        <button type="submit" class="btn-acao btn-enviar">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                     
+        <div class="direitos-reservados">
+          &copy; 2025 Segue o Festival. Todos os direitos reservados.
+        </div>            
+    </footer>
+
+    <script>
+        // Função de logout
+        function fazerLogout() {
+            localStorage.removeItem("cnpjUsuario");
+            window.location.href = "index.html";
+        }
+
+        // Modal de upload
+        const modal = document.getElementById("uploadModal");
+        const btnAdicionar = document.getElementById("btnAdicionarFoto");
+        const spanFechar = document.querySelector(".close-modal");
+        const btnCancelar = document.getElementById("btnCancelar");
+        const uploadForm = document.getElementById("uploadForm");
+
+        // Abrir modal
+        btnAdicionar.onclick = function() {
+            carregarEventosSelect();
+            modal.style.display = "block";
+        }
+
+        // Fechar modal
+        spanFechar.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        btnCancelar.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Fechar ao clicar fora do modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Carregar eventos para o select
+        async function carregarEventosSelect() {
+            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+            const select = document.getElementById("eventoSelect");
+            
+            try {
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}`);
+                
+                if (!resposta.ok) throw new Error("Erro ao carregar eventos.");
+                
+                const eventos = await resposta.json();
+                
+                // Limpar opções exceto a primeira
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                // Adicionar eventos ao select
+                eventos.forEach(evento => {
+                    const option = document.createElement("option");
+                    option.value = evento.id_evento;
+                    option.textContent = evento.nome;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao carregar eventos. Tente novamente.");
+            }
+        }
+
+        // Carregar fotos da galeria
+        async function carregarGaleria() {
+            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+            const galeriaGrid = document.getElementById("galeriaGrid");
+            
+            try {
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/galeriaEventos?cnpj=${cnpjUsuario}`);
+                
+                if (!resposta.ok) throw new Error("Erro ao carregar galeria.");
+                
+                const fotos = await resposta.json();
+                galeriaGrid.innerHTML = "";
+                
+                if (fotos.length === 0) {
+                    galeriaGrid.innerHTML = "<p>Nenhuma foto encontrada na galeria.</p>";
+                    return;
+                }
+                
+                fotos.forEach(foto => {
+                    const fotoDiv = document.createElement("div");
+                    fotoDiv.className = "galeria-item";
+                    
+                    // Converter BYTEA para URL de imagem
+                    const blob = new Blob([new Uint8Array(foto.imagem.data)], { type: "image/jpeg" });
+                    const imageUrl = URL.createObjectURL(blob);
+                    
+                    fotoDiv.innerHTML = `
+                        <div class="galeria-imagem-container">
+                            <img src="${imageUrl}" alt="${foto.titulo || 'Foto do evento'}" class="galeria-imagem">
+                        </div>
+                        <div class="galeria-info">
+                            <h3 class="galeria-item-title">${foto.titulo || 'Sem título'}</h3>
+                            <p class="galeria-item-desc">${foto.descricao || 'Sem descrição'}</p>
+                            <div class="galeria-acoes">
+                                <button class="btn-acao btn-editar" onclick="editarFoto(${foto.id_imagem})">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn-acao btn-excluir" onclick="confirmarExclusaoFoto(${foto.id_imagem})">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    galeriaGrid.appendChild(fotoDiv);
+                });
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                galeriaGrid.innerHTML = "<p>Erro ao carregar galeria de fotos.</p>";
+            }
+        }
+
+        // Enviar formulário de upload
+        uploadForm.onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+            const idEvento = document.getElementById("eventoSelect").value;
+            const titulo = document.getElementById("fotoTitulo").value;
+            const descricao = document.getElementById("fotoDescricao").value;
+            const arquivo = document.getElementById("fotoArquivo").files[0];
+            
+            if (!idEvento || !arquivo) {
+                alert("Selecione um evento e uma imagem para continuar.");
+                return;
+            }
+            
+            try {
+                // Converter imagem para ArrayBuffer
+                const arrayBuffer = await arquivo.arrayBuffer();
+                const byteArray = new Uint8Array(arrayBuffer);
+                
+                const formData = {
+                    id_evento: idEvento,
+                    titulo: titulo,
+                    descricao: descricao,
+                    imagem: Array.from(byteArray) // Converter Uint8Array para array normal
+                };
+                
+                const resposta = await fetch('https://segue-o-festival.vercel.app/api/galeriaEventos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (resposta.ok) {
+                    alert("Foto adicionada com sucesso!");
+                    modal.style.display = "none";
+                    uploadForm.reset();
+                    carregarGaleria();
+                } else {
+                    throw new Error("Erro ao enviar foto.");
+                }
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao enviar foto. Tente novamente.");
+            }
+        };
+
+        // Funções para editar/excluir fotos
+        function editarFoto(idImagem) {
+            // Implemente a lógica de edição conforme necessário
+            alert(`Editar foto com ID ${idImagem}`);
+        }
+
+        function confirmarExclusaoFoto(idImagem) {
+            if (confirm("Tem certeza que deseja excluir esta foto?")) {
+                excluirFoto(idImagem);
+            }
+        }
+
+        async function excluirFoto(idImagem) {
+            try {
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/galeriaEventos?id_imagem=${idImagem}`, {
+                    method: 'DELETE'
+                });
+                
+                if (resposta.ok) {
+                    carregarGaleria();
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao excluir foto.");
+            }
+        }
+
+        // Carregar galeria quando a página for carregada
+        document.addEventListener("DOMContentLoaded", carregarGaleria);
+    </script>
+</body>
+</html>
