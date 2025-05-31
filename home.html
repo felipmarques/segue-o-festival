@@ -219,13 +219,8 @@
           const img = document.createElement('img');
           img.className = 'galeria-geral-foto';
           img.src = `data:image/jpeg;base64,${foto.imagem}`;
-          img.alt = foto.titulo || 'Foto do evento';
-          img.loading = 'lazy'; // Otimização de carregamento
-          
-          // Adiciona tooltip se houver título
-          if (foto.titulo) {
-            img.title = foto.titulo;
-          }
+          img.alt = 'Foto do evento';
+          img.loading = 'lazy';
           
           imgContainer.appendChild(img);
           galeriaContainer.appendChild(imgContainer);
