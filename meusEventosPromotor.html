@@ -94,27 +94,24 @@
                     eventoDiv.dataset.id = evento.id_evento;
 
                     eventoDiv.innerHTML = `
-                        <div class="evento-container">
-                            <div class="conteudo-evento">
-                                <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                                <p class="conteudo-secundario-data">
-                                    <i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)} - ${formatarDiaSemana(evento.data)}
-                                </p>
-                                <p class="conteudo-secundario-endereco">
-                                    <i class="fas fa-map-marker-alt"></i> ${evento.endereco}
-                                </p>
+                        <div class="evento-card">
+                            <h3 class="evento-nome">${evento.nome}</h3>
+                            <div class="evento-data">
+                                <i class="fas fa-calendar"></i> ${formatarData(evento.data)} - ${formatarDiaSemana(evento.data)}
                             </div>
-                            <div class="evento-acoes">
+                            <div class="evento-local">
+                                <i class="fas fa-map-marker-alt"></i> ${evento.endereco}
+                            </div>
+                            <div class="evento-botoes">
                                 <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
-                                    <i class="fas fa-edit"></i> Editar
+                                    <i class="fas fa-pencil-alt"></i> Editar
                                 </button>
                                 <button class="botao-excluir" onclick="confirmarExclusao(${evento.id_evento})">
                                     <i class="fas fa-trash"></i> Excluir
                                 </button>
                             </div>
                         </div>
-                    `;
-                    
+                    `;                    
                     listaEventos.appendChild(eventoDiv);
                 });
 
