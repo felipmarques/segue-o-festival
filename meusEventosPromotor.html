@@ -94,21 +94,25 @@
                     eventoDiv.dataset.id = evento.id_evento;
 
                     eventoDiv.innerHTML = `
-                        <div class="conteudo-evento">
-                            <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
-                            <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                            <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
-                            <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
+                        <div class="evento-container">
+                            <div class="conteudo-evento">
+                                <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                                <p class="conteudo-secundario-data">
+                                    <i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)} - ${formatarDiaSemana(evento.data)}
+                                </p>
+                                <p class="conteudo-secundario-endereco">
+                                    <i class="fas fa-map-marker-alt"></i> ${evento.endereco}
+                                </p>
+                            </div>
+                            <div class="evento-acoes">
+                                <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="botao-excluir" onclick="confirmarExclusao(${evento.id_evento})">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </button>
+                            </div>
                         </div>
-                        <div class="evento-acoes">
-                            <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="botao-excluir" onclick="confirmarExclusao(${evento.id_evento})">
-                                <i class="fas fa-trash"></i> Excluir
-                            </button>
-                        </div>
-                    </div>
                     `;
                     
                     listaEventos.appendChild(eventoDiv);
@@ -161,6 +165,11 @@
         // Função para editar um evento
         function editarEvento(idEvento) {
             window.location.href = `editar_evento.html?id=${idEvento}`;
+        }
+        function formatarDiaSemana(dataISO) {
+            const dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            const data = new Date(dataISO);
+            return dias[data.getDay()];
         }
 
         // Carrega os eventos quando a página é aberta
