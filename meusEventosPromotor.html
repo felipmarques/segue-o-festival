@@ -7,56 +7,75 @@
     <link rel="stylesheet" href="css/meusEventosPromotor.css">
     <title>Segue o Festival</title>
     <style>
-        /* Estilos adicionais para os botões de ação */
-        .evento-container {
-            position: relative;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            border: 1px solid #ddd;
+        .evento-card {
+            background: white;
             border-radius: 8px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            border: none; /* Remove qualquer borda */
         }
-
-        .evento-acoes {
+    
+        .evento-nome {
+            font-size: 1.3rem;
+            margin: 0 0 10px 0;
+            color: #333;
+            font-weight: 600;
+        }
+    
+        .evento-data, .evento-local {
+            font-size: 1rem;
+            color: #555;
+            margin: 8px 0;
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            align-items: center;
         }
-
+    
+        .evento-data i, .evento-local i {
+            margin-right: 10px;
+            color: #666;
+            width: 18px;
+            text-align: center;
+        }
+    
+        .evento-botoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+        }
+    
+        .botao-editar, .botao-excluir {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+    
         .botao-editar {
-            background-color: #2196F3;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            background-color: #f0f0f0;
+            color: #333;
         }
-
-        .botao-editar:hover {
-            background-color: #0b7dda;
-        }
-
+    
         .botao-excluir {
-            background-color: #f44336;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            background-color: #f8f8f8;
+            color: #d32f2f;
         }
-
+    
+        .botao-editar:hover {
+            background-color: #e0e0e0;
+        }
+    
         .botao-excluir:hover {
-            background-color: #da190b;
-        }
-
-        .conteudo-secundario-primeiralinha {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            background-color: #ffebee;
         }
     </style>
 </head>
