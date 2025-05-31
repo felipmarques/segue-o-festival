@@ -1,6 +1,76 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url("https://use.typekit.net/qrb0jox.css");
 
+
+.evento-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 350px;
+}
+
+.evento-nome {
+    font-size: 1.2rem;
+    margin: 0 0 8px 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.evento-data, .evento-local {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+}
+
+.evento-data i, .evento-local i {
+    margin-right: 8px;
+    color: #666;
+    width: 16px;
+    text-align: center;
+}
+
+.evento-botoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.botao-editar, .botao-excluir {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.botao-editar {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.botao-excluir {
+    background-color: #f8f8f8;
+    color: #d32f2f;
+}
+
+.botao-editar:hover {
+    background-color: #e0e0e0;
+}
+
+.botao-excluir:hover {
+    background-color: #ffebee;
+}
+
 .conteudo-evento {
     padding: 1rem;
 }
