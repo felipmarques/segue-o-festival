@@ -94,10 +94,12 @@
                     eventoDiv.dataset.id = evento.id_evento;
 
                     eventoDiv.innerHTML = `
-                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
+                        <div class="conteudo-evento">
+                            <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
+                            <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                            <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
+                            <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
+                        </div>
                         <div class="evento-acoes">
                             <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
                                 <i class="fas fa-edit"></i> Editar
@@ -106,6 +108,7 @@
                                 <i class="fas fa-trash"></i> Excluir
                             </button>
                         </div>
+                    </div>
                     `;
                     
                     listaEventos.appendChild(eventoDiv);
