@@ -7,75 +7,141 @@
     <link rel="stylesheet" href="css/meusEventosPromotor.css">
     <title>Segue o Festival</title>
     <style>
+        /* Estilos do cabeçalho */
+        .cabecalho {
+            background-color: #fff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cabecalho-botoes {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .cabecalho-botao-entrar {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .cabecalho-botao-entrar:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Botão de logout */
+        .botao-logout {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .botao-logout:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Estilos dos cards de eventos */
         .evento-card {
             background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
-            border: none; /* Remove qualquer borda */
         }
-    
-        .evento-nome {
+
+        .conteudo-secundario-imagem {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .conteudo-secundario-titulo {
             font-size: 1.3rem;
-            margin: 0 0 10px 0;
-            color: #333;
+            color: #2c3e50;
+            margin: 0 0 0.5rem 0;
             font-weight: 600;
         }
-    
-        .evento-data, .evento-local {
-            font-size: 1rem;
+
+        .conteudo-secundario-paragrafo {
+            font-size: 0.95rem;
             color: #555;
-            margin: 8px 0;
+            margin: 0.3rem 0;
+            line-height: 1.4;
             display: flex;
             align-items: center;
         }
-    
-        .evento-data i, .evento-local i {
-            margin-right: 10px;
-            color: #666;
-            width: 18px;
-            text-align: center;
+
+        .conteudo-secundario-paragrafo i {
+            margin-right: 8px;
+            color: #4CAF50;
         }
-    
-        .evento-botoes {
+
+        /* Botões de ação */
+        .evento-acoes {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-top: 15px;
-            padding-top: 15px;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
-    
+
         .botao-editar, .botao-excluir {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            border-radius: 4px;
+            padding: 0.6rem 1rem;
             border: none;
+            border-radius: 5px;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s;
+            font-size: 0.9rem;
         }
-    
+
         .botao-editar {
-            background-color: #f0f0f0;
-            color: #333;
+            background-color: #2196F3;
+            color: white;
         }
-    
+
         .botao-excluir {
-            background-color: #f8f8f8;
-            color: #d32f2f;
+            background-color: #f44336;
+            color: white;
         }
-    
-        .botao-editar:hover {
-            background-color: #e0e0e0;
-        }
-    
-        .botao-excluir:hover {
-            background-color: #ffebee;
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .cabecalho {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .cabecalho-botoes {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .evento-card {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -86,6 +152,9 @@
             <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Meu Perfil</button>
             <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
         </div>
+        <button class="botao-logout" onclick="fazerLogout()">
+            <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
     </header>
 
     <main>        
@@ -119,52 +188,38 @@
             return `${dia}/${mes}/${ano}`;
         }
 
+        // Função de logout
+        function fazerLogout() {
+            localStorage.removeItem("cnpjUsuario");
+            window.location.href = "index.html";
+        }
+
         // Função para carregar os eventos do promotor
         async function carregarEventos() {
-            // Recupera o CNPJ do usuário logado
             const cnpjUsuario = localStorage.getItem("cnpjUsuario");
 
             if (!cnpjUsuario) {
                 document.getElementById("lista-eventos").innerHTML = "<p>Erro: Usuário não identificado. Faça login novamente.</p>";
-                console.error("Erro: CNPJ não encontrado no LocalStorage.");
                 return;
             }
 
             try {
-                // Exibe loading enquanto carrega
-                document.getElementById("lista-eventos").innerHTML = "<p>Carregando seus eventos...</p>";
-                
-                // Faz requisição para buscar os eventos do usuário logado
                 const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}`);
-
-                if (!resposta.ok) {
-                    throw new Error("Erro ao carregar eventos. Código: " + resposta.status);
-                }
-
+                
+                if (!resposta.ok) throw new Error("Erro ao carregar eventos.");
+                
                 const eventos = await resposta.json();
                 const listaEventos = document.getElementById("lista-eventos");
-
-                // Limpa os eventos antes de adicionar os novos
                 listaEventos.innerHTML = "";
 
                 if (eventos.length === 0) {
-                    listaEventos.innerHTML = `
-                        <div class="sem-eventos">
-                            <p>Nenhum evento encontrado.</p>
-                            <button onclick="location.href='inserir_eventos.html'" class="botao-cadastrar">
-                                Cadastrar Primeiro Evento
-                            </button>
-                        </div>
-                    `;
+                    listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
                     return;
                 }
 
-                // Renderiza os eventos com botões de ação
                 eventos.forEach(evento => {
                     const eventoDiv = document.createElement("div");
-                    eventoDiv.className = "evento-container";
-                    eventoDiv.dataset.id = evento.id_evento;
-
+                    eventoDiv.className = "evento-card";
                     eventoDiv.innerHTML = `
                         <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
                         <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
@@ -179,60 +234,41 @@
                             </button>
                         </div>
                     `;
-                    
                     listaEventos.appendChild(eventoDiv);
                 });
 
             } catch (error) {
-                console.error("Erro na requisição:", error);
-                document.getElementById("lista-eventos").innerHTML = `
-                    <div class="erro-carregamento">
-                        <p>Erro ao carregar eventos. ${error.message}</p>
-                        <button onclick="carregarEventos()" class="botao-tentar-novamente">
-                            <i class="fas fa-sync-alt"></i> Tentar Novamente
-                        </button>
-                    </div>
-                `;
-            }
-        }
-
-        // Função para excluir um evento
-        async function excluirEvento(idEvento) {
-            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
-            
-            try {
-                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}&id_evento=${idEvento}`, {
-                    method: 'DELETE'
-                });
-
-                if (!resposta.ok) {
-                    const erro = await resposta.json();
-                    throw new Error(erro.message || "Erro ao excluir evento.");
-                }
-
-                const resultado = await resposta.json();
-                alert(resultado.message || "Evento excluído com sucesso!");
-                carregarEventos(); // Recarrega a lista de eventos
-                
-            } catch (error) {
                 console.error("Erro:", error);
-                alert(error.message || "Erro ao excluir evento. Tente novamente.");
+                document.getElementById("lista-eventos").innerHTML = "<p>Erro ao carregar eventos.</p>";
             }
         }
 
-        // Função para confirmar a exclusão
-        function confirmarExclusao(idEvento) {
-            if (confirm("Tem certeza que deseja excluir este evento?\nEsta ação não pode ser desfeita.")) {
-                excluirEvento(idEvento);
-            }
-        }
-
-        // Função para editar um evento
+        // Funções para editar/excluir
         function editarEvento(idEvento) {
             window.location.href = `editar_evento.html?id=${idEvento}`;
         }
 
-        // Carrega os eventos quando a página é aberta
+        function confirmarExclusao(idEvento) {
+            if (confirm("Tem certeza que deseja excluir este evento?")) {
+                excluirEvento(idEvento);
+            }
+        }
+
+        async function excluirEvento(idEvento) {
+            try {
+                const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}&id_evento=${idEvento}`, {
+                    method: 'DELETE'
+                });
+                
+                if (resposta.ok) {
+                    carregarEventos();
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", carregarEventos);
     </script>
 </body>
