@@ -151,6 +151,54 @@
         height: 180px;
       }
     }
+
+    /* Estilos para a nova seção de criação de eventos */
+    .criar-evento-container {
+      background-color: #f8f9fa;
+      padding: 60px 20px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .criar-evento-container h2 {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    
+    .criar-evento-container p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    
+    .criar-evento-container .destaque-verde {
+      font-size: 1.1rem;
+      color: #4CAF50;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    
+    .criar-evento-container .divisor {
+      border-top: 1px solid #ddd;
+      margin: 30px auto;
+      width: 100px;
+    }
+    
+    .criar-evento-container .botao-criar-evento {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .criar-evento-container .botao-criar-evento:hover {
+      background-color: #3e8e41;
+    }
   </style>
 </head>
 <body>
@@ -241,6 +289,30 @@
         <p class="galeria-status galeria-carregando">
           <i class="fas fa-spinner fa-spin"></i> Carregando galeria...
         </p>
+      </div>
+    </section>
+
+    <!-- Nova seção para criação de eventos -->
+    <section class="criar-evento-container">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h2>Crie eventos, divulgue e venda ingressos com facilidade</h2>
+        
+        <p>
+          Da publicação à venda:<br>
+          suporte em todas as etapas.
+        </p>
+        
+        <p class="destaque-verde">
+          Publicação grátis: sem taxa de adesão ou mensalidade.
+        </p>
+        
+        <div class="divisor"></div>
+        
+        <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 20px;">Crie seu evento</h3>
+        
+        <button onclick="location.href='organizador.html'" class="botao-criar-evento">
+          Veja como funciona
+        </button>
       </div>
     </section>
   </main>
@@ -480,11 +552,12 @@
   </script>
   <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
-</body>
+
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
     <button class="logout-botao" onclick="logout()">
       <span class="logout-icone">↩️</span>
       Sair
     </button>
   </footer>
+</body>
 </html>
