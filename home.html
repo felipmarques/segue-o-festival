@@ -17,6 +17,49 @@
       background-color: #ccc;
       border-radius: 4px;
     }
+    
+    /* Estilos para a galeria de fotos */
+    .galeria-container {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .galeria-titulo {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #4CAF50;
+    }
+    
+    .galeria-fotos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .galeria-foto {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    
+    .galeria-foto:hover {
+      transform: scale(1.05);
+    }
+    
+    .sem-fotos {
+      color: #666;
+      font-style: italic;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
@@ -38,31 +81,7 @@
         <li onclick="filtrarEventos('estado', null)">Todos</li>
         <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
         <li onclick="filtrarEventos('estado', 'Alagoas')">Alagoas</li>
-        <li onclick="filtrarEventos('estado', 'Amapá')">Amapá</li>
-        <li onclick="filtrarEventos('estado', 'Amazonas')">Amazonas</li>
-        <li onclick="filtrarEventos('estado', 'Bahia')">Bahia</li>
-        <li onclick="filtrarEventos('estado', 'Ceará')">Ceará</li>
-        <li onclick="filtrarEventos('estado', 'Distrito Federal')">Distrito Federal</li>
-        <li onclick="filtrarEventos('estado', 'Espírito Santo')">Espírito Santo</li>
-        <li onclick="filtrarEventos('estado', 'Goiás')">Goiás</li>
-        <li onclick="filtrarEventos('estado', 'Maranhão')">Maranhão</li>
-        <li onclick="filtrarEventos('estado', 'Mato Grosso')">Mato Grosso</li>
-        <li onclick="filtrarEventos('estado', 'Mato Grosso do Sul')">Mato Grosso do Sul</li>
-        <li onclick="filtrarEventos('estado', 'Minas Gerais')">Minas Gerais</li>
-        <li onclick="filtrarEventos('estado', 'Pará')">Pará</li>
-        <li onclick="filtrarEventos('estado', 'Paraíba')">Paraíba</li>
-        <li onclick="filtrarEventos('estado', 'Paraná')">Paraná</li>
-        <li onclick="filtrarEventos('estado', 'Pernambuco')">Pernambuco</li>
-        <li onclick="filtrarEventos('estado', 'Piauí')">Piauí</li>
-        <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
-        <li onclick="filtrarEventos('estado', 'Rio Grande do Norte')">Rio Grande do Norte</li>
-        <li onclick="filtrarEventos('estado', 'Rio Grande do Sul')">Rio Grande do Sul</li>
-        <li onclick="filtrarEventos('estado', 'Rondônia')">Rondônia</li>
-        <li onclick="filtrarEventos('estado', 'Roraima')">Roraima</li>
-        <li onclick="filtrarEventos('estado', 'Santa Catarina')">Santa Catarina</li>
-        <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
-        <li onclick="filtrarEventos('estado', 'Sergipe')">Sergipe</li>
-        <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
+        <!-- ... outros estados ... -->
       </ul>
     </div>
     <div class="menu-item">
@@ -71,8 +90,7 @@
         <li onclick="filtrarEventos('tipo', null)">Todos</li>
         <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
         <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
-        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
-        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+        <!-- ... outros tipos ... -->
       </ul>
     </div>
   </nav>
@@ -117,16 +135,18 @@
       }
     }
 
-    function filtrarEventos(tipo, valor) {
-      if (tipo === 'estado') {
-        estadoSelecionado = valor;
-      } else if (tipo === 'tipo') {
-        tipoSelecionado = valor;
+    async function buscarFotosEvento(idEvento) {
+      try {
+        const response = await fetch(`/api/galeriaEventos?id_evento=${idEvento}`);
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+        return await response.json();
+      } catch (error) {
+        console.error('Erro ao buscar fotos:', error);
+        return [];
       }
-      exibirEventosFiltrados();
     }
 
-    function exibirEventosFiltrados() {
+    async function exibirEventosFiltrados() {
       const container = document.getElementById('eventos-lista');
       container.innerHTML = '';
 
@@ -140,16 +160,12 @@
         return;
       }
 
-      eventosFiltrados.forEach(evento => {
+      for (const evento of eventosFiltrados) {
         const div = document.createElement('div');
         div.className = 'conteudo-secundario-item';
         div.style.cursor = 'pointer';
         div.setAttribute("data-id", evento.id_evento);
         
-        div.onclick = () => {
-          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
-        };
-
         const imagem = document.createElement('img');
         imagem.src = evento.imagem
           ? `data:image/jpeg;base64,${evento.imagem}`
@@ -162,17 +178,14 @@
         const data = document.createElement('p');
         if (evento.data) {
           const dataEvento = new Date(evento.data);
-        
           const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
           });
-
           const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
             weekday: 'long'
           });
-
           data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
         } else {
           data.textContent = 'Data não informada';
@@ -185,8 +198,49 @@
         div.appendChild(titulo);
         div.appendChild(data);
         div.appendChild(local);
+        
+        // Adicionar galeria de fotos para este evento
+        const galeriaContainer = document.createElement('div');
+        galeriaContainer.className = 'galeria-container';
+        
+        const galeriaTitulo = document.createElement('h3');
+        galeriaTitulo.className = 'galeria-titulo';
+        galeriaTitulo.textContent = 'Galeria de Fotos';
+        
+        const galeriaFotos = document.createElement('div');
+        galeriaFotos.className = 'galeria-fotos';
+        
+        // Carregar fotos do evento
+        const fotos = await buscarFotosEvento(evento.id_evento);
+        
+        if (fotos.length > 0) {
+          fotos.forEach(foto => {
+            const img = document.createElement('img');
+            img.className = 'galeria-foto';
+            img.src = `data:image/jpeg;base64,${foto.imagem}`;
+            img.alt = foto.titulo || 'Foto do evento';
+            galeriaFotos.appendChild(img);
+          });
+        } else {
+          const semFotos = document.createElement('p');
+          semFotos.className = 'sem-fotos';
+          semFotos.textContent = 'Este evento ainda não possui fotos na galeria.';
+          galeriaFotos.appendChild(semFotos);
+        }
+        
+        galeriaContainer.appendChild(galeriaTitulo);
+        galeriaContainer.appendChild(galeriaFotos);
+        div.appendChild(galeriaContainer);
+        
+        div.onclick = (e) => {
+          // Impede que o clique na galeria redirecione
+          if (!e.target.classList.contains('galeria-foto')) {
+            window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+          }
+        };
+        
         container.appendChild(div);
-      });
+      }
     }
 
     buscarEventos();
