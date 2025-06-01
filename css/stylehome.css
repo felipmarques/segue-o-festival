@@ -116,16 +116,16 @@ left: 10px;
 .botao:last-of-type {
 right: 10px;
 }
+
 .menu {
-background-color: white;
-display: flex;
-justify-content: center;
-padding: 15px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-border-bottom: 1px solid #eee;
-font-family: 'Times New Roman', Times, serif;
-gap: 15px;
-flex-wrap: wrap;
+  background: linear-gradient(to right, #08C2FF, #A0DEFF);
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #eee;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .menu-item {
