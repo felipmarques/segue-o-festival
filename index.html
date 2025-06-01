@@ -318,6 +318,11 @@
       transform: scale(1.1);
     }
     
+    .btn-favorito.nao-logado {
+      color: #ccc !important;
+      cursor: not-allowed;
+    }
+    
     .conteudo-secundario-item {
       position: relative;
     }
@@ -576,14 +581,17 @@
         const local = document.createElement('p');
         local.textContent = evento.endereco || 'Local não informado';
 
-        // Botão de favorito (só aparece se o usuário estiver logado)
-        if (localStorage.getItem("usuarioLogado")) {
-          const btnFavorito = document.createElement('button');
-          btnFavorito.className = 'btn-favorito';
-          btnFavorito.innerHTML = '<i class="fas fa-heart"></i>';
-          btnFavorito.title = 'Salvar evento';
-          
-          // Verifica se o evento está nos favoritos
+        // Botão de favorito (sempre aparece)
+        const btnFavorito = document.createElement('button');
+        btnFavorito.className = 'btn-favorito';
+        btnFavorito.innerHTML = '<i class="fas fa-heart"></i>';
+        btnFavorito.title = 'Salvar evento';
+        
+        // Verifica se o usuário está logado
+        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+        
+        if (usuarioLogado?.cpf) {
+          // Se estiver logado, verifica se é favorito
           const isFavorito = eventosFavoritos.some(fav => fav.id_evento == evento.id_evento);
           if (isFavorito) {
             btnFavorito.classList.add('ativo');
@@ -593,13 +601,23 @@
             e.stopPropagation();
             await alternarFavorito(evento.id_evento, btnFavorito);
           };
-          div.appendChild(btnFavorito);
+        } else {
+          // Se não estiver logado, mostra comportamento diferente
+          btnFavorito.classList.add('nao-logado');
+          btnFavorito.title = 'Faça login para salvar eventos';
+          
+          btnFavorito.onclick = (e) => {
+            e.stopPropagation();
+            alert('Você precisa fazer login para salvar eventos como favoritos.\n\nRedirecionando para a página de login...');
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname);
+          };
         }
 
         div.appendChild(imagem);
         div.appendChild(titulo);
         div.appendChild(data);
         div.appendChild(local);
+        div.appendChild(btnFavorito);
         container.appendChild(div);
       });
     }
