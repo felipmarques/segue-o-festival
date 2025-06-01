@@ -4,26 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="css/meusEventosPromotor.css">
-    <title>Segue o Festival</title>
+    <title>Segue o Festival - Meus Eventos</title>
     <style>
         /* Estilos do cabeçalho */
+        :root {
+            --cor-primaria: #4CAF50;
+            --cor-secundaria: #2c3e50;
+            --cor-perigo: #f44336;
+            --cor-info: #2196F3;
+            --cor-aviso: #ff9800;
+            --cor-sucesso: #4CAF50;
+            --cor-texto: #333;
+            --cor-texto-claro: #777;
+            --cor-fundo: #f5f5f5;
+            --cor-borda: #e0e0e0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            line-height: 1.6;
+        }
+
         .cabecalho {
             background-color: #fff;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .cabecalho-botoes {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
-        .cabecalho-botao-entrar {
-            background-color: #4CAF50;
+        .cabecalho-botao {
+            background-color: var(--cor-primaria);
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -31,15 +62,27 @@
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .cabecalho-botao-entrar:hover {
+        .cabecalho-botao:hover {
             background-color: #3e8e41;
+            transform: translateY(-2px);
+        }
+
+        .cabecalho-botao.secundario {
+            background-color: var(--cor-secundaria);
+        }
+
+        .cabecalho-botao.secundario:hover {
+            background-color: #1a252f;
         }
 
         /* Botão de logout */
         .botao-logout {
-            background-color: #f44336;
+            background-color: var(--cor-perigo);
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -54,17 +97,122 @@
 
         .botao-logout:hover {
             background-color: #d32f2f;
+            transform: translateY(-2px);
         }
 
         /* Estilos dos cards de eventos */
+        .eventos-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filtros-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .filtros-titulo {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--cor-secundaria);
+            font-weight: 600;
+        }
+
+        .filtros-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .filtro-grupo {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .filtro-label {
+            font-size: 0.9rem;
+            color: var(--cor-texto-claro);
+            margin-bottom: 0.5rem;
+        }
+
+        .filtro-input, .filtro-select {
+            padding: 0.6rem;
+            border: 1px solid var(--cor-borda);
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+
+        .filtro-botao {
+            padding: 0.6rem 1.2rem;
+            background-color: var(--cor-primaria);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filtro-botao:hover {
+            background-color: #3e8e41;
+        }
+
+        .filtro-botao.limpar {
+            background-color: var(--cor-texto-claro);
+        }
+
+        .filtro-botao.limpar:hover {
+            background-color: #555;
+        }
+
+        .evento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
         .evento-card {
             background: white;
             border-radius: 10px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .evento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .evento-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-ativo {
+            background-color: #e8f5e9;
+            color: var(--cor-sucesso);
+        }
+
+        .status-encerrado {
+            background-color: #ffebee;
+            color: var(--cor-perigo);
+        }
+
+        .status-futuro {
+            background-color: #fff8e1;
+            color: var(--cor-aviso);
         }
 
         .conteudo-secundario-imagem {
@@ -77,14 +225,14 @@
 
         .conteudo-secundario-titulo {
             font-size: 1.3rem;
-            color: #2c3e50;
+            color: var(--cor-secundaria);
             margin: 0 0 0.5rem 0;
             font-weight: 600;
         }
 
         .conteudo-secundario-paragrafo {
             font-size: 0.95rem;
-            color: #555;
+            color: var(--cor-texto-claro);
             margin: 0.3rem 0;
             line-height: 1.4;
             display: flex;
@@ -93,18 +241,44 @@
 
         .conteudo-secundario-paragrafo i {
             margin-right: 8px;
-            color: #4CAF50;
+            color: var(--cor-primaria);
+            min-width: 16px;
+        }
+
+        .evento-metricas {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--cor-borda);
+        }
+
+        .metrica-item {
+            text-align: center;
+        }
+
+        .metrica-valor {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--cor-secundaria);
+        }
+
+        .metrica-label {
+            font-size: 0.7rem;
+            color: var(--cor-texto-claro);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Botões de ação */
         .evento-acoes {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             gap: 1rem;
             margin-top: 1.5rem;
         }
 
-        .botao-editar, .botao-excluir {
+        .evento-botao {
             padding: 0.6rem 1rem;
             border: none;
             border-radius: 5px;
@@ -113,18 +287,165 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
             font-size: 0.9rem;
+            flex: 1;
         }
 
         .botao-editar {
-            background-color: #2196F3;
+            background-color: var(--cor-info);
             color: white;
         }
 
+        .botao-editar:hover {
+            background-color: #0b7dda;
+        }
+
         .botao-excluir {
-            background-color: #f44336;
+            background-color: var(--cor-perigo);
             color: white;
+        }
+
+        .botao-excluir:hover {
+            background-color: #d32f2f;
+        }
+
+        .botao-ingressos {
+            background-color: var(--cor-secundaria);
+            color: white;
+        }
+
+        .botao-ingressos:hover {
+            background-color: #1a252f;
+        }
+
+        /* Paginação */
+        .paginacao {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+
+        .paginacao-botao {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--cor-borda);
+            background-color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .paginacao-botao:hover {
+            background-color: var(--cor-primaria);
+            color: white;
+            border-color: var(--cor-primaria);
+        }
+
+        .paginacao-botao.ativo {
+            background-color: var(--cor-primaria);
+            color: white;
+            border-color: var(--cor-primaria);
+        }
+
+        .paginacao-botao:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-conteudo {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: slideInDown 0.3s;
+        }
+
+        .modal-titulo {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--cor-secundaria);
+        }
+
+        .modal-texto {
+            margin-bottom: 2rem;
+        }
+
+        .modal-acoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-botao {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .modal-botao.primario {
+            background-color: var(--cor-perigo);
+            color: white;
+        }
+
+        .modal-botao.primario:hover {
+            background-color: #d32f2f;
+        }
+
+        .modal-botao.secundario {
+            background-color: var(--cor-borda);
+        }
+
+        .modal-botao.secundario:hover {
+            background-color: #ccc;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--cor-primaria);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mensagens */
+        .mensagem-vazia {
+            text-align: center;
+            padding: 2rem;
+            color: var(--cor-texto-claro);
         }
 
         /* Responsividade */
@@ -132,26 +453,112 @@
             .cabecalho {
                 flex-direction: column;
                 gap: 1rem;
+                padding: 1rem;
             }
             
             .cabecalho-botoes {
                 width: 100%;
-                justify-content: space-between;
+                justify-content: center;
             }
             
-            .evento-card {
-                max-width: 100%;
+            .evento-grid {
+                grid-template-columns: 1fr;
             }
+
+            .filtros-form {
+                flex-direction: column;
+            }
+
+            .filtro-grupo {
+                width: 100%;
+            }
+
+            .filtro-botao {
+                width: 100%;
+            }
+        }
+
+        /* Animação de entrada dos cards */
+        .animate-card {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        /* Título principal */
+        .titulo-principal {
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--cor-secundaria);
+            position: relative;
+        }
+
+        .titulo-principal h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .titulo-principal::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background-color: var(--cor-primaria);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* Footer */
+        .rodape {
+            background-color: var(--cor-secundaria);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .titulo-rodape {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .direitos-reservados {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .redes-sociais {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .rede-social {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .rede-social:hover {
+            color: var(--cor-primaria);
+            transform: translateY(-3px);
         }
     </style>
 </head>
 <body>
     <header class="cabecalho">
         <div class="cabecalho-botoes">
-            <button class="cabecalho-botao-entrar" onclick="location.href='inserir_eventos.html'">Cadastrar Eventos</button>
-            <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Meu Perfil</button>
-            <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
-            <button class="cabecalho-botao-entrar" onclick="location.href='galeria.html'">Galeria de Fotos</button>
+            <button class="cabecalho-botao" onclick="location.href='inserir_eventos.html'">
+                <i class="fas fa-plus"></i> Cadastrar Evento
+            </button>
+            <button class="cabecalho-botao secundario" onclick="location.href='perfil.html'">
+                <i class="fas fa-user"></i> Meu Perfil
+            </button>
+            <button class="cabecalho-botao secundario" onclick="location.href='faq.html'">
+                <i class="fas fa-question-circle"></i> FAQ
+            </button>
+            <button class="cabecalho-botao secundario" onclick="location.href='galeria.html'">
+                <i class="fas fa-images"></i> Galeria
+            </button>
         </div>
         <button class="botao-logout" onclick="fazerLogout()">
             <i class="fas fa-sign-out-alt"></i> Sair
@@ -159,34 +566,153 @@
     </header>
 
     <main>        
-        <a href="https://segue-o-festival.vercel.app/" class="titulo-link"><h1 class="cabecalho-titulo">Segue<br>O Festival!</h1></a>
+        <div class="titulo-principal">
+            <h1>Meus Eventos</h1>
+            <p>Gerencie todos os seus eventos em um só lugar</p>
+        </div>
 
-        <section class="conteudo-secundario">
-            <div class="conteudo-secundario-destaque">
-                <h1>Meus Eventos</h1>
+        <div class="eventos-container">
+            <div class="filtros-container">
+                <h3 class="filtros-titulo"><i class="fas fa-filter"></i> Filtros</h3>
+                <form class="filtros-form" id="form-filtros">
+                    <div class="filtro-grupo">
+                        <label class="filtro-label" for="filtro-nome">Nome do Evento</label>
+                        <input type="text" id="filtro-nome" class="filtro-input" placeholder="Digite o nome...">
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <label class="filtro-label" for="filtro-status">Status</label>
+                        <select id="filtro-status" class="filtro-select">
+                            <option value="todos">Todos</option>
+                            <option value="ativo">Ativos</option>
+                            <option value="encerrado">Encerrados</option>
+                            <option value="futuro">Futuros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <label class="filtro-label" for="filtro-data-inicio">Data Início</label>
+                        <input type="date" id="filtro-data-inicio" class="filtro-input">
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <label class="filtro-label" for="filtro-data-fim">Data Fim</label>
+                        <input type="date" id="filtro-data-fim" class="filtro-input">
+                    </div>
+                    
+                    <button type="button" class="filtro-botao" onclick="aplicarFiltros()">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    
+                    <button type="button" class="filtro-botao limpar" onclick="limparFiltros()">
+                        <i class="fas fa-broom"></i> Limpar
+                    </button>
+                </form>
             </div>
     
-            <div class="conteudo-secundario-primeiralinha" id="lista-eventos">
+            <div class="evento-grid" id="lista-eventos">
                 <!-- Eventos dinâmicos serão inseridos aqui -->
             </div>
-        </section>
+
+            <div class="paginacao" id="paginacao">
+                <!-- Paginação será inserida aqui -->
+            </div>
+        </div>
 
         <footer class="rodape">
-            <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                     
+            <h3 class="titulo-rodape">Segue O Festival!</h3>
+            <div class="redes-sociais">
+                <a href="#" class="rede-social"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="rede-social"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="rede-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="rede-social"><i class="fab fa-youtube"></i></a>
+            </div>            
             <div class="direitos-reservados">
-              &copy; 2025 Segue o Festival. Todos os direitos reservados.
+                &copy; 2025 Segue o Festival. Todos os direitos reservados.
             </div>            
         </footer>
     </main>
 
+    <!-- Modal de Confirmação -->
+    <div class="modal" id="modal-exclusao">
+        <div class="modal-conteudo">
+            <h3 class="modal-titulo"><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
+            <p class="modal-texto">Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos.</p>
+            <div class="modal-acoes">
+                <button class="modal-botao secundario" onclick="fecharModal()">Cancelar</button>
+                <button class="modal-botao primario" id="confirmar-exclusao">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes de Ingressos -->
+    <div class="modal" id="modal-ingressos">
+        <div class="modal-conteudo">
+            <h3 class="modal-titulo"><i class="fas fa-ticket-alt"></i> Ingressos Vendidos</h3>
+            <div id="detalhes-ingressos">
+                <!-- Conteúdo dinâmico será inserido aqui -->
+            </div>
+            <div class="modal-acoes">
+                <button class="modal-botao secundario" onclick="fecharModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Variáveis globais
+        let eventos = [];
+        let eventosFiltrados = [];
+        let eventoParaExcluir = null;
+        let paginaAtual = 1;
+        const eventosPorPagina = 6;
+
         // Função para formatar a data no padrão dd/MM/yyyy
         function formatarData(dataISO) {
+            if (!dataISO) return 'Data não definida';
+            
             const data = new Date(dataISO);
+            if (isNaN(data.getTime())) return 'Data inválida';
+            
             const dia = String(data.getDate()).padStart(2, '0');
             const mes = String(data.getMonth() + 1).padStart(2, '0');
             const ano = data.getFullYear();
             return `${dia}/${mes}/${ano}`;
+        }
+
+        // Função para formatar valor monetário
+        function formatarMoeda(valor) {
+            return parseFloat(valor).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+        }
+
+        // Função para determinar o status do evento
+        function determinarStatus(evento) {
+            const hoje = new Date();
+            const dataEvento = new Date(evento.data);
+            
+            // Remove a parte de hora para comparar apenas datas
+            hoje.setHours(0, 0, 0, 0);
+            dataEvento.setHours(0, 0, 0, 0);
+            
+            if (evento.encerrado) return 'encerrado';
+            if (dataEvento < hoje) return 'encerrado';
+            if (dataEvento > hoje) return 'futuro';
+            return 'ativo';
+        }
+
+        // Função para exibir o modal
+        function exibirModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+            eventoParaExcluir = null;
         }
 
         // Função de logout
@@ -198,9 +724,12 @@
         // Função para carregar os eventos do promotor
         async function carregarEventos() {
             const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+            const listaEventos = document.getElementById("lista-eventos");
+            
+            listaEventos.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
 
             if (!cnpjUsuario) {
-                document.getElementById("lista-eventos").innerHTML = "<p>Erro: Usuário não identificado. Faça login novamente.</p>";
+                listaEventos.innerHTML = '<div class="mensagem-vazia animate__animated animate__fadeIn"><p>Erro: Usuário não identificado. Faça login novamente.</p></div>';
                 return;
             }
 
@@ -209,38 +738,288 @@
                 
                 if (!resposta.ok) throw new Error("Erro ao carregar eventos.");
                 
-                const eventos = await resposta.json();
-                const listaEventos = document.getElementById("lista-eventos");
-                listaEventos.innerHTML = "";
-
+                eventos = await resposta.json();
+                eventosFiltrados = [...eventos];
+                
                 if (eventos.length === 0) {
-                    listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
+                    listaEventos.innerHTML = '<div class="mensagem-vazia animate__animated animate__fadeIn"><i class="fas fa-calendar-times fa-3x" style="margin-bottom: 1rem; color: #ccc;"></i><h3>Nenhum evento encontrado</h3><p>Parece que você ainda não cadastrou nenhum evento. Clique no botão "Cadastrar Evento" para começar.</p></div>';
                     return;
                 }
 
-                eventos.forEach(evento => {
-                    const eventoDiv = document.createElement("div");
-                    eventoDiv.className = "evento-card";
-                    eventoDiv.innerHTML = `
-                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
-                        <div class="evento-acoes">
-                            <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="botao-excluir" onclick="confirmarExclusao(${evento.id_evento})">
-                                <i class="fas fa-trash"></i> Excluir
-                            </button>
-                        </div>
-                    `;
-                    listaEventos.appendChild(eventoDiv);
-                });
-
+                // Aplicar filtros iniciais
+                aplicarFiltros();
+                
             } catch (error) {
                 console.error("Erro:", error);
-                document.getElementById("lista-eventos").innerHTML = "<p>Erro ao carregar eventos.</p>";
+                listaEventos.innerHTML = '<div class="mensagem-vazia animate__animated animate__fadeIn"><i class="fas fa-exclamation-triangle fa-3x" style="margin-bottom: 1rem; color: #f44336;"></i><h3>Erro ao carregar eventos</h3><p>Ocorreu um erro ao tentar carregar seus eventos. Por favor, tente novamente mais tarde.</p></div>';
+            }
+        }
+
+        // Função para renderizar os eventos na página
+        function renderizarEventos() {
+            const listaEventos = document.getElementById("lista-eventos");
+            const paginacao = document.getElementById("paginacao");
+            
+            // Calcular eventos para a página atual
+            const inicio = (paginaAtual - 1) * eventosPorPagina;
+            const fim = inicio + eventosPorPagina;
+            const eventosPagina = eventosFiltrados.slice(inicio, fim);
+            
+            // Limpar conteúdo atual
+            listaEventos.innerHTML = '';
+            
+            if (eventosPagina.length === 0) {
+                listaEventos.innerHTML = '<div class="mensagem-vazia animate__animated animate__fadeIn"><i class="fas fa-search fa-3x" style="margin-bottom: 1rem; color: #ccc;"></i><h3>Nenhum evento encontrado</h3><p>Nenhum evento corresponde aos filtros aplicados. Tente ajustar seus critérios de busca.</p></div>';
+                paginacao.innerHTML = '';
+                return;
+            }
+            
+            // Adicionar eventos à página
+            eventosPagina.forEach((evento, index) => {
+                const status = determinarStatus(evento);
+                const statusText = {
+                    'ativo': 'Em andamento',
+                    'encerrado': 'Encerrado',
+                    'futuro': 'Em breve'
+                }[status];
+                
+                const statusClass = {
+                    'ativo': 'status-ativo',
+                    'encerrado': 'status-encerrado',
+                    'futuro': 'status-futuro'
+                }[status];
+                
+                const eventoDiv = document.createElement("div");
+                eventoDiv.className = `evento-card animate__animated animate__fadeInUp`;
+                eventoDiv.style.animationDelay = `${index * 0.1}s`;
+                
+                eventoDiv.innerHTML = `
+                    <span class="evento-status ${statusClass}">${statusText}</span>
+                    <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}" onerror="this.src='img/placeholder-eventos.jpg'">
+                    <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                    <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
+                    <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco || 'Local não informado'}</p>
+                    
+                    <div class="evento-metricas">
+                        <div class="metrica-item">
+                            <div class="metrica-valor">${evento.ingressos_vendidos || 0}</div>
+                            <div class="metrica-label">Vendidos</div>
+                        </div>
+                        <div class="metrica-item">
+                            <div class="metrica-valor">${evento.ingressos_disponiveis || 0}</div>
+                            <div class="metrica-label">Disponíveis</div>
+                        </div>
+                        <div class="metrica-item">
+                            <div class="metrica-valor">${formatarMoeda(evento.receita_total || 0)}</div>
+                            <div class="metrica-label">Arrecadado</div>
+                        </div>
+                    </div>
+                    
+                    <div class="evento-acoes">
+                        <button class="evento-botao botao-ingressos" onclick="verIngressos(${evento.id_evento})">
+                            <i class="fas fa-ticket-alt"></i> Ingressos
+                        </button>
+                        <button class="evento-botao botao-editar" onclick="editarEvento(${evento.id_evento})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="evento-botao botao-excluir" onclick="confirmarExclusao(${evento.id_evento})">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                
+                listaEventos.appendChild(eventoDiv);
+            });
+            
+            // Configurar paginação
+            configurarPaginacao();
+        }
+
+        // Função para configurar a paginação
+        function configurarPaginacao() {
+            const paginacao = document.getElementById("paginacao");
+            const totalPaginas = Math.ceil(eventosFiltrados.length / eventosPorPagina);
+            
+            paginacao.innerHTML = '';
+            
+            if (totalPaginas <= 1) return;
+            
+            // Botão Anterior
+            const botaoAnterior = document.createElement('button');
+            botaoAnterior.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            botaoAnterior.className = 'paginacao-botao';
+            botaoAnterior.disabled = paginaAtual === 1;
+            botaoAnterior.onclick = () => {
+                if (paginaAtual > 1) {
+                    paginaAtual--;
+                    renderizarEventos();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+            paginacao.appendChild(botaoAnterior);
+            
+            // Números das páginas
+            const maxBotoes = 5;
+            let inicio = Math.max(1, paginaAtual - Math.floor(maxBotoes / 2));
+            let fim = Math.min(totalPaginas, inicio + maxBotoes - 1);
+            
+            if (fim - inicio + 1 < maxBotoes) {
+                inicio = Math.max(1, fim - maxBotoes + 1);
+            }
+            
+            for (let i = inicio; i <= fim; i++) {
+                const botaoPagina = document.createElement('button');
+                botaoPagina.textContent = i;
+                botaoPagina.className = `paginacao-botao ${i === paginaAtual ? 'ativo' : ''}`;
+                botaoPagina.onclick = () => {
+                    paginaAtual = i;
+                    renderizarEventos();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                paginacao.appendChild(botaoPagina);
+            }
+            
+            // Botão Próximo
+            const botaoProximo = document.createElement('button');
+            botaoProximo.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            botaoProximo.className = 'paginacao-botao';
+            botaoProximo.disabled = paginaAtual === totalPaginas;
+            botaoProximo.onclick = () => {
+                if (paginaAtual < totalPaginas) {
+                    paginaAtual++;
+                    renderizarEventos();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+            paginacao.appendChild(botaoProximo);
+        }
+
+        // Função para aplicar filtros
+        function aplicarFiltros() {
+            const filtroNome = document.getElementById('filtro-nome').value.toLowerCase();
+            const filtroStatus = document.getElementById('filtro-status').value;
+            const filtroDataInicio = document.getElementById('filtro-data-inicio').value;
+            const filtroDataFim = document.getElementById('filtro-data-fim').value;
+            
+            eventosFiltrados = eventos.filter(evento => {
+                // Filtro por nome
+                if (filtroNome && !evento.nome.toLowerCase().includes(filtroNome)) {
+                    return false;
+                }
+                
+                // Filtro por status
+                if (filtroStatus !== 'todos') {
+                    const status = determinarStatus(evento);
+                    if (status !== filtroStatus) return false;
+                }
+                
+                // Filtro por data
+                if (filtroDataInicio || filtroDataFim) {
+                    const dataEvento = new Date(evento.data).getTime();
+                    const dataInicio = filtroDataInicio ? new Date(filtroDataInicio).getTime() : 0;
+                    const dataFim = filtroDataFim ? new Date(filtroDataFim).getTime() : Infinity;
+                    
+                    if (dataEvento < dataInicio || dataEvento > dataFim) return false;
+                }
+                
+                return true;
+            });
+            
+            // Resetar para a primeira página
+            paginaAtual = 1;
+            renderizarEventos();
+        }
+
+        // Função para limpar filtros
+        function limparFiltros() {
+            document.getElementById('filtro-nome').value = '';
+            document.getElementById('filtro-status').value = 'todos';
+            document.getElementById('filtro-data-inicio').value = '';
+            document.getElementById('filtro-data-fim').value = '';
+            
+            eventosFiltrados = [...eventos];
+            paginaAtual = 1;
+            renderizarEventos();
+        }
+
+        // Função para ver detalhes dos ingressos
+        async function verIngressos(idEvento) {
+            try {
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/ingressosEvento?id_evento=${idEvento}`);
+                
+                if (!resposta.ok) throw new Error("Erro ao carregar ingressos.");
+                
+                const dados = await resposta.json();
+                const modal = document.getElementById('modal-ingressos');
+                const detalhes = document.getElementById('detalhes-ingressos');
+                
+                // Encontrar o evento correspondente
+                const evento = eventos.find(e => e.id_evento === idEvento);
+                
+                if (!dados || dados.length === 0) {
+                    detalhes.innerHTML = `
+                        <p>Nenhum ingresso vendido para este evento ainda.</p>
+                        <div style="text-align: center; margin: 1rem 0;">
+                            <i class="fas fa-ticket-alt fa-3x" style="color: #ccc;"></i>
+                        </div>
+                    `;
+                } else {
+                    // Agrupar ingressos por tipo
+                    const ingressosPorTipo = {};
+                    dados.forEach(ingresso => {
+                        if (!ingressosPorTipo[ingresso.tipo_ingresso]) {
+                            ingressosPorTipo[ingresso.tipo_ingresso] = {
+                                quantidade: 0,
+                                valor_total: 0,
+                                valor_unitario: ingresso.valor
+                            };
+                        }
+                        ingressosPorTipo[ingresso.tipo_ingresso].quantidade++;
+                        ingressosPorTipo[ingresso.tipo_ingresso].valor_total += ingresso.valor;
+                    });
+                    
+                    let html = `
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="margin-bottom: 0.5rem;">${evento.nome}</h4>
+                            <p style="color: #666; font-size: 0.9rem;">${formatarData(evento.data)} - ${evento.endereco || 'Local não informado'}</p>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; background: #f5f5f5; padding: 1rem; border-radius: 5px;">
+                            <div>
+                                <div style="font-size: 0.8rem; color: #666;">Total Vendido</div>
+                                <div style="font-size: 1.5rem; font-weight: bold;">${dados.length}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.8rem; color: #666;">Arrecadação Total</div>
+                                <div style="font-size: 1.5rem; font-weight: bold;">${formatarMoeda(dados.reduce((total, ingresso) => total + ingresso.valor, 0))}</div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin-bottom: 1rem;">Detalhes por Tipo de Ingresso</h4>
+                    `;
+                    
+                    for (const tipo in ingressosPorTipo) {
+                        html += `
+                            <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #eee;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500;">${tipo}</span>
+                                    <span>${formatarMoeda(ingressosPorTipo[tipo].valor_unitario)} cada</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>${ingressosPorTipo[tipo].quantidade} ingressos</span>
+                                    <span style="font-weight: 500;">${formatarMoeda(ingressosPorTipo[tipo].valor_total)}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    detalhes.innerHTML = html;
+                }
+                
+                exibirModal('modal-ingressos');
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Ocorreu um erro ao carregar os detalhes dos ingressos.");
             }
         }
 
@@ -250,9 +1029,14 @@
         }
 
         function confirmarExclusao(idEvento) {
-            if (confirm("Tem certeza que deseja excluir este evento?")) {
+            eventoParaExcluir = idEvento;
+            exibirModal('modal-exclusao');
+            
+            // Configurar o botão de confirmação
+            document.getElementById('confirmar-exclusao').onclick = () => {
                 excluirEvento(idEvento);
-            }
+                fecharModal();
+            };
         }
 
         async function excluirEvento(idEvento) {
@@ -263,13 +1047,30 @@
                 });
                 
                 if (resposta.ok) {
-                    carregarEventos();
+                    // Remover o evento da lista local
+                    eventos = eventos.filter(evento => evento.id_evento !== idEvento);
+                    eventosFiltrados = eventosFiltrados.filter(evento => evento.id_evento !== idEvento);
+                    
+                    // Verificar se a página atual ainda é válida após a exclusão
+                    const totalPaginas = Math.ceil(eventosFiltrados.length / eventosPorPagina);
+                    if (paginaAtual > totalPaginas && totalPaginas > 0) {
+                        paginaAtual = totalPaginas;
+                    }
+                    
+                    renderizarEventos();
+                    
+                    // Mostrar mensagem de sucesso
+                    alert("Evento excluído com sucesso!");
+                } else {
+                    throw new Error("Erro ao excluir evento.");
                 }
             } catch (error) {
                 console.error("Erro:", error);
+                alert("Ocorreu um erro ao excluir o evento.");
             }
         }
 
+        // Inicializar a página quando carregada
         document.addEventListener("DOMContentLoaded", carregarEventos);
     </script>
 </body>
