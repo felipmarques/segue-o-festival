@@ -10,7 +10,7 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
   <style>
     /* Estilos existentes */
-     #lista-estados {
+    #lista-estados {
       max-height: 240px;
       overflow-y: auto;
     }
@@ -24,7 +24,6 @@
       border-radius: 4px;
     }
 
-    
     /* Novos estilos para a galeria */
     .galeria-container {
       margin: 40px auto;
@@ -119,7 +118,7 @@
       background-color: #3e8e41;
     }
 
-    /* Lightbox (opcional) */
+    /* Lightbox */
     .lightbox {
       display: none;
       position: fixed;
@@ -205,6 +204,140 @@
     .criar-evento-container .botao-criar-evento:hover {
       background-color: #3e8e41;
     }
+
+    /* Novos estilos para o carrossel melhorado */
+    .carrossel-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    
+    .carrossel {
+      display: flex;
+      transition: transform 0.5s ease;
+      width: 100%;
+    }
+    
+    .carrossel img {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    
+    .botao-carrossel {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 15px;
+      cursor: pointer;
+      z-index: 10;
+      font-size: 24px;
+      transition: background-color 0.3s;
+    }
+    
+    .botao-carrossel:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+    
+    .botao-carrossel.anterior {
+      left: 10px;
+    }
+    
+    .botao-carrossel.proximo {
+      right: 10px;
+    }
+    
+    .indicadores-carrossel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    
+    .indicador {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .indicador.ativo {
+      background-color: white;
+    }
+
+    /* Estilos para contador de eventos */
+    .contador-eventos {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 1.1rem;
+      color: #555;
+    }
+    
+    .contador-eventos strong {
+      color: #2c3e50;
+    }
+
+    /* Estilos para botão de favorito */
+    .btn-favorito {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      color: #ccc;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+    
+    .btn-favorito.ativo {
+      color: #e74c3c;
+    }
+    
+    .btn-favorito:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+    
+    .conteudo-secundario-item {
+      position: relative;
+    }
+
+    /* Animação para os cards */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .conteudo-secundario-item {
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+    }
+    
+    .conteudo-secundario-item:nth-child(1) { animation-delay: 0.1s; }
+    .conteudo-secundario-item:nth-child(2) { animation-delay: 0.2s; }
+    .conteudo-secundario-item:nth-child(3) { animation-delay: 0.3s; }
+    .conteudo-secundario-item:nth-child(4) { animation-delay: 0.4s; }
+    .conteudo-secundario-item:nth-child(5) { animation-delay: 0.5s; }
+    .conteudo-secundario-item:nth-child(6) { animation-delay: 0.6s; }
   </style>
 </head>
 <body>
@@ -272,15 +405,20 @@
   </nav>
   
   <main class="conteudo">
+    <!-- Carrossel melhorado -->
     <section class="carrossel-container">
       <div class="carrossel" id="carrossel"></div>
-      <button class="botao" onclick="voltar()">‹</button>
-      <button class="botao" onclick="avancar()">›</button>
+      <button class="botao-carrossel anterior" onclick="voltar()">‹</button>
+      <button class="botao-carrossel proximo" onclick="avancar()">›</button>
+      <div class="indicadores-carrossel" id="indicadores-carrossel"></div>
     </section>
 
     <section class="conteudo-secundario">
       <div class="conteudo-secundario-destaque">
         <h1>Destaques</h1>
+        <div class="contador-eventos" id="contador-eventos">
+          Mostrando <strong>0</strong> eventos
+        </div>
       </div>
 
       <div class="conteudo-secundario-linha" id="eventos-lista">
@@ -336,8 +474,10 @@
     }
 
     let todosEventos = [];
+    let eventosFavoritos = [];
     let estadoSelecionado = null;
     let tipoSelecionado = null;
+    let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
     // Função principal para carregar eventos
     async function buscarEventos() {
@@ -346,12 +486,196 @@
         if (!response.ok) throw new Error(`Erro: ${response.status}`);
 
         todosEventos = await response.json();
+        
+        // Carrega os eventos favoritos do usuário
+        if (usuarioLogado?.cpf) {
+          await carregarEventosFavoritos();
+        }
+        
         exibirEventosFiltrados();
         exibirCarrossel(todosEventos);
-        carregarGaleria(); // Carrega a galeria
+        carregarGaleria();
       } catch (error) {
         document.getElementById('eventos-lista').innerHTML = '<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>';
         console.error("Erro ao buscar eventos:", error);
+      }
+    }
+
+    // Carrega os eventos favoritos do usuário
+    async function carregarEventosFavoritos() {
+      try {
+        const response = await fetch(`/api/eventos-salvos-usuario?cpf=${encodeURIComponent(usuarioLogado.cpf)}`);
+        
+        if (response.ok) {
+          eventosFavoritos = await response.json();
+        }
+      } catch (error) {
+        console.error("Erro ao carregar eventos favoritos:", error);
+      }
+    }
+
+    // Função para filtrar eventos por estado e tipo
+    function filtrarEventos(tipo, valor) {
+      if (tipo === 'estado') {
+        estadoSelecionado = valor;
+      } else if (tipo === 'tipo') {
+        tipoSelecionado = valor;
+      }
+      
+      exibirEventosFiltrados();
+    }
+
+    // Função para exibir eventos filtrados
+    function exibirEventosFiltrados() {
+      const container = document.getElementById('eventos-lista');
+      container.innerHTML = '';
+
+      const eventosFiltrados = todosEventos.filter(evento => {
+        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+      });
+
+      // Atualiza o contador de eventos
+      document.getElementById('contador-eventos').innerHTML = 
+        `Mostrando <strong>${eventosFiltrados.length}</strong> ${eventosFiltrados.length === 1 ? 'evento' : 'eventos'}`;
+
+      if (eventosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum evento encontrado com os filtros selecionados.</p>';
+        return;
+      }
+
+      eventosFiltrados.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'conteudo-secundario-item';
+        div.style.cursor = 'pointer';
+        div.setAttribute("data-id", evento.id_evento);
+        
+        div.onclick = (e) => {
+          // Verifica se o clique foi no botão de favorito
+          if (!e.target.closest('.btn-favorito')) {
+            window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+          }
+        };
+
+        const imagem = document.createElement('img');
+        imagem.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        imagem.alt = evento.nome;
+        imagem.loading = 'lazy';
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = evento.nome;
+
+        const data = document.createElement('p');
+        if (evento.data) {
+          const dataEvento = new Date(evento.data);
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+            weekday: 'long'
+          });
+          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+        } else {
+          data.textContent = 'Data não informada';
+        }
+
+        const local = document.createElement('p');
+        local.textContent = evento.endereco || 'Local não informado';
+
+        // Botão de favorito
+        const btnFavorito = document.createElement('button');
+        btnFavorito.className = 'btn-favorito';
+        btnFavorito.innerHTML = '<i class="fas fa-heart"></i>';
+        btnFavorito.title = 'Salvar evento';
+        
+        // Verifica se o evento está nos favoritos
+        const isFavorito = eventosFavoritos.some(fav => fav.id_evento == evento.id_evento);
+        if (isFavorito) {
+          btnFavorito.classList.add('ativo');
+        }
+        
+        btnFavorito.onclick = async (e) => {
+          e.stopPropagation();
+          await alternarFavorito(evento.id_evento, btnFavorito);
+        };
+
+        div.appendChild(imagem);
+        div.appendChild(titulo);
+        div.appendChild(data);
+        div.appendChild(local);
+        div.appendChild(btnFavorito);
+        container.appendChild(div);
+      });
+    }
+
+    // Alternar evento entre favoritos
+    async function alternarFavorito(eventoId, btnElement) {
+      if (!usuarioLogado?.cpf) {
+        alert('Você precisa estar logado para salvar eventos');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const isFavorito = btnElement.classList.contains('ativo');
+      btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btnElement.disabled = true;
+
+      try {
+        let response;
+        const url = '/api/eventos-salvos-usuario';
+        
+        if (isFavorito) {
+          // Remover dos favoritos
+          response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              usuario_cpf: usuarioLogado.cpf,
+              evento_id: parseInt(eventoId)
+            })
+          });
+        } else {
+          // Adicionar aos favoritos
+          response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              usuario_cpf: usuarioLogado.cpf,
+              evento_id: parseInt(eventoId)
+            })
+          });
+        }
+
+        if (response.ok) {
+          // Atualiza visualmente
+          btnElement.classList.toggle('ativo');
+          btnElement.innerHTML = '<i class="fas fa-heart"></i>';
+          
+          // Atualiza a lista de favoritos localmente
+          if (isFavorito) {
+            eventosFavoritos = eventosFavoritos.filter(fav => fav.id_evento != eventoId);
+          } else {
+            const evento = todosEventos.find(e => e.id_evento == eventoId);
+            if (evento) {
+              eventosFavoritos.push(evento);
+            }
+          }
+        } else {
+          throw new Error('Erro ao atualizar favoritos');
+        }
+      } catch (error) {
+        console.error('Erro ao alternar favorito:', error);
+        alert('Ocorreu um erro ao atualizar seus favoritos');
+      } finally {
+        btnElement.disabled = false;
       }
     }
 
@@ -440,105 +764,72 @@
       }
     }
 
-    // Função para exibir eventos filtrados
-    function exibirEventosFiltrados() {
-      const container = document.getElementById('eventos-lista');
-      container.innerHTML = '';
-
-      const eventosFiltrados = todosEventos.filter(evento => {
-        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo === tipoSelecionado);
-      });
-
-      if (eventosFiltrados.length === 0) {
-        container.innerHTML = '<p>Nenhum evento encontrado com os filtros selecionados.</p>';
-        return;
-      }
-
-      eventosFiltrados.forEach(evento => {
-        const div = document.createElement('div');
-        div.className = 'conteudo-secundario-item';
-        div.style.cursor = 'pointer';
-        div.setAttribute("data-id", evento.id_evento);
-        
-        div.onclick = () => {
-          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
-        };
-
-        const imagem = document.createElement('img');
-        imagem.src = evento.imagem
-          ? `data:image/jpeg;base64,${evento.imagem}`
-          : '/img/default.jpg';
-        imagem.alt = evento.nome;
-        imagem.loading = 'lazy';
-
-        const titulo = document.createElement('h3');
-        titulo.textContent = evento.nome;
-
-        const data = document.createElement('p');
-        if (evento.data) {
-          const dataEvento = new Date(evento.data);
-          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          });
-          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
-            weekday: 'long'
-          });
-          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
-        } else {
-          data.textContent = 'Data não informada';
-        }
-
-        const local = document.createElement('p');
-        local.textContent = evento.endereco || 'Local não informado';
-
-        div.appendChild(imagem);
-        div.appendChild(titulo);
-        div.appendChild(data);
-        div.appendChild(local);
-        container.appendChild(div);
-      });
-    }
-
-    // Funções do carrossel
-    let index = 0;
+    // Funções do carrossel melhorado
+    let currentSlide = 0;
+    let slides = [];
 
     function exibirCarrossel(eventos) {
       const carrossel = document.getElementById("carrossel");
+      const indicadores = document.getElementById("indicadores-carrossel");
       carrossel.innerHTML = '';
+      indicadores.innerHTML = '';
 
-      const eventosCarrossel = eventos.slice(0, 5);
+      // Limita a 5 eventos no carrossel
+      slides = eventos.slice(0, 5);
 
-      eventosCarrossel.forEach(evento => {
+      slides.forEach((evento, index) => {
+        // Imagem do carrossel
         const img = document.createElement("img");
         img.src = evento.imagem
           ? `data:image/jpeg;base64,${evento.imagem}`
           : '/img/default.jpg';
         img.alt = evento.nome;
         img.loading = 'eager';
+        img.style.cursor = 'pointer';
+        img.onclick = () => {
+          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+        };
         carrossel.appendChild(img);
+
+        // Indicador
+        const indicador = document.createElement("div");
+        indicador.className = "indicador";
+        if (index === 0) indicador.classList.add("ativo");
+        indicador.onclick = () => {
+          currentSlide = index;
+          atualizarCarrossel();
+        };
+        indicadores.appendChild(indicador);
       });
 
-      index = 0;
+      currentSlide = 0;
       atualizarCarrossel();
     }
 
     function atualizarCarrossel() {
       const carrossel = document.getElementById("carrossel");
-      carrossel.style.transform = `translateX(-${index * 100}%)`;
+      const indicadores = document.querySelectorAll(".indicador");
+      
+      // Atualiza posição do carrossel
+      carrossel.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Atualiza indicadores
+      indicadores.forEach((indicador, index) => {
+        if (index === currentSlide) {
+          indicador.classList.add("ativo");
+        } else {
+          indicador.classList.remove("ativo");
+        }
+      });
     }
 
     function avancar() {
-      const total = document.querySelectorAll('#carrossel img').length;
-      index = (index + 1) % total;
+      currentSlide = (currentSlide + 1) % slides.length;
       atualizarCarrossel();
     }
 
     function voltar() {
-      const total = document.querySelectorAll('#carrossel img').length;
-      index = (index - 1 + total) % total;
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
       atualizarCarrossel();
     }
 
@@ -556,7 +847,6 @@
       setInterval(avancar, 5000);
     });
   </script>
-  <script src="js/filtros-logado.js"></script>
   <script src="js/calendario.js"></script>
 
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
