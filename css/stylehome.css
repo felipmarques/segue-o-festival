@@ -466,6 +466,7 @@ width: 48%; /* Ajuste para 2 itens por linha em telas menores */
 width: 100%; /* 1 item por linha em dispositivos menores */
 margin-bottom: 20px;
 }
+}
 
 /* Estilo para a lista de eventos na tela inicial */
 .lista-eventos {
@@ -599,72 +600,73 @@ margin-right: 6px;
 
 
 /*RODAPÉ*/
+
 .rodape {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    margin-top: 70px;
-    padding-left: 300px;
-  }
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 70px;
+  padding-left: 300px;
+}
   
-  .titulo-rodape {
-    font-family: 'Droog', sans-serif;
-    font-size: 15px;
-    color: #00bfff;
-    margin-bottom: 20px;
-    text-align: left;
-    line-height: 1.2;
-  }
+.titulo-rodape {
+  font-family: 'Droog', sans-serif;
+  font-size: 15px;
+  color: #00bfff;
+  margin-bottom: 20px;
+  text-align: left;
+  line-height: 1.2;
+}
   
-  .rodape-links {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 70px;
-    margin-bottom: 40px;
-  }
+.rodape-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 70px;
+  margin-bottom: 40px;
+}
   
-  .menu-hover {
-    display: flex;
-    flex-direction: row;
-    gap: 70px;
-  }
+.menu-hover {
+  display: flex;
+  flex-direction: row;
+  gap: 70px;
+}
   
-  .menu-hover > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.menu-hover > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
   
-  .rodape-direcionamento {
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    color: #333;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    margin-bottom: 5px;
-    color: inherit;
-    text-decoration: none;
-  }
+.rodape-direcionamento {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-bottom: 5px;
+  color: inherit;
+  text-decoration: none;
+}
   
-  .rodape-direcionamento:hover {
-    color: #00bfff;
-  }
+.rodape-direcionamento:hover {
+  color: #00bfff;
+}
   
-  .lista-escondida {
-    display: none;
-    list-style: none;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 4px;
-    text-align: left;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    color: #000000;
-  }
+.lista-escondida {
+  display: none;
+  list-style: none;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  text-align: left;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  color: #000000;
+}
   
-  .direitos-reservados {
-    font-size: 13px;
-    color: #666;
-    font-family: 'Poppins', sans-serif;
-  }
+.direitos-reservados {
+  font-size: 13px;
+  color: #666;
+  font-family: 'Poppins', sans-serif;
+}
