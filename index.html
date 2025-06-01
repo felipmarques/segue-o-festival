@@ -7,22 +7,338 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
   <style>
+    /* Estilos existentes */
     #lista-estados {
-    max-height: 240px;
-    overflow-y: auto;
-  }
-  
-  #lista-estados::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  #lista-estados::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-  }
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    
+    #lista-estados::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #lista-estados::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
 
+    /* Novos estilos para a galeria */
+    .galeria-container {
+      margin: 40px auto;
+      padding: 20px;
+      max-width: 1200px;
+    }
+    
+    .galeria-titulo {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .galeria-titulo::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: #4CAF50;
+    }
+    
+    .galeria-fotos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .galeria-item {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .galeria-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .galeria-foto {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.5s ease;
+    }
+    
+    .galeria-item:hover .galeria-foto {
+      transform: scale(1.05);
+    }
+    
+    .galeria-status {
+      text-align: center;
+      padding: 20px;
+      font-size: 1.1rem;
+      grid-column: 1 / -1;
+    }
+    
+    .galeria-carregando {
+      color: #4CAF50;
+    }
+    
+    .galeria-vazia {
+      color: #666;
+      font-style: italic;
+    }
+    
+    .galeria-erro {
+      color: #e74c3c;
+    }
+    
+    .botao-recarregar {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .botao-recarregar:hover {
+      background-color: #3e8e41;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+    
+    .fechar-lightbox {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .galeria-fotos {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+      }
+      
+      .galeria-foto {
+        height: 180px;
+      }
+    }
+
+    /* Estilos para a nova seção de criação de eventos */
+    .criar-evento-container {
+      background-color: #f8f9fa;
+      padding: 60px 20px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .criar-evento-container h2 {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    
+    .criar-evento-container p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    
+    .criar-evento-container .destaque-verde {
+      font-size: 1.1rem;
+      color: #4CAF50;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    
+    .criar-evento-container .divisor {
+      border-top: 1px solid #ddd;
+      margin: 30px auto;
+      width: 100px;
+    }
+    
+    .criar-evento-container .botao-criar-evento {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .criar-evento-container .botao-criar-evento:hover {
+      background-color: #3e8e41;
+    }
+
+    /* Novos estilos para o carrossel melhorado */
+    .carrossel-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    
+    .carrossel {
+      display: flex;
+      transition: transform 0.5s ease;
+      width: 100%;
+    }
+    
+    .carrossel img {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    
+    .botao-carrossel {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 15px;
+      cursor: pointer;
+      z-index: 10;
+      font-size: 24px;
+      transition: background-color 0.3s;
+    }
+    
+    .botao-carrossel:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+    
+    .botao-carrossel.anterior {
+      left: 10px;
+    }
+    
+    .botao-carrossel.proximo {
+      right: 10px;
+    }
+    
+    .indicadores-carrossel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    
+    .indicador {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .indicador.ativo {
+      background-color: white;
+    }
+
+    /* Estilos para contador de eventos */
+    .contador-eventos {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 1.1rem;
+      color: #555;
+    }
+    
+    .contador-eventos strong {
+      color: #2c3e50;
+    }
+
+    /* Estilos para botão de favorito */
+    .btn-favorito {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      color: #ccc;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+    
+    .btn-favorito.ativo {
+      color: #e74c3c;
+    }
+    
+    .btn-favorito:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+    
+    .conteudo-secundario-item {
+      position: relative;
+    }
+
+    /* Animação para os cards */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .conteudo-secundario-item {
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+    }
+    
+    .conteudo-secundario-item:nth-child(1) { animation-delay: 0.1s; }
+    .conteudo-secundario-item:nth-child(2) { animation-delay: 0.2s; }
+    .conteudo-secundario-item:nth-child(3) { animation-delay: 0.3s; }
+    .conteudo-secundario-item:nth-child(4) { animation-delay: 0.4s; }
+    .conteudo-secundario-item:nth-child(5) { animation-delay: 0.5s; }
+    .conteudo-secundario-item:nth-child(6) { animation-delay: 0.6s; }
   </style>
 </head>
 
@@ -32,15 +348,19 @@
       Segue<br>O Festival!
     </h3>
     <div class="cabecalho-botoes">
-      <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">Entrar</button>
-      <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">FAQ</button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='login.html'">
+        <i class="fas fa-user"></i> Entrar
+      </button>
+      <button class="cabecalho-botao-entrar" onclick="location.href='faq.html'">
+        <i class="fas fa-question-circle"></i> FAQ
+      </button>
     </div>
   </header>
 
   <nav class="menu">
     <div class="menu-item">
       <button class="menu-botao">📍Estado</button>
-      <ul class="menu-lista" id="lista-estados">
+      <ul class="menu-lista scroll-limitada" id="lista-estados">
         <li onclick="filtrarEventos('estado', null)">Todos</li>
         <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
         <li onclick="filtrarEventos('estado', 'Rio de Janeiro')">Rio de Janeiro</li>
@@ -91,15 +411,20 @@
   </nav>
 
   <main class="conteudo">
+    <!-- Carrossel melhorado -->
     <section class="carrossel-container">
       <div class="carrossel" id="carrossel"></div>
-      <button class="botao" onclick="voltar()">‹</button>
-      <button class="botao" onclick="avancar()">›</button>
+      <button class="botao-carrossel anterior" onclick="voltar()">‹</button>
+      <button class="botao-carrossel proximo" onclick="avancar()">›</button>
+      <div class="indicadores-carrossel" id="indicadores-carrossel"></div>
     </section>
 
     <section class="conteudo-secundario">
       <div class="conteudo-secundario-destaque">
         <h1>Destaques</h1>
+        <div class="contador-eventos" id="contador-eventos">
+          Mostrando <strong>0</strong> eventos
+        </div>
       </div>
 
       <div class="conteudo-secundario-linha" id="eventos-lista">
@@ -107,8 +432,411 @@
       </div>
     </section>
 
+    <!-- Seção da Galeria de Fotos -->
+    <section class="galeria-container">
+      <h2 class="galeria-titulo">Galeria de Fotos</h2>
+      <div class="galeria-fotos" id="galeria-fotos">
+        <p class="galeria-status galeria-carregando">
+          <i class="fas fa-spinner fa-spin"></i> Carregando galeria...
+        </p>
+      </div>
+    </section>
 
-    <footer class="rodape">
+    <!-- Nova seção para criação de eventos -->
+    <section class="criar-evento-container">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h2>Crie eventos, divulgue e venda ingressos com facilidade</h2>
+        
+        <p>
+          Da publicação à venda:<br>
+          suporte em todas as etapas.
+        </p>
+        
+        <p class="destaque-verde">
+          Publicação grátis: sem taxa de adesão ou mensalidade.
+        </p>
+        
+        <div class="divisor"></div>
+        
+        <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 20px;">Crie seu evento</h3>
+        
+        <button onclick="location.href='organizador.html'" class="botao-criar-evento">
+          Veja como funciona
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox para ampliar fotos -->
+  <div id="lightbox" class="lightbox">
+    <span class="fechar-lightbox" onclick="fecharLightbox()">&times;</span>
+    <img id="lightbox-img" class="lightbox-img">
+  </div>
+
+  <script>
+    let todosEventos = [];
+    let eventosFavoritos = [];
+    let estadoSelecionado = null;
+    let tipoSelecionado = null;
+    let dataSelecionada = null;
+
+    async function buscarEventos() {
+      try {
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+
+        todosEventos = await response.json();
+        exibirEventosFiltrados();
+        exibirCarrossel(todosEventos);
+        carregarGaleria();
+      } catch (error) {
+        document.getElementById('eventos-lista').innerHTML = '<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>';
+        console.error("Erro ao buscar eventos:", error);
+      }
+    }
+
+    function filtrarEventos(tipo, valor) {
+      if (tipo === 'estado') {
+        estadoSelecionado = valor;
+      } else if (tipo === 'tipo') {
+        tipoSelecionado = valor;
+      } else if (tipo === 'data') {
+        dataSelecionada = valor;
+      }
+      exibirEventosFiltrados();
+    }
+
+    function limparFiltros() {
+      estadoSelecionado = null;
+      tipoSelecionado = null;
+      dataSelecionada = null;
+      document.getElementById('dataInput').value = '';
+      exibirEventosFiltrados();
+    }
+
+    function exibirEventosFiltrados() {
+      const container = document.getElementById('eventos-lista');
+      container.innerHTML = '';
+
+      const eventosFiltrados = todosEventos.filter(evento => {
+        const dataEvento = evento.data ? new Date(evento.data).toLocaleDateString('pt-BR') : null;
+        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
+               (!tipoSelecionado || evento.tipo_evento === tipoSelecionado) &&
+               (!dataSelecionada || dataEvento === dataSelecionada);
+      });
+
+      // Atualiza o contador de eventos
+      document.getElementById('contador-eventos').innerHTML = 
+        `Mostrando <strong>${eventosFiltrados.length}</strong> ${eventosFiltrados.length === 1 ? 'evento' : 'eventos'}`;
+
+      if (eventosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum evento encontrado com os filtros selecionados.</p>';
+        return;
+      }
+
+      eventosFiltrados.forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'conteudo-secundario-item';
+        div.style.cursor = 'pointer';
+        div.setAttribute("data-id", evento.id_evento);
+        
+        div.onclick = (e) => {
+          // Verifica se o clique foi no botão de favorito
+          if (!e.target.closest('.btn-favorito')) {
+            window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+          }
+        };
+
+        const imagem = document.createElement('img');
+        imagem.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        imagem.alt = evento.nome;
+        imagem.loading = 'lazy';
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = evento.nome;
+
+        const data = document.createElement('p');
+        if (evento.data) {
+          const dataEvento = new Date(evento.data);
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+            weekday: 'long'
+          });
+          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
+        } else {
+          data.textContent = 'Data não informada';
+        }
+
+        const local = document.createElement('p');
+        local.textContent = evento.endereco || 'Local não informado';
+
+        // Botão de favorito (só aparece se o usuário estiver logado)
+        if (localStorage.getItem("usuarioLogado")) {
+          const btnFavorito = document.createElement('button');
+          btnFavorito.className = 'btn-favorito';
+          btnFavorito.innerHTML = '<i class="fas fa-heart"></i>';
+          btnFavorito.title = 'Salvar evento';
+          
+          // Verifica se o evento está nos favoritos
+          const isFavorito = eventosFavoritos.some(fav => fav.id_evento == evento.id_evento);
+          if (isFavorito) {
+            btnFavorito.classList.add('ativo');
+          }
+          
+          btnFavorito.onclick = async (e) => {
+            e.stopPropagation();
+            await alternarFavorito(evento.id_evento, btnFavorito);
+          };
+          div.appendChild(btnFavorito);
+        }
+
+        div.appendChild(imagem);
+        div.appendChild(titulo);
+        div.appendChild(data);
+        div.appendChild(local);
+        container.appendChild(div);
+      });
+    }
+
+    // Alternar evento entre favoritos
+    async function alternarFavorito(eventoId, btnElement) {
+      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+      if (!usuarioLogado?.cpf) {
+        alert('Você precisa estar logado para salvar eventos');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const isFavorito = btnElement.classList.contains('ativo');
+      btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btnElement.disabled = true;
+
+      try {
+        let response;
+        const url = '/api/eventos-salvos-usuario';
+        
+        if (isFavorito) {
+          // Remover dos favoritos
+          response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              usuario_cpf: usuarioLogado.cpf,
+              evento_id: parseInt(eventoId)
+            })
+          });
+        } else {
+          // Adicionar aos favoritos
+          response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              usuario_cpf: usuarioLogado.cpf,
+              evento_id: parseInt(eventoId)
+            })
+          });
+        }
+
+        if (response.ok) {
+          // Atualiza visualmente
+          btnElement.classList.toggle('ativo');
+          btnElement.innerHTML = '<i class="fas fa-heart"></i>';
+          
+          // Atualiza a lista de favoritos localmente
+          if (isFavorito) {
+            eventosFavoritos = eventosFavoritos.filter(fav => fav.id_evento != eventoId);
+          } else {
+            const evento = todosEventos.find(e => e.id_evento == eventoId);
+            if (evento) {
+              eventosFavoritos.push(evento);
+            }
+          }
+        } else {
+          throw new Error('Erro ao atualizar favoritos');
+        }
+      } catch (error) {
+        console.error('Erro ao alternar favorito:', error);
+        alert('Ocorreu um erro ao atualizar seus favoritos');
+      } finally {
+        btnElement.disabled = false;
+      }
+    }
+
+    // Função para carregar a galeria de fotos
+    async function carregarGaleria() {
+      const galeria = document.getElementById('galeria-fotos');
+      
+      try {
+        galeria.innerHTML = `
+          <p class="galeria-status galeria-carregando">
+            <i class="fas fa-spinner fa-spin"></i> Carregando fotos...
+          </p>
+        `;
+        
+        const response = await fetch('/api/galeriaEventos');
+        
+        if (!response.ok) {
+          throw new Error(`Erro ${response.status}: ${await response.text()}`);
+        }
+        
+        const { success, data: fotos, error } = await response.json();
+        
+        if (!success || !fotos) {
+          throw new Error(error || 'Dados inválidos recebidos da API');
+        }
+        
+        if (fotos.length === 0) {
+          galeria.innerHTML = `
+            <p class="galeria-status galeria-vazia">
+              <i class="far fa-images"></i> Nenhuma foto encontrada na galeria.
+            </p>
+          `;
+          return;
+        }
+        
+        let html = '';
+        fotos.forEach(foto => {
+          html += `
+            <div class="galeria-item">
+              <img src="data:image/jpeg;base64,${foto.imagem}" 
+                   alt="Foto do evento" 
+                   class="galeria-foto"
+                   loading="lazy"
+                   onclick="ampliarFoto('${foto.imagem}')">
+            </div>
+          `;
+        });
+        
+        galeria.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Erro ao carregar galeria:', error);
+        galeria.innerHTML = `
+          <div class="galeria-status galeria-erro">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Erro ao carregar galeria: ${error.message}</p>
+            <button onclick="carregarGaleria()" class="botao-recarregar">
+              <i class="fas fa-sync-alt"></i> Tentar novamente
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Funções do lightbox
+    function ampliarFoto(base64Image) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      
+      lightboxImg.src = `data:image/jpeg;base64,${base64Image}`;
+      lightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function fecharLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Fechar lightbox ao clicar fora da imagem
+    window.onclick = function(event) {
+      const lightbox = document.getElementById('lightbox');
+      if (event.target === lightbox) {
+        fecharLightbox();
+      }
+    }
+
+    // Funções do carrossel melhorado
+    let currentSlide = 0;
+    let slides = [];
+
+    function exibirCarrossel(eventos) {
+      const carrossel = document.getElementById("carrossel");
+      const indicadores = document.getElementById("indicadores-carrossel");
+      carrossel.innerHTML = '';
+      indicadores.innerHTML = '';
+
+      // Limita a 5 eventos no carrossel
+      slides = eventos.slice(0, 5);
+
+      slides.forEach((evento, index) => {
+        // Imagem do carrossel
+        const img = document.createElement("img");
+        img.src = evento.imagem
+          ? `data:image/jpeg;base64,${evento.imagem}`
+          : '/img/default.jpg';
+        img.alt = evento.nome;
+        img.loading = 'eager';
+        img.style.cursor = 'pointer';
+        img.onclick = () => {
+          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
+        };
+        carrossel.appendChild(img);
+
+        // Indicador
+        const indicador = document.createElement("div");
+        indicador.className = "indicador";
+        if (index === 0) indicador.classList.add("ativo");
+        indicador.onclick = () => {
+          currentSlide = index;
+          atualizarCarrossel();
+        };
+        indicadores.appendChild(indicador);
+      });
+
+      currentSlide = 0;
+      atualizarCarrossel();
+    }
+
+    function atualizarCarrossel() {
+      const carrossel = document.getElementById("carrossel");
+      const indicadores = document.querySelectorAll(".indicador");
+      
+      // Atualiza posição do carrossel
+      carrossel.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Atualiza indicadores
+      indicadores.forEach((indicador, index) => {
+        if (index === currentSlide) {
+          indicador.classList.add("ativo");
+        } else {
+          indicador.classList.remove("ativo");
+        }
+      });
+    }
+
+    function avancar() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      atualizarCarrossel();
+    }
+
+    function voltar() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      atualizarCarrossel();
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      buscarEventos();
+      
+      // Atualiza o carrossel automaticamente a cada 5 segundos
+      setInterval(avancar, 5000);
+    });
+  </script>
+  <script src="calendario.js"></script>
+
+  <footer class="rodape">
     <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                 
     <div class="rodape-links">
         <div class="menu-hover">
@@ -155,141 +883,6 @@
     </div>
                         
     <div class="direitos-reservados">&copy; 2025 Segue o Festival. Todos os direitos reservados.</div>            
-</footer>
-  </main>
-
-  <script>
-    let todosEventos = [];
-    let estadoSelecionado = null;
-    let tipoSelecionado = null;
-    let dataSelecionada = null;
-
-    async function buscarEventos() {
-      try {
-        const response = await fetch('/api/buscaeventos');
-        if (!response.ok) throw new Error(`Erro: ${response.status}`);
-
-        todosEventos = await response.json();
-        exibirEventosFiltrados();
-        exibirCarrossel(todosEventos);
-      } catch (error) {
-        document.getElementById('eventos-lista').innerHTML = 'Erro ao carregar eventos.';
-        console.error(error);
-      }
-    }
-
-    function filtrarEventos(tipo, valor) {
-      if (tipo === 'estado') {
-        estadoSelecionado = valor;
-      } else if (tipo === 'tipo') {
-        tipoSelecionado = valor;
-      } else if (tipo === 'data') {
-        dataSelecionada = valor;
-      }
-      exibirEventosFiltrados();
-    }
-
-    function limparFiltros() {
-      estadoSelecionado = null;
-      tipoSelecionado = null;
-      dataSelecionada = null;
-      document.getElementById('dataInput').value = '';
-      exibirEventosFiltrados();
-    }
-
-    function exibirEventosFiltrados() {
-      const container = document.getElementById('eventos-lista');
-      container.innerHTML = '';
-
-      const eventosFiltrados = todosEventos.filter(evento => {
-        const dataEvento = evento.data ? new Date(evento.data).toLocaleDateString('pt-BR') : null;
-        return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo_evento === tipoSelecionado) &&
-               (!dataSelecionada || dataEvento === dataSelecionada);
-      });
-
-      if (eventosFiltrados.length === 0) {
-        container.innerHTML = '<p>Nenhum evento encontrado.</p>';
-        return;
-      }
-
-      eventosFiltrados.forEach(evento => {
-        const link = document.createElement('a');
-        link.href = `pagina_evento.html?id=${evento.id_evento}`;
-        link.className = 'conteudo-secundario-item';
-        link.style.textDecoration = 'none';
-        link.style.color = 'inherit';
-
-        const imagem = document.createElement('img');
-        imagem.src = evento.imagem
-          ? `data:image/jpeg;base64,${evento.imagem}`
-          : '/img/default.jpg';
-        imagem.alt = evento.nome;
-
-        const titulo = document.createElement('h3');
-        titulo.textContent = evento.nome;
-
-        const data = document.createElement('p');
-        if (evento.data) {
-          const dataEvento = new Date(evento.data);
-          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
-            day: '2-digit', month: '2-digit', year: 'numeric'
-          });
-          const diaSemana = dataEvento.toLocaleDateString('pt-BR', { weekday: 'long' });
-          data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
-        } else {
-          data.textContent = 'Data não informada';
-        }
-
-        const local = document.createElement('p');
-        local.textContent = evento.endereco || 'Local não informado';
-
-        link.appendChild(imagem);
-        link.appendChild(titulo);
-        link.appendChild(data);
-        link.appendChild(local);
-        container.appendChild(link);
-      });
-    }
-
-    buscarEventos();
-
-    let index = 0;
-    function exibirCarrossel(eventos) {
-      const carrossel = document.getElementById("carrossel");
-      carrossel.innerHTML = '';
-
-      eventos.forEach(evento => {
-        const img = document.createElement("img");
-        img.src = evento.imagem
-          ? `data:image/jpeg;base64,${evento.imagem}`
-          : '/img/default.jpg';
-        img.alt = evento.nome;
-        carrossel.appendChild(img);
-      });
-      index = 0;
-      atualizarCarrossel();
-    }
-    function atualizarCarrossel() {
-      const carrossel = document.getElementById("carrossel");
-      carrossel.style.transform = `translateX(-${index * 100}%)`;
-    }
-    function avancar() {
-      const total = document.querySelectorAll('#carrossel img').length;
-      index = (index + 1) % total;
-      atualizarCarrossel();
-    }
-    function voltar() {
-      const total = document.querySelectorAll('#carrossel img').length;
-      index = (index - 1 + total) % total;
-      atualizarCarrossel();
-    }
-
-    function toggleLista(id) {
-    const lista = document.getElementById(id);
-    lista.style.display = (lista.style.display === "block") ? "none" : "block";
-  }
-  </script>
-  <script src="calendario.js"></script>
+  </footer>
 </body>
 </html>
