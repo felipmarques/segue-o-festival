@@ -9,11 +9,20 @@
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
   <style>
-    /* Limite de altura e scroll no menu de estados */
     #lista-estados {
-      max-height: 240px;
-      overflow-y: auto;
-    }
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  
+  #lista-estados::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  #lista-estados::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+
   </style>
 </head>
 
