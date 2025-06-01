@@ -156,6 +156,32 @@
       color: var(--error-color);
     }
 
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      color: white;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.5s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .toast.success {
+      background-color: #4CAF50;
+    }
+    
+    .toast.error {
+      background-color: #f44336;
+    }
+    
+    .toast.warning {
+      background-color: #ff9800;
+    }
+
     /* Responsividade */
     @media (max-width: 768px) {
       main {
@@ -268,6 +294,12 @@
       const btn = document.querySelector(`.remove-btn[data-id="${eventId}"]`);
       if (!btn) return;
 
+      // Verifica se o usuário está logado
+      if (!usuarioLogado?.cpf) {
+        showToast('Você precisa estar logado para remover eventos', 'warning');
+        return;
+      }
+
       btn.classList.add('loading');
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
@@ -278,22 +310,24 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            eventoId: parseInt(eventId),
-            cpf: usuarioLogado.cpf
+            usuario_cpf: usuarioLogado.cpf,
+            evento_id: parseInt(eventId)
           })
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
-          throw new Error(data.error || 'Erro ao remover evento');
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Erro ao remover evento');
         }
 
+        // Feedback visual
+        showToast('Evento removido com sucesso!', 'success');
+        
         // Recarrega a lista após remoção
         await loadSavedEvents();
       } catch (error) {
         console.error('Erro ao remover evento:', error);
-        alert(error.message);
+        showToast(error.message || 'Erro ao remover evento', 'error');
         btn.classList.remove('loading');
         btn.innerHTML = '<i class="fas fa-trash"></i>';
       }
@@ -333,6 +367,18 @@
           <a href="login.html" class="btn-primary">Fazer Login</a>
         </div>
       `;
+    }
+
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
     }
 
     // Logout
