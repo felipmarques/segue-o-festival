@@ -262,11 +262,13 @@ display: block;
 .conteudo-secundario-item h3 {
   margin: 10px 0 5px;
   font-size: 1.2rem;
+  font-family: 'Raleway', sans-serif;
 }
 
 .conteudo-secundario-item p {
   font-size: 0.95rem;
   color: #333;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Estilo do título da seção */
