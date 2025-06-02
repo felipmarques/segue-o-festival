@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
-  <link rel="stylesheet" type="text/css" href="css/calendario.css">
+  <link rel="stylesheet" href="src/css/chatbot.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
 </head>
@@ -236,9 +237,37 @@
                         
     <div class="direitos-reservados">&copy; 2025 Segue o Festival. Todos os direitos reservados.</div>            
   </footer>
-
-
   </main>
+
+  <!-- Chatbot -->
+<div id="chatbot-toggle">
+  <span id="chatbot-balloon">Precisa de ajuda?</span>
+  <img src="src/images/menino_logo-removebg-preview.png" alt="Chatbot" />
+</div>
+
+<div id="chatbot-window">
+  <div id="chatbot-header">
+    <h1>Segue<br>O Festival</h1>
+    <span id="chatbot-name">Chat com Zeca</span>
+    <div id="button-chat">
+      <button id="minimize-chat">-</button>
+      <button id="close-chat">x</button> 
+    </div>
+  </div>    
+  <div id="chatbox"></div>
+  <div id="options"></div>
+  <div id="calendar-container"></div>
+  <div id="input-area">
+    <button id="upload-button"><i class="fa-solid fa-plus"></i></button>
+    <input type="file" id="image-input" accept="image/*" style="display: none" />
+    <textarea id="message-input" placeholder="Digite sua mensagem"></textarea>
+    <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<!-- Antes do </body>, adicione: -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="src/js/chatbot.js"></script> 
 
   <!-- Lightbox para ampliar fotos -->
   <div id="lightbox" class="lightbox">
