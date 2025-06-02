@@ -212,24 +212,47 @@ display: block;
 
 /*CONTEÚDO SECUNDÁRIO */
 
+/* Container dos eventos */
 .conteudo-secundario {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(4, 1fr); /* 4 por linha */
   gap: 20px;
-  justify-content: center; 
+  padding: 20px;
+  justify-content: center; /* centraliza se tiver menos que 4 */
 }
 
+/* Cada evento */
 .conteudo-secundario-item {
-display: inline-block;
-margin: 10px;
-border: 1px solid #ccc;
-padding: 10px;
-border-radius: 10px;
-background-color: white;
-width: 100%; 
-text-align: center;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%; /* ocupa toda a célula */
+  box-sizing: border-box;
+  margin: 0; /* removemos o margin antigo */
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .conteudo-secundario {
+    grid-template-columns: repeat(3, 1fr); /* 3 por linha */
+  }
+}
+
+@media (max-width: 768px) {
+  .conteudo-secundario {
+    grid-template-columns: repeat(2, 1fr); /* 2 por linha */
+  }
+}
+
+@media (max-width: 480px) {
+  .conteudo-secundario {
+    grid-template-columns: 1fr; /* 1 por linha no celular */
+  }
+}
+
 
 
 .conteudo-secundario-item img {
