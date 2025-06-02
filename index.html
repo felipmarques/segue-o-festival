@@ -24,7 +24,34 @@
 
   <nav class="menu">
     <div class="menu-item">
-      <button class="menu-botao">📍Estado</button>
+      <button class="menu-botao">Música</button>
+        <ul class="menu-lista" id="lista-musica">
+          <li onclick="filtrarEventos('tipo', null)">Todos</li>
+          <li onclick="filtrarEventos('tipo', 'Sertanejo')">Sertanejo</li>
+          <li onclick="filtrarEventos('tipo', 'Rap')">Rap</li>
+          <li onclick="filtrarEventos('tipo', 'Funk')">Funk</li>
+          <li onclick="filtrarEventos('tipo', 'Gospel')">Gospel</li>
+          <li onclick="filtrarEventos ('tipo', 'Pop')">Pop</li>
+          <li onclick="filtrarEventos('tipo', 'Rock')">Rock</li>
+        </ul>
+    </div>
+
+    <div class="menu-item">
+      <button class="menu-botao">Eventos</button>
+        <ul class="menu-lista" id="lista-tipos">
+          <li onclick="filtrarEventos('tipo', null)">Todos</li>
+          <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+          <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
+          <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+          <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+          <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
+        </ul>
+    </div>
+
+
+
+    <div class="menu-item">
+      <button class="menu-botao">Estado</button>
       <ul class="menu-lista scroll-limitada" id="lista-estados">
         <li onclick="filtrarEventos('estado', null)">Todos</li>
         <li onclick="filtrarEventos('estado', 'São Paulo')">São Paulo</li>
@@ -60,17 +87,29 @@
         <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
       </ul>
     </div>
-    <div class="menu-item">
-      <button class="menu-botao">🎢Tipo de Evento</button>
-      <ul class="menu-lista" id="lista-tipos">
-        <li onclick="filtrarEventos('tipo', null)">Todos</li>
-        <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
-        <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
-        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
-        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
-        <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
+
+<div class="menu-item">
+  <button class="menu-botao">Line-Up</button>
+    <ul class="menu-lista" id="lista-lineup">
+          <li onclick="filtrarEventos('tipo', 'The Town')">The Town</li>
+          <li onclick="filtrarEventos('tipo', 'Rock In Rio')">Rock In Rio</li>
+          <li onclick="filtrarEventos('tipo', 'Só Track Boa')">Só Track Boa</li>
+          <li onclick="filtrarEventos('tipo', 'Lollapalooza')">Lollapalooza</li>
+          <li onclick="filtrarEventos ('tipo', 'Cena 2K25')">Cena 2K25</li>
       </ul>
-    </div>
+</div>
+
+<div class="menu-item">
+  <button class="menu-botao">Especiais</button>
+    <ul class="menu-lista" id="lista-especiais">
+          <li onclick="filtrarEventos('tipo', 'Ano Novo')">Ano Novo</li>
+          <li onclick="filtrarEventos ('tipo', 'Carnaval')">Carnaval</li>
+          <li onclick="filtrarEventos('tipo', 'Páscoa')">Páscoa</li>
+          <li onclick="filtrarEventos('tipo', 'Festa Junina')">Festa Junina</li>  
+          <li onclick="filtrarEventos('tipo', 'Natal')">Natal</li>
+          
+      </ul>
+</div>
     <div class="search-bar">
     </div>
   </nav>
