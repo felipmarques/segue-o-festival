@@ -340,27 +340,31 @@ background-color: #FFF100;
 
 
     /*CARROSSEL*/
-    .carrossel-container {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      margin: 20px 0;
-    }
-    
+.carrossel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-end; /* empurra o carrossel para a direita */
+}
 
-    .carrossel {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-      }
-      
-      .carrossel img {
-      width: 100%;
-      max-width: 1000px; /* máximo do container */
-      height: 400px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border-radius: 20px;
-      }
+.carrossel {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+  max-width: 1000px; /* largura máxima do carrossel */
+  overflow: hidden;
+}
+
+.carrossel img {
+  width: 1000px;  /* força uma imagem por vez */
+  height: 400px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 20px;
+}
+
     
     .botao-carrossel {
       position: absolute;
