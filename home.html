@@ -338,6 +338,29 @@
     .conteudo-secundario-item:nth-child(4) { animation-delay: 0.4s; }
     .conteudo-secundario-item:nth-child(5) { animation-delay: 0.5s; }
     .conteudo-secundario-item:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Estilo para o botão de logout */
+    .logout-botao {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    
+    .logout-botao:hover {
+      background-color: #c0392b;
+    }
+    
+    .logout-icone {
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
@@ -569,13 +592,17 @@
 
         const data = document.createElement('p');
         if (evento.data) {
+          // CORREÇÃO: Formatação da data ajustada para evitar problemas de timezone
           const dataEvento = new Date(evento.data);
-          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          // Ajusta para o timezone local
+          const dataAjustada = new Date(dataEvento.getTime() + dataEvento.getTimezoneOffset() * 60000);
+          
+          const dataFormatada = dataAjustada.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
           });
-          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          const diaSemana = dataAjustada.toLocaleDateString('pt-BR', {
             weekday: 'long'
           });
           data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
