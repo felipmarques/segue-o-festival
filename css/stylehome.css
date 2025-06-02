@@ -368,25 +368,30 @@ display: block;
   position: relative;
   width: 80%; 
   max-width: 850px; 
-  margin: 20px auto; /* Centraliza horizontalmente */
+  margin: 20px auto;
   overflow: hidden;
-  border-radius: 30px; /* Opcional: para cantos arredondados */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Opcional: sombra para efeito visual */
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  /* Novidade: Garante proporção 16:9 sem depender do aspect-ratio */
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 = 9/16 = 0.5625 */
 }
 
 .carrossel {
+  position: absolute; /* Novidade: Posicionamento absoluto para preencher o container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   transition: transform 0.5s ease;
-  width: 100%;
-  aspect-ratio: 16/9; /* Proporção recomendada para imagens */
 }
 
 .carrossel img {
   flex: 0 0 100%;
   width: 100%;
-  height: 100%; /* Agora usa 100% da altura do carrossel */
-  object-fit: contain; /* Mantém a proporção sem cortar a imagem */
-  /* Ou object-fit: cover; se preferir preencher todo o espaço (pode cortar um pouco) */
+  height: 100%;
+  object-fit: cover; /* Alterado: Agora cobre todo o espaço, mesmo com cortes */
   cursor: pointer;
 }
 
