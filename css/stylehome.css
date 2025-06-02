@@ -347,19 +347,6 @@ background-color: #FFF100;
       margin: 20px 0;
     }
     
-    .carrossel {
-      display: flex;
-      transition: transform 0.5s ease;
-      width: 100%;
-    }
-    
-    .carrossel img {
-      flex: 0 0 100%;
-      width: 100%;
-      height: 400px;
-      object-fit: cover;
-      cursor: pointer;
-    }
 
     .carrossel {
       display: flex;
