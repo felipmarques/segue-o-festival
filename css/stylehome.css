@@ -427,6 +427,7 @@ background-color: #FFF100;
       margin-bottom: 20px;
       text-align: center;
       position: relative;
+      font-family: 'Raleway', sans-serif;
     }
     
     .galeria-titulo::after {
@@ -535,7 +536,7 @@ background-color: #FFF100;
       cursor: pointer;
     }
 
-        .criar-evento-container {
+    .criar-evento-container {
       background-color: #f8f9fa;
       padding: 60px 20px;
       text-align: center;
@@ -546,12 +547,14 @@ background-color: #FFF100;
       font-size: 2rem;
       color: #2c3e50;
       margin-bottom: 20px;
+      font-family: 'Raleway', sans-serif;
     }
     
     .criar-evento-container p {
       font-size: 1.2rem;
       color: #555;
       margin-bottom: 30px;
+      font-family: 'Raleway', sans-serif;
     }
     
     .criar-evento-container .destaque-verde {
@@ -559,6 +562,7 @@ background-color: #FFF100;
       color: #4CAF50;
       font-weight: bold;
       margin-bottom: 30px;
+      font-family: 'Raleway', sans-serif;
     }
     
     .criar-evento-container .divisor {
@@ -576,6 +580,7 @@ background-color: #FFF100;
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s;
+      font-family: 'Inter', sans-serif;
     }
     
     .criar-evento-container .botao-criar-evento:hover {
