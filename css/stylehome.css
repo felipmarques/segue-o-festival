@@ -222,10 +222,14 @@ display: block;
 }
 
 /* Cada evento */
+.conteudo-secundario {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colunas fixas */
+  gap: 20px; /* espaçamento entre os cards */
+  padding: 20px;
+}
+
 .conteudo-secundario-item {
-  width: 100%; /* ocupa toda a célula */
-  box-sizing: border-box;
-  margin: 0; /* removemos o margin antigo */
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 10px;
@@ -233,26 +237,6 @@ display: block;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-
-/* Responsividade */
-@media (max-width: 1024px) {
-  .conteudo-secundario {
-    grid-template-columns: repeat(3, 1fr); /* 3 por linha */
-  }
-}
-
-@media (max-width: 768px) {
-  .conteudo-secundario {
-    grid-template-columns: repeat(2, 1fr); /* 2 por linha */
-  }
-}
-
-@media (max-width: 480px) {
-  .conteudo-secundario {
-    grid-template-columns: 1fr; /* 1 por linha no celular */
-  }
-}
-
 
 
 .conteudo-secundario-item img {
