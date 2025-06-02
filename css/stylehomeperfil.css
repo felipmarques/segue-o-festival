@@ -350,7 +350,7 @@
     position: relative;
     display: inline-block;
     margin: 25px auto;
-    margin-left: 60px; 
+    margin-left: 80px; 
 }
 
 .conteudo-secundario-destaque::after {
