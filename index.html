@@ -128,7 +128,9 @@
   <section class="pesquisa">
         <div class="pesquisa-busca-evento">
             <input type="search" id="txtBusca" placeholder="Pesquise seus eventos favoritos..."/>
+            <button id="btnBusca" aria-label="Buscar evento">
             <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
         </div>
         
         <div class="pesquisa-busca-local">
@@ -281,6 +283,8 @@
     let estadoSelecionado = null;
     let tipoSelecionado = null;
     let dataSelecionada = null;
+    let termoBusca = '';
+
 
     async function buscarEventos() {
       try {
@@ -322,9 +326,11 @@
 
       const eventosFiltrados = todosEventos.filter(evento => {
         const dataEvento = evento.data ? new Date(evento.data).toLocaleDateString('pt-BR') : null;
+        const nomeEvento = evento.nome?.toLowerCase() || '';
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
                (!tipoSelecionado || evento.tipo_evento === tipoSelecionado) &&
-               (!dataSelecionada || dataEvento === dataSelecionada);
+               (!dataSelecionada || dataEvento === dataSelecionada)&&
+               (!termoBusca || nomeEvento.includes(termoBusca));
       });
 
       // Atualiza o contador de eventos
@@ -643,6 +649,23 @@
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
+      // Configura a busca por nome do evento
+  const inputBusca = document.getElementById("txtBusca");
+  const iconeBusca = document.querySelector("btnBusca");
+
+  function aplicarBusca() {
+    termoBusca = inputBusca.value.trim().toLowerCase();
+    exibirEventosFiltrados();
+  }
+
+  inputBusca.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      aplicarBusca();
+    }
+  });
+
+  iconeBusca.addEventListener("click", aplicarBusca);
+      
       buscarEventos();
       
       // Atualiza o carrossel automaticamente a cada 5 segundos
