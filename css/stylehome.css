@@ -366,11 +366,11 @@ display: block;
     /*CARROSSEL*/
 .carrossel-container {
   position: relative;
-  width: 80%; /* Reduzindo a largura para 80% do container pai */
-  max-width: 800px; /* Largura máxima para não ficar muito grande */
+  width: 80%; 
+  max-width: 100%; 
   margin: 20px auto; /* Centraliza horizontalmente */
   overflow: hidden;
-  border-radius: 8px; /* Opcional: para cantos arredondados */
+  border-radius: 50%; /* Opcional: para cantos arredondados */
   box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Opcional: sombra para efeito visual */
 }
 
@@ -388,7 +388,6 @@ display: block;
   object-fit: contain; /* Mantém a proporção sem cortar a imagem */
   /* Ou object-fit: cover; se preferir preencher todo o espaço (pode cortar um pouco) */
   cursor: pointer;
-  background-color: #f5f5f5; /* Cor de fundo para áreas vazias (se usar 'contain') */
 }
 
 /* O restante do CSS pode permanecer igual */
