@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="src/css/paginaperfiledicao.css">
     <title>Segue o Festival</title>
 </head>
@@ -164,44 +164,9 @@
                     <option value="taboao_da_serra">Taboão da Serra</option>
                     </select>
                 </div>
-                    
-    
-                <div class="dados-pessoais-uf">
-                    <p>UF</p>
-                    <select class="dados-pessoais-uf-formulario" id="uf" name="uf">
-                    <option value="AC">Acre (AC)</option>
-                    <option value="AL">Alagoas (AL)</option>
-                    <option value="AP">Amapá (AP)</option>
-                    <option value="AM">Amazonas (AM)</option>
-                    <option value="BA">Bahia (BA)</option>
-                    <option value="CE">Ceará (CE)</option>
-                    <option value="DF">Distrito Federal (DF)</option>
-                    <option value="ES">Espírito Santo (ES)</option>
-                    <option value="GO">Goiás (GO)</option>
-                    <option value="MA">Maranhão (MA)</option>
-                    <option value="MT">Mato Grosso (MT)</option>
-                    <option value="MS">Mato Grosso do Sul (MS)</option>
-                    <option value="MG">Minas Gerais (MG)</option>
-                    <option value="PA">Pará (PA)</option>
-                    <option value="PB">Paraíba (PB)</option>
-                    <option value="PR">Paraná (PR)</option>
-                    <option value="PE">Pernambuco (PE)</option>
-                    <option value="PI">Piauí (PI)</option>
-                    <option value="RJ">Rio de Janeiro (RJ)</option>
-                    <option value="RN">Rio Grande do Norte (RN)</option>
-                    <option value="RS">Rio Grande do Sul (RS)</option>
-                    <option value="RO">Rondônia (RO)</option>
-                    <option value="RR">Roraima (RR)</option>
-                    <option value="SC">Santa Catarina (SC)</option>
-                    <option value="SP">São Paulo (SP)</option>
-                    <option value="SE">Sergipe (SE)</option>
-                    <option value="TO">Tocantins (TO)</option>
-                    </select>
-                </div>
                 </div>
             </div>
     
-            
             <div class="dados-pessoais-usuario">
                 <h2 class="subtitulo-pen">
                     Login <i class="fa-solid fa-pen"></i>
@@ -243,21 +208,16 @@
     <script>
         // Função de Logout
         function fazerLogout() {
-            // Adicionar feedback visual
             const btn = document.getElementById("logout_btn");
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saindo...';
             btn.disabled = true;
             
-            // Limpar dados de autenticação
             localStorage.removeItem("usuarioLogado");
             localStorage.removeItem("token");
             localStorage.removeItem("authToken");
             
-            // Redirecionar após pequeno delay para melhor UX
             setTimeout(() => {
                 window.location.href = "index.html";
-                
-                // Impedir retorno via botão voltar
                 history.pushState(null, null, "index.html");
                 window.addEventListener('popstate', function() {
                     history.pushState(null, null, "index.html");
@@ -270,10 +230,9 @@
 
         // Funções de formatação
         function formatarCNPJ(cnpj) {
-         cnpj = cnpj.replace(/\D/g, ''); // Remove tudo que não for dígito
+         cnpj = cnpj.replace(/\D/g, '');
          return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
         }
-
         
         function formatarTelefone(telefone) {
             telefone = telefone.replace(/\D/g, '');
@@ -317,25 +276,28 @@
           try {
             console.log("Buscando dados do promotor...");
             const response = await fetch(`/api/buscarPromotor?email=${encodeURIComponent(usuarioLogado.email)}`);
-            if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
-            const dados = await response.json();
-            console.log("Dados carregados:", dados);
-        
-            document.getElementById("txtNome").value = dados.nome_responsavel || "";
-            document.getElementById("txtCNPJ").value = formatarCNPJ(dados.cnpj || "");
-            document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
-            document.getElementById("emailEm").value = dados.email || "";
-        
-            if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
-            if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
-            if (dados.numero) document.getElementById("telNum").value = dados.numero;
-            if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
-            if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
-            if (dados.uf) document.getElementById("uf").value = dados.uf;
+            
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(`Erro ${response.status}: ${errorData.error || 'Falha ao buscar dados'}`);
+            }
+            
+            const { data } = await response.json();
+            console.log("Dados carregados:", data);
+
+            document.getElementById("txtNome").value = data.nome_responsavel || "";
+            document.getElementById("txtCNPJ").value = formatarCNPJ(data.cnpj || "");
+            document.getElementById("telTelefone").value = formatarTelefone(data.telefone || "");
+            document.getElementById("emailEm").value = data.email || "";
+            document.getElementById("txtEndereço").value = data.endereco || "";
+            document.getElementById("telCEP").value = formatarCEP(data.cep || "");
+            document.getElementById("telNum").value = data.numero || "";
+            document.getElementById("telCom").value = data.complemento || "";
+            if (data.municipio) document.getElementById("municipio").value = data.municipio;
         
           } catch (error) {
             console.error("Erro ao carregar dados do perfil:", error);
-            alert("Erro ao carregar dados do perfil.");
+            alert(error.message || "Erro ao carregar dados do perfil.");
           }
         
           document.getElementById("logout_btn")?.addEventListener("click", fazerLogout);
@@ -360,8 +322,7 @@
               cep: document.getElementById("telCEP").value.replace(/[^\d]/g, ""),
               numero: document.getElementById("telNum").value,
               complemento: document.getElementById("telCom").value,
-              municipio: document.getElementById("municipio").value,
-              uf: document.getElementById("uf").value
+              municipio: document.getElementById("municipio").value
             };
         
             if (senha) dadosAtualizados.senha = senha;
@@ -375,66 +336,26 @@
                 body: JSON.stringify(dadosAtualizados)
               });
             
-              if (!response.ok) throw new Error("Erro ao atualizar os dados.");
+              if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || 'Erro ao atualizar os dados');
+              }
             
               alert("Perfil atualizado com sucesso!");
-              console.log("Perfil atualizado:", await response.json());
-            } catch (err) {
-              console.error("Erro ao salvar os dados:", err);
-              alert("Erro ao salvar os dados. Tente novamente.");
-            }
-              console.log("Dados atualizados com sucesso.");
-              exibirPopup("Perfil atualizado com sucesso!");
-        
+              console.log("Perfil atualizado com sucesso");
+              
               usuarioLogado.nome_responsavel = dadosAtualizados.nome_responsavel;
               localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
-        
-            } catch (error) {
-              console.error("Erro ao salvar alterações:", error);
-              alert("Erro ao salvar alterações: " + error.message);
+            
+            } catch (err) {
+              console.error("Erro ao salvar os dados:", err);
+              alert(err.message || "Erro ao salvar os dados. Tente novamente.");
             }
           });
         });
-        
-        function fazerLogout() {
-          console.log("Logout solicitado.");
-          localStorage.removeItem("usuarioLogado");
-          window.location.href = "loginPromotor.html";
-        }
-        
-        function formatarCNPJ(cnpj) {
-          cnpj = cnpj.replace(/\D/g, '');
-          return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
-        }
-        
-        function formatarTelefone(telefone) {
-          telefone = telefone.replace(/\D/g, '');
-          return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-        }
-        
-        function formatarCEP(cep) {
-          cep = cep.replace(/\D/g, '');
-          return cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
-        }
-        
-        function exibirPopup(mensagem) {
-          const popup = document.getElementById("popupSucesso");
-          if (popup) {
-            popup.textContent = mensagem;
-            popup.style.display = "block";
-            setTimeout(() => {
-              popup.style.display = "none";
-            }, 4000);
-          } else {
-            console.warn("Popup de sucesso não encontrado no DOM.");
-          }
-        }
-
-
     </script>
     <div id="popupSucesso" style="display:none; position:fixed; top:20px; right:20px; background:#4caf50; color:#fff; padding:15px 25px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:1000;">
-  Perfil atualizado com sucesso!
-</div>
-
+        Perfil atualizado com sucesso!
+    </div>
 </body>
 </html>
