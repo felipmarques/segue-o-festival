@@ -133,15 +133,16 @@ object-fit: cover;
   background: linear-gradient(to right, #08C2FF, #A0DEFF);
   display: flex;
   justify-content: center;
+  gap: 90px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid #eee;
-  gap: 15px;
   flex-wrap: wrap;
 }
 
 .menu-item {
 position: relative;
+font-family: 'Inter', sans-serif;
 }
 
 .menu-botao {
