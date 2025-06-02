@@ -236,7 +236,20 @@ display: block;
   box-sizing: border-box; /* Importante para o cálculo de largura */
 }
 
-
+.conteudo-secundario-item {
+  display: inline-block;
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
 
 .conteudo-secundario-item img {
   width: 100%;
