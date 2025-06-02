@@ -423,7 +423,7 @@ background-color: #FFF100;
     
     .galeria-titulo {
       font-size: 2rem;
-      color: #ffffff;
+      color: #000000;
       margin-bottom: 20px;
       text-align: center;
       position: relative;
@@ -545,7 +545,7 @@ background-color: #FFF100;
     
     .criar-evento-container h2 {
       font-size: 2rem;
-      color: #ffffff;
+      color: #000000;
       margin-bottom: 20px;
       font-family: 'Raleway', sans-serif;
     }
