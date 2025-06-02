@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="src/css/paginaperfiledicao.css">
+    <title>Segue o Festival</title>
+</head>
+<body>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const usuarioLogado = localStorage.getItem("usuarioLogado");
+    
+        if (!usuarioLogado) {
+          window.location.href = "loginPromotor.html";
+          return;
+        }
+    
+        try {
+          const dados = JSON.parse(usuarioLogado);
+          if (!dados.email) {
+            window.location.href = "loginPromotor.html";
+          }
+        } catch (erro) {
+          window.location.href = "loginPromotor.html";
+        }
+      });
+    </script>
+    
+    <header>
+        <nav id="sidebar" class="open-sidebar">
+            <div id="sidebar_content">
+                <div id="user">
+                    <img src="src/images/avatar.avif" id="user_avatar" alt="Avatar">
+        
+                    <p id="user_infos">
+                        <span class="item-description">
+                        </span>
+                    </p>
+                </div>
+        
+                <ul id="side_items">
+                    <li class="side-item">
+                        <a href="https://segue-o-festival.vercel.app/home.html">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="item-description">
+                                Home
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="side-item active">
+                        <a href="#">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="item-description">
+                                Perfil
+                            </span>
+                        </a>
+                    </li>
+        
+                    <li class="side-item">
+                        <a href="meusEventosPromotor.html">
+                            <i class="fa-solid fa-star"></i>
+                            <span class="item-description">
+                                Meus Eventos
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="logout">
+                <button id="logout_btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="item-description">
+                        Logout
+                    </span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>        
+        <h1 class="cabecalho-titulo">Segue<br>O Festival</h1>
+
+        <section class="conteudo-formulario">
+            <div class="dados-pessoais-informacoes">
+                <h2 class="subtitulo">Dados Pessoais</h2>
+                <i class="fa-solid fa-pen"></i>
+                <div class="dados-pessoais-nome">
+                <p>Nome Completo da Empresa</p>
+                <input class="dados-pessoais-nome-formulario" type="text" id="txtNome" placeholder="Nome Completo"/>
+                </div>
+    
+                <div class="dados-pessoais-baixo">
+                <div class="dados-pessoais-telefone">
+                    <p>CNPJ</p>
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CNPJ">
+                </div>
+                <div class="dados-pessoais-telefone">
+                    <p>Telefone</p>
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telTelefone" placeholder="(00) 00000-0000">
+                </div>    
+    
+            <div class="dados-pessoais-morada">
+                <div class="dados-pessoais-endereco">
+                    <h2 class="subtitulo">Endereço</h2>
+                    <i class="fa-solid fa-pen"></i>
+                    <p>Endereço</p>
+                    <input class="dados-pessoais-endereco-formulario" type="text" id="txtEndereço" placeholder="Insira o Endereço"/>
+                </div>
+    
+                <div class="dados-endereco-abaixo" >
+                <div class="dados-pessoais-cep">
+                    <p>CEP</p>
+                    <input class="dados-pessoais-cep-formulario" type="tel" id="telCEP" placeholder="CEP">
+                </div>
+    
+                <div class="dados-pessoais-numero">
+                    <p>Número</p>
+                    <input class="dados-pessoais-numero-formulario" type="tel" id="telNum" placeholder="Número da Residência">
+                </div>
+    
+                <div class="dados-pessoais-complemento" >
+                    <p>Complemento</p>
+                    <input class="dados-pessoais-complemento-formulario" type="tel" id="telCom" placeholder="Complemento">
+                </div>
+                </div>
+    
+                <div class="dados-endereco-abaixo-secundario" >
+                <div class="dados-pessoais-municipio" >
+                    <p>Município</p>
+                    <select class="dados-pessoais-municipio-formulario" id="municipio" name="municipio">
+                    <option value="americana">Americana</option>
+                    <option value="barueri">Barueri</option>
+                    <option value="braganca_paulista">Bragança Paulista</option>
+                    <option value="cajamar">Cajamar</option>
+                    <option value="campinas">Campinas</option>
+                    <option value="carapicuiba">Carapicuíba</option>
+                    <option value="diadema">Diadema</option>
+                    <option value="embu_das_artes">Embu das Artes</option>
+                    <option value="guaruja">Guarujá</option>
+                    <option value="hortolandia">Hortolândia</option>
+                    <option value="itatiba">Itatiba</option>
+                    <option value="itapecerica_da_serra">Itapecerica da Serra</option>
+                    <option value="jundiai">Jundiaí</option>
+                    <option value="maua">Mauá</option>
+                    <option value="osasco">Osasco</option>
+                    <option value="piracicaba">Piracicaba</option>
+                    <option value="praia_grande">Praia Grande</option>
+                    <option value="ribeirao_pires">Ribeirão Pires</option>
+                    <option value="rio_grande_da_serra">Rio Grande da Serra</option>
+                    <option value="santana_de_parnaiba">Santana de Parnaíba</option>
+                    <option value="santo_andre">Santo André</option>
+                    <option value="santos">Santos</option>
+                    <option value="sao_bernardo">São Bernardo do Campo</option>
+                    <option value="sao_caetano">São Caetano do Sul</option>
+                    <option value="sao_jose_dos_campos">São José dos Campos</option>
+                    <option value="sao_paulo">São Paulo</option>
+                    <option value="sorocaba">Sorocaba</option>
+                    <option value="sumare">Sumaré</option>
+                    <option value="taubate">Taubaté</option>
+                    <option value="taboao_da_serra">Taboão da Serra</option>
+                    </select>
+                </div>
+                    
+    
+                <div class="dados-pessoais-uf">
+                    <p>UF</p>
+                    <select class="dados-pessoais-uf-formulario" id="uf" name="uf">
+                    <option value="AC">Acre (AC)</option>
+                    <option value="AL">Alagoas (AL)</option>
+                    <option value="AP">Amapá (AP)</option>
+                    <option value="AM">Amazonas (AM)</option>
+                    <option value="BA">Bahia (BA)</option>
+                    <option value="CE">Ceará (CE)</option>
+                    <option value="DF">Distrito Federal (DF)</option>
+                    <option value="ES">Espírito Santo (ES)</option>
+                    <option value="GO">Goiás (GO)</option>
+                    <option value="MA">Maranhão (MA)</option>
+                    <option value="MT">Mato Grosso (MT)</option>
+                    <option value="MS">Mato Grosso do Sul (MS)</option>
+                    <option value="MG">Minas Gerais (MG)</option>
+                    <option value="PA">Pará (PA)</option>
+                    <option value="PB">Paraíba (PB)</option>
+                    <option value="PR">Paraná (PR)</option>
+                    <option value="PE">Pernambuco (PE)</option>
+                    <option value="PI">Piauí (PI)</option>
+                    <option value="RJ">Rio de Janeiro (RJ)</option>
+                    <option value="RN">Rio Grande do Norte (RN)</option>
+                    <option value="RS">Rio Grande do Sul (RS)</option>
+                    <option value="RO">Rondônia (RO)</option>
+                    <option value="RR">Roraima (RR)</option>
+                    <option value="SC">Santa Catarina (SC)</option>
+                    <option value="SP">São Paulo (SP)</option>
+                    <option value="SE">Sergipe (SE)</option>
+                    <option value="TO">Tocantins (TO)</option>
+                    </select>
+                </div>
+                </div>
+            </div>
+    
+            
+            <div class="dados-pessoais-usuario">
+                <h2 class="subtitulo-pen">
+                    Login <i class="fa-solid fa-pen"></i>
+                </h2>
+                <div class="dados-pessoais-email">
+                    <p>E-mail</p>
+                    <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly/>
+                </div>
+            
+                <div class="dados-pessoais-senha">
+                    <h3>Alterar Senha</h3>
+                    
+                    <div class="campo-senha">
+                        <p>Nova Senha:</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
+                    </div>
+                    
+                    <div class="campo-senha">
+                        <p>Confirmar Senha:</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+                    </div>
+                </div>
+            </div> 
+
+            <div>
+                <button class="botao-salvar" onclick="salvarPerfil()">Salvar</button>
+            </div>
+        </section>
+
+        <footer class="rodape">
+            <h3 class="titulo-rodape">Segue<br>O Festival!</h3>           
+            </div>           
+            <div class="direitos-reservados">
+              &copy; 2025 Segue o Festival. Todos os direitos reservados.
+            </div>            
+        </footer>
+    </main>
+
+    <script>
+        // Função de Logout
+        function fazerLogout() {
+            // Adicionar feedback visual
+            const btn = document.getElementById("logout_btn");
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saindo...';
+            btn.disabled = true;
+            
+            // Limpar dados de autenticação
+            localStorage.removeItem("usuarioLogado");
+            localStorage.removeItem("token");
+            localStorage.removeItem("authToken");
+            
+            // Redirecionar após pequeno delay para melhor UX
+            setTimeout(() => {
+                window.location.href = "index.html";
+                
+                // Impedir retorno via botão voltar
+                history.pushState(null, null, "index.html");
+                window.addEventListener('popstate', function() {
+                    history.pushState(null, null, "index.html");
+                });
+            }, 500);
+        }
+
+        // Adicionar evento de logout
+        document.getElementById("logout_btn")?.addEventListener("click", fazerLogout);
+
+        // Funções de formatação
+        function formatarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        
+        function formatarTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, '');
+            if (telefone.length === 11) {
+                return telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+            return telefone;
+        }
+        
+        function formatarCEP(cep) {
+            cep = cep.replace(/\D/g, '');
+            return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+
+        // Carregar dados do perfil
+        document.addEventListener("DOMContentLoaded", async () => {
+            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+        
+            if (!usuarioLogado) {
+                window.location.href = "login.html";
+                return;
+            }
+        
+            // Preencher nome do usuário na sidebar
+            const nomeUsuario = document.querySelector("#user_infos .item-description");
+            if (nomeUsuario) {
+                nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
+            }
+        
+            try {
+                const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
+                if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
+        
+                const dados = await response.json();
+        
+                // Preencher formulário com os dados
+                document.getElementById("txtNome").value = dados.nome || "";
+                document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
+                document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
+                document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
+                
+                if (dados.data_nascimento) {
+                    let dataFormatada;
+            
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(dados.data_nascimento)) {
+                        dataFormatada = dados.data_nascimento;
+                    } 
+                    else if (/\d{2}\/\d{2}\/\d{4}/.test(dados.data_nascimento)) {
+                        const [dia, mes, ano] = dados.data_nascimento.split('/');
+                        dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                    }
+                    
+                    if (dataFormatada) {
+                        document.getElementById("dateNascimento").value = dataFormatada;
+                    }
+                }
+
+                if (dados.sexo) {
+                    const selectSexo = document.getElementById("sexo");
+                    selectSexo.value = dados.sexo;
+                    selectSexo.dispatchEvent(new Event('change'));
+                }
+                if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
+                if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
+                if (dados.numero) document.getElementById("telNum").value = dados.numero;
+                if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
+                if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
+                if (dados.uf) document.getElementById("uf").value = dados.uf;
+        
+            } catch (error) {
+                console.error("Erro ao carregar perfil:", error);
+                alert("Erro ao carregar dados do perfil.");
+            }
+        });
+        
+        // Função para alterar senha
+        async function alterarSenha() {
+            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+            const novaSenha = document.getElementById("novaSenha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+        
+            if (!novaSenha || !confirmarSenha) {
+                alert("Por favor, preencha todos os campos");
+                return;
+            }
+        
+            if (novaSenha !== confirmarSenha) {
+                alert("As senhas não coincidem");
+                return;
+            }
+        
+            try {
+                const response = await fetch('/api/alterar_senha', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: usuarioLogado.email,
+                        novaSenha: novaSenha
+                    })
+                });
+        
+                const result = await response.json();
+        
+                if (!response.ok) {
+                    throw new Error(result.message || 'Erro ao alterar senha');
+                }
+        
+                alert("Senha alterada com sucesso!");
+                // Limpa os campos após sucesso
+                document.getElementById("novaSenha").value = "";
+                document.getElementById("confirmarSenha").value = "";
+        
+            } catch (error) {
+                console.error("Erro:", error);
+                alert(error.message || "Erro ao alterar senha");
+            }
+        }
+        
+        // Vincular função ao botão Salvar
+        document.querySelector('.botao-salvar')?.addEventListener('click', alterarSenha);
+    </script>
+</body>
+</html>
