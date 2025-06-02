@@ -385,7 +385,7 @@ display: block;
   flex: 0 0 100%;
   width: 100%;
   height: 100%; /* Agora usa 100% da altura do carrossel */
-  object-fit: contain; /* Mantém a proporção sem cortar a imagem */
+  object-fit: cover; /* Mantém a proporção sem cortar a imagem */
   /* Ou object-fit: cover; se preferir preencher todo o espaço (pode cortar um pouco) */
   cursor: pointer;
 }
