@@ -212,8 +212,30 @@ display: block;
 
 /*CONTEÚDO SECUNDÁRIO */
 
-/* Container dos eventos */
-/* Estilo dos cards de eventos */
+.conteudo-secundario{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1100px; /* Ajuste conforme necessário */
+  margin: 0 auto;
+}
+
+/* Estilo dos cards de eventos (editado para 4 por linha) */
+.conteudo-secundario-item {
+  flex: 0 0 calc(25% - 20px); /* 25% de largura - margens */
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+  box-sizing: border-box; /* Importante para o cálculo de largura */
+}
+
 .conteudo-secundario-item {
   display: inline-block;
   margin: 10px;
