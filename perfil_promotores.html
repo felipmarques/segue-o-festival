@@ -316,7 +316,7 @@
         
           try {
             console.log("Buscando dados do promotor...");
-            const response = await fetch(`/api/usuario_promotor?email=${encodeURIComponent(usuarioLogado.email)}`);
+            const response = await fetch(`/api/buscarPromotor?email=${encodeURIComponent(usuarioLogado.email)}`);
             if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
             const dados = await response.json();
             console.log("Dados carregados:", dados);
@@ -367,7 +367,7 @@
             if (senha) dadosAtualizados.senha = senha;
         
             try {
-              const response = await fetch(`/api/usuario_promotor?email=${encodeURIComponent(usuarioLogado.email)}`, {
+              const response = await fetch(`/api/buscarPromotor?email=${encodeURIComponent(usuarioLogado.email)}`, {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json"
