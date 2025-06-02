@@ -3,10 +3,267 @@
 <head>
   <meta charset="UTF-8">
   <title>Segue o Festival - Chatbot</title>
-  <link rel="stylesheet" href="src/css/chatbot.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    /* Estilo original do SKADE OTESTIVAL */
+    #chatbot-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #chatbot-toggle img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    #chatbot-toggle img:hover {
+      transform: scale(1.05);
+    }
+
+    #chatbot-window {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 350px;
+      height: 500px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      z-index: 1001;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #chatbot-header {
+      background: linear-gradient(135deg, #2c3e50, #4a6491);
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    #chatbot-header h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    #chatbot-name {
+      position: absolute;
+      bottom: 5px;
+      left: 15px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    #button-chat {
+      display: flex;
+      gap: 8px;
+    }
+
+    #button-chat button {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    #button-chat button:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    #chatbox {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f8f9fa;
+    }
+
+    .message {
+      margin-bottom: 12px;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      word-wrap: break-word;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .bot-message {
+      background: #e9ecef;
+      color: #212529;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .user-message {
+      background: #2c3e50;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    #options {
+      padding: 12px;
+      background: #fff;
+      border-top: 1px solid #e9ecef;
+      max-height: 150px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-option {
+      background: #f1f3f5;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      font-size: 14px;
+      color: #495057;
+    }
+
+    .chat-option:hover {
+      background: #e9ecef;
+      transform: translateX(2px);
+    }
+
+    .back-option {
+      background: #2c3e50;
+      color: white;
+    }
+
+    .back-option:hover {
+      background: #1a2636;
+    }
+
+    #input-area {
+      display: flex;
+      padding: 12px;
+      background: #fff;
+      border-top: 1px solid #e9ecef;
+      align-items: center;
+    }
+
+    #message-input {
+      flex: 1;
+      border: 1px solid #e9ecef;
+      border-radius: 20px;
+      padding: 10px 16px;
+      resize: none;
+      max-height: 100px;
+      outline: none;
+      font-size: 14px;
+      transition: border 0.2s;
+    }
+
+    #message-input:focus {
+      border-color: #adc5ff;
+    }
+
+    #upload-button, #send-message {
+      background: none;
+      border: none;
+      color: #2c3e50;
+      cursor: pointer;
+      font-size: 18px;
+      margin: 0 8px;
+      transition: color 0.2s;
+    }
+
+    #upload-button:hover, #send-message:hover {
+      color: #4a6491;
+    }
+
+    .event-item {
+      padding: 12px;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .event-name {
+      margin: 0 0 6px 0;
+      font-weight: 600;
+      color: #212529;
+      font-size: 14px;
+    }
+
+    .event-link {
+      color: #4a6491;
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .event-link:hover {
+      color: #2c3e50;
+      text-decoration: underline;
+    }
+
+    /* Estado minimizado */
+    #chatbot-window.minimized {
+      height: 60px;
+      overflow: hidden;
+    }
+
+    #chatbot-window.minimized #chatbox,
+    #chatbot-window.minimized #options,
+    #chatbot-window.minimized #input-area,
+    #chatbot-window.minimized #calendar-container {
+      display: none;
+    }
+
+    #chatbot-window.minimized #chatbot-header {
+      cursor: pointer;
+    }
+
+    /* Animação de balão */
+    #chatbot-balloon {
+      position: absolute;
+      bottom: 90px;
+      right: 10px;
+      background: #2c3e50;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 18px;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    #chatbot-toggle:hover #chatbot-balloon {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 
 <body>
@@ -17,11 +274,11 @@
 
   <div id="chatbot-window">
     <div id="chatbot-header">
-      <h1>Segue<br>O Festival</h1>
+      <h1>SKADE<br>OTESTIVAL</h1>
       <span id="chatbot-name">Chat com Zeca</span>
       <div id="button-chat">
-        <button id="minimize-chat">-</button>
-        <button id="close-chat">x</button> 
+        <button id="minimize-chat">−</button>
+        <button id="close-chat">×</button> 
       </div>
     </div>    
     <div id="chatbox"></div>
@@ -60,10 +317,11 @@
     const closeBtn = document.getElementById('close-chat');
     const uploadButton = document.getElementById('upload-button');
     const imageInput = document.getElementById('image-input');
+    const chatbotHeader = document.getElementById('chatbot-header');
 
     // Event Listeners
     chatbotToggle.addEventListener('click', toggleChat);
-    minimizeBtn.addEventListener('click', minimizeChat);
+    minimizeBtn.addEventListener('click', toggleMinimize);
     closeBtn.addEventListener('click', closeChat);
     sendMessageBtn.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', (e) => {
@@ -74,6 +332,11 @@
     });
     uploadButton.addEventListener('click', () => imageInput.click());
     imageInput.addEventListener('change', handleImageUpload);
+    chatbotHeader.addEventListener('click', () => {
+      if (minimized) {
+        toggleMinimize();
+      }
+    });
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
@@ -81,7 +344,7 @@
       fetchEventos();
       // Mostrar mensagem inicial
       setTimeout(() => {
-        addBotMessage('Oiá! Bem-vindo ao Segue o Festival!');
+        addBotMessage('Oiá! Bem-vindo ao SKADE OTESTIVAL!');
         showMainOptions();
       }, 500);
     });
@@ -92,26 +355,26 @@
       if (chatOpen) {
         chatbotWindow.style.display = 'flex';
         minimized = false;
+        updateWindowState();
         scrollToBottom();
       } else {
         chatbotWindow.style.display = 'none';
       }
     }
 
-    function minimizeChat() {
+    function toggleMinimize() {
       minimized = !minimized;
-      if (minimized) {
-        chatbotWindow.style.height = '60px';
-        chatbox.style.display = 'none';
-        optionsContainer.style.display = 'none';
-        document.getElementById('input-area').style.display = 'none';
-        document.getElementById('calendar-container').style.display = 'none';
-      } else {
-        chatbotWindow.style.height = '500px';
-        chatbox.style.display = 'block';
-        optionsContainer.style.display = 'block';
-        document.getElementById('input-area').style.display = 'flex';
+      updateWindowState();
+      if (!minimized) {
         scrollToBottom();
+      }
+    }
+
+    function updateWindowState() {
+      if (minimized) {
+        chatbotWindow.classList.add('minimized');
+      } else {
+        chatbotWindow.classList.remove('minimized');
       }
     }
 
@@ -158,6 +421,7 @@
           img.src = e.target.result;
           img.style.maxWidth = '200px';
           img.style.maxHeight = '200px';
+          img.style.borderRadius = '8px';
           
           const messageDiv = document.createElement('div');
           messageDiv.className = 'message user-message';
@@ -296,7 +560,6 @@
     }
 
     function handleUserMessage(message) {
-      // Aqui você pode adicionar processamento de linguagem natural básico
       const lowerMsg = message.toLowerCase();
       
       if (lowerMsg.includes('olá') || lowerMsg.includes('oi') || lowerMsg.includes('ola')) {
@@ -364,213 +627,5 @@
       }
     }
   </script>
-
-  <style>
-    /* Estilos básicos do chatbot */
-    #chatbot-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      cursor: pointer;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-
-    #chatbot-toggle img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    #chatbot-balloon {
-      background: #fff;
-      padding: 8px 12px;
-      border-radius: 18px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-    }
-
-    #chatbot-window {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 350px;
-      height: 500px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      display: none;
-      flex-direction: column;
-      z-index: 1001;
-      overflow: hidden;
-    }
-
-    #chatbot-header {
-      background: linear-gradient(135deg, #6e48aa, #9d50bb);
-      color: white;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-    }
-
-    #chatbot-header h1 {
-      margin: 0;
-      font-size: 20px;
-      line-height: 1.2;
-    }
-
-    #chatbot-name {
-      position: absolute;
-      bottom: 5px;
-      left: 15px;
-      font-size: 12px;
-    }
-
-    #button-chat {
-      display: flex;
-      gap: 5px;
-    }
-
-    #button-chat button {
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #button-chat button:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    #chatbox {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-      background: #f5f5f5;
-    }
-
-    .message {
-      margin-bottom: 10px;
-      max-width: 80%;
-      padding: 8px 12px;
-      border-radius: 18px;
-      word-wrap: break-word;
-    }
-
-    .bot-message {
-      background: #e6e6e6;
-      color: #333;
-      align-self: flex-start;
-      border-bottom-left-radius: 5px;
-    }
-
-    .user-message {
-      background: #6e48aa;
-      color: white;
-      margin-left: auto;
-      border-bottom-right-radius: 5px;
-    }
-
-    #options {
-      padding: 10px;
-      background: #fff;
-      border-top: 1px solid #eee;
-      max-height: 150px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .chat-option {
-      background: #f0f0f0;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 15px;
-      cursor: pointer;
-      text-align: left;
-      transition: background 0.2s;
-    }
-
-    .chat-option:hover {
-      background: #e0e0e0;
-    }
-
-    .back-option {
-      background: #6e48aa;
-      color: white;
-    }
-
-    .back-option:hover {
-      background: #5d3a99;
-    }
-
-    #input-area {
-      display: flex;
-      padding: 10px;
-      background: #fff;
-      border-top: 1px solid #eee;
-      align-items: center;
-    }
-
-    #message-input {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      padding: 8px 15px;
-      resize: none;
-      max-height: 100px;
-      outline: none;
-    }
-
-    #upload-button, #send-message {
-      background: none;
-      border: none;
-      color: #6e48aa;
-      cursor: pointer;
-      font-size: 18px;
-      margin: 0 5px;
-    }
-
-    .event-item {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .event-name {
-      margin: 0 0 5px 0;
-      font-weight: bold;
-    }
-
-    .event-link {
-      color: #6e48aa;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .event-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Estilo para quando o chat está minimizado */
-    #chatbot-window.minimized {
-      height: 60px !important;
-    }
-  </style>
 </body>
 </html>
-
-
-
