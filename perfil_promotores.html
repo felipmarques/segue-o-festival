@@ -274,16 +274,23 @@
           }
         
           try {
-            console.log("Buscando dados do promotor...");
-            const response = await fetch(`/api/buscarPromotor?email=${encodeURIComponent(usuarioLogado.email)}`);
-            
-            if (!response.ok) {
-              const errorData = await response.json().catch(() => ({}));
-              throw new Error(`Erro ${response.status}: ${errorData.error || 'Falha ao buscar dados'}`);
-            }
-            
-            const { data } = await response.json();
-            console.log("Dados carregados:", data);
+            try {
+              console.log("Buscando dados do promotor para o email:", usuarioLogado.email);
+              const response = await fetch(`/api/buscarPromotor?email=${encodeURIComponent(usuarioLogado.email)}`);
+              
+              if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMsg = errorData.error || 'Erro desconhecido ao buscar dados';
+                console.error("Erro na resposta:", {
+                  status: response.status,
+                  statusText: response.statusText,
+                  errorData
+                });
+                throw new Error(`Erro ${response.status}: ${errorMsg}`);
+              }
+              
+              const { data } = await response.json();
+              console.log("Dados recebidos do servidor:", data);
 
             document.getElementById("txtNome").value = data.nome_responsavel || "";
             document.getElementById("txtCNPJ").value = formatarCNPJ(data.cnpj || "");
@@ -296,9 +303,12 @@
             if (data.municipio) document.getElementById("municipio").value = data.municipio;
         
           } catch (error) {
-            console.error("Erro ao carregar dados do perfil:", error);
-            alert(error.message || "Erro ao carregar dados do perfil.");
-          }
+              console.error("Erro detalhado ao carregar perfil:", {
+                error: error.message,
+                stack: error.stack
+              });
+              alert("Erro ao carregar perfil: " + error.message);
+            }
         
           document.getElementById("logout_btn")?.addEventListener("click", fazerLogout);
         
