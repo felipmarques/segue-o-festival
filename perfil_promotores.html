@@ -269,10 +269,11 @@
         document.getElementById("logout_btn")?.addEventListener("click", fazerLogout);
 
         // Funções de formatação
-        function formatarCPF(cpf) {
-            cpf = cpf.replace(/\D/g, '');
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        function formatarCNPJ(cnpj) {
+         cnpj = cnpj.replace(/\D/g, ''); // Remove tudo que não for dígito
+         return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
         }
+
         
         function formatarTelefone(telefone) {
             telefone = telefone.replace(/\D/g, '');
@@ -288,113 +289,92 @@
         }
 
         // Carregar dados do perfil
-        document.addEventListener("DOMContentLoaded", async () => {
-            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-        
-            if (!usuarioLogado) {
-                window.location.href = "login.html";
-                return;
-            }
-        
-            // Preencher nome do usuário na sidebar
-            const nomeUsuario = document.querySelector("#user_infos .item-description");
-            if (nomeUsuario) {
-                nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
-            }
-        
-            try {
-                const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
-                if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
-        
-                const dados = await response.json();
-        
-                // Preencher formulário com os dados
-                document.getElementById("txtNome").value = dados.nome || "";
-                document.getElementById("telCPF").value = formatarCPF(dados.cpf || "");
-                document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
-                document.getElementById("emailEm").value = dados.email || dados.email_usuario || "";
-                
-                if (dados.data_nascimento) {
-                    let dataFormatada;
-            
-                    if (/^\d{4}-\d{2}-\d{2}$/.test(dados.data_nascimento)) {
-                        dataFormatada = dados.data_nascimento;
-                    } 
-                    else if (/\d{2}\/\d{2}\/\d{4}/.test(dados.data_nascimento)) {
-                        const [dia, mes, ano] = dados.data_nascimento.split('/');
-                        dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-                    }
-                    
-                    if (dataFormatada) {
-                        document.getElementById("dateNascimento").value = dataFormatada;
-                    }
-                }
+document.addEventListener("DOMContentLoaded", async () => {
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-                if (dados.sexo) {
-                    const selectSexo = document.getElementById("sexo");
-                    selectSexo.value = dados.sexo;
-                    selectSexo.dispatchEvent(new Event('change'));
-                }
-                if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
-                if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
-                if (dados.numero) document.getElementById("telNum").value = dados.numero;
-                if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
-                if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
-                if (dados.uf) document.getElementById("uf").value = dados.uf;
-        
-            } catch (error) {
-                console.error("Erro ao carregar perfil:", error);
-                alert("Erro ao carregar dados do perfil.");
-            }
+    if (!usuarioLogado) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Preencher nome do usuário na sidebar
+    const nomeUsuario = document.querySelector("#user_infos .item-description");
+    if (nomeUsuario) {
+        nomeUsuario.textContent = `Olá, ${usuarioLogado.nome_responsavel || "Usuário"}!`;
+    }
+
+    try {
+        const response = await fetch(`/api/usuario_promotor?email=${encodeURIComponent(usuarioLogado.email)}`);
+        if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
+
+        const dados = await response.json();
+
+        // Preencher formulário com os dados
+        document.getElementById("txtNome").value = dados.nome_responsavel || "";
+        document.getElementById("telCPF").value = formatarCNPJ(dados.cnpj || "");
+        document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
+        document.getElementById("emailEm").value = dados.email || "";
+
+        if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
+        if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
+        if (dados.numero) document.getElementById("telNum").value = dados.numero;
+        if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
+        if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
+        if (dados.uf) document.getElementById("uf").value = dados.uf;
+
+    } catch (error) {
+        console.error("Erro ao carregar perfil:", error);
+        alert("Erro ao carregar dados do perfil.");
+    }
+   });
+
+    // Função para alterar senha
+    async function alterarSenha() {
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    const novaSenha = document.getElementById("novaSenha").value;
+    const confirmarSenha = document.getElementById("confirmarSenha").value;
+
+    if (!novaSenha || !confirmarSenha) {
+        alert("Por favor, preencha todos os campos");
+        return;
+    }
+
+    if (novaSenha !== confirmarSenha) {
+        alert("As senhas não coincidem");
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/alterar_senha', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: usuarioLogado.email,
+                novaSenha: novaSenha
+            })
         });
-        
-        // Função para alterar senha
-        async function alterarSenha() {
-            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-            const novaSenha = document.getElementById("novaSenha").value;
-            const confirmarSenha = document.getElementById("confirmarSenha").value;
-        
-            if (!novaSenha || !confirmarSenha) {
-                alert("Por favor, preencha todos os campos");
-                return;
-            }
-        
-            if (novaSenha !== confirmarSenha) {
-                alert("As senhas não coincidem");
-                return;
-            }
-        
-            try {
-                const response = await fetch('/api/alterar_senha', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: usuarioLogado.email,
-                        novaSenha: novaSenha
-                    })
-                });
-        
-                const result = await response.json();
-        
-                if (!response.ok) {
-                    throw new Error(result.message || 'Erro ao alterar senha');
-                }
-        
-                alert("Senha alterada com sucesso!");
-                // Limpa os campos após sucesso
-                document.getElementById("novaSenha").value = "";
-                document.getElementById("confirmarSenha").value = "";
-        
-            } catch (error) {
-                console.error("Erro:", error);
-                alert(error.message || "Erro ao alterar senha");
-            }
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Erro ao alterar senha');
         }
-        
-        // Vincular função ao botão Salvar
-        document.querySelector('.botao-salvar')?.addEventListener('click', alterarSenha);
+
+        alert("Senha alterada com sucesso!");
+        document.getElementById("novaSenha").value = "";
+        document.getElementById("confirmarSenha").value = "";
+
+      } catch (error) {
+        console.error("Erro:", error);
+        alert(error.message || "Erro ao alterar senha");
+        }
+      }
+
+      // Vincular função ao botão Salvar
+      document.querySelector('.botao-salvar')?.addEventListener('click', alterarSenha);
+
     </script>
 </body>
 </html>
