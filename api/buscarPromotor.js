@@ -5,9 +5,9 @@ const pool = new Pool({
 });
 
 module.exports = async (req, res) => {
-  const { method, query, body, url } = req;
+  const { method, query, url } = req;
 
-  console.log(`[${new Date().toISOString()}] ${method} ${url}`);
+  console.log(`[${new Date().toISOString()}] ${method} ${url}`, query);
 
   // Rota: buscar dados do promotor por e-mail
   if (method === "GET" && url.includes("/api/buscarPromotor")) {
@@ -22,106 +22,60 @@ module.exports = async (req, res) => {
     }
 
     try {
-      console.log('Buscando promotor com e-mail:', email);
-      const resultado = await pool.query(
-        "SELECT nome_responsavel, cnpj, email, telefone, rua, cep, numero, complemento, bairro FROM usuario_promotor WHERE email = $1", 
-        [email]
-      );
-    
-      console.log('Resultado da query:', resultado.rows);
-    
-      if (resultado.rows.length === 0) {
-        console.log('Promotor não encontrado para o e-mail:', email);
-        return res.status(404).json({ 
-          success: false,
-          error: "Promotor não encontrado" 
-        });
-      }
-    
-      const promotor = resultado.rows[0];
-      console.log('Promotor encontrado:', promotor);
-    
-      return res.status(200).json({
-        success: true,
-        data: {
-          nome_responsavel: promotor.nome_responsavel,
-          cnpj: promotor.cnpj,
-          email: promotor.email,
-          telefone: promotor.telefone,
-          endereco: promotor.rua, // Mapeando rua para endereco no front
-          cep: promotor.cep,
-          numero: promotor.numero,
-          complemento: promotor.complemento,
-          municipio: promotor.bairro // Mapeando bairro para municipio no front
+      console.log('Tentando conectar ao banco de dados...');
+      
+      // Verifica se a conexão com o pool está OK
+      const client = await pool.connect();
+      console.log('Conexão com o banco estabelecida com sucesso');
+      
+      try {
+        console.log('Executando query para email:', email);
+        const resultado = await client.query(
+          "SELECT nome_responsavel, cnpj, email, telefone, rua, cep, numero, complemento, bairro FROM usuario_promotor WHERE email = $1", 
+          [email]
+        );
+        
+        console.log('Query executada com sucesso. Resultados:', resultado.rows);
+        
+        if (resultado.rows.length === 0) {
+          console.log('Nenhum promotor encontrado para o e-mail:', email);
+          return res.status(404).json({ 
+            success: false,
+            error: "Promotor não encontrado" 
+          });
         }
-      });
+        
+        const promotor = resultado.rows[0];
+        console.log('Dados do promotor encontrado:', promotor);
+        
+        return res.status(200).json({
+          success: true,
+          data: {
+            nome_responsavel: promotor.nome_responsavel,
+            cnpj: promotor.cnpj,
+            email: promotor.email,
+            telefone: promotor.telefone,
+            endereco: promotor.rua,
+            cep: promotor.cep,
+            numero: promotor.numero,
+            complemento: promotor.complemento,
+            municipio: promotor.bairro
+          }
+        });
+      } finally {
+        client.release();
+      }
     } catch (error) {
-      console.error("Erro ao buscar promotor:", error);
+      console.error("Erro detalhado:", {
+        message: error.message,
+        stack: error.stack,
+        code: error.code
+      });
+      
       return res.status(500).json({ 
         success: false,
-        error: "Erro interno do servidor" 
-      });
-    }
-  }
-
-  // Rota: atualizar dados do promotor
-  if (method === "PUT" && url.includes("/api/buscarPromotor")) {
-    const { email } = query;
-    const dadosAtualizados = body;
-
-    if (!email) {
-      return res.status(400).json({ 
-        success: false,
-        error: "E-mail é obrigatório" 
-      });
-    }
-
-    try {
-      const resultado = await pool.query(
-        `UPDATE usuario_promotor SET
-          nome_responsavel = $1,
-          cnpj = $2,
-          telefone = $3,
-          rua = $4,
-          cep = $5,
-          numero = $6,
-          complemento = $7,
-          bairro = $8
-          ${dadosAtualizados.senha ? ', senha = $9' : ''}
-        WHERE email = ${dadosAtualizados.senha ? '$10' : '$9'}`,
-        dadosAtualizados.senha ? [
-          dadosAtualizados.nome_responsavel,
-          dadosAtualizados.cnpj,
-          dadosAtualizados.telefone,
-          dadosAtualizados.endereco, // Mapeando endereco para rua no BD
-          dadosAtualizados.cep,
-          dadosAtualizados.numero,
-          dadosAtualizados.complemento,
-          dadosAtualizados.municipio, // Mapeando municipio para bairro no BD
-          dadosAtualizados.senha,
-          email
-        ] : [
-          dadosAtualizados.nome_responsavel,
-          dadosAtualizados.cnpj,
-          dadosAtualizados.telefone,
-          dadosAtualizados.endereco,
-          dadosAtualizados.cep,
-          dadosAtualizados.numero,
-          dadosAtualizados.complemento,
-          dadosAtualizados.municipio,
-          email
-        ]
-      );
-
-      return res.status(200).json({
-        success: true,
-        message: "Dados atualizados com sucesso"
-      });
-    } catch (error) {
-      console.error("Erro ao atualizar promotor:", error);
-      return res.status(500).json({ 
-        success: false,
-        error: "Erro interno do servidor" 
+        error: "Erro interno do servidor",
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   }
