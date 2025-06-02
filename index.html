@@ -678,20 +678,21 @@
 ///Lógica da Busca do Evento por Local    
 const inputLocalizacao = document.getElementById("txtLocalizacao");
 const botaoLocalizacao = document.querySelector("#btnBuscaLocal");
-const eventos = document.querySelectorAll(".evento"); // Supondo que cada evento tenha a classe `.evento`
+const eventos = document.querySelectorAll(".conteudo-secundario-tem"); // Agora buscando pela classe correta
 
 function filtrarEventosPorLocal() {
     const termoBusca = inputLocalizacao.value.trim().toLowerCase();
 
     eventos.forEach(evento => {
-        const descricaoEvento = evento.querySelector(".descricao").textContent.toLowerCase();
+        const descricaoEvento = evento.textContent.toLowerCase(); // Pegando o texto diretamente da div
         if (descricaoEvento.includes(termoBusca)) {
-            evento.style.display = "block"; // Mostra o evento
+            evento.parentElement.style.display = "block"; // Mostra o evento completo
         } else {
-            evento.style.display = "none"; // Esconde o evento
+            evento.parentElement.style.display = "none"; // Esconde o evento
         }
     });
 }
+
 
 botaoLocalizacao.addEventListener("click", filtrarEventosPorLocal);
 
