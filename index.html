@@ -49,8 +49,6 @@
         </ul>
     </div>
 
-
-
     <div class="menu-item">
       <button class="menu-botao">Estado</button>
       <ul class="menu-lista scroll-limitada" id="lista-estados">
@@ -89,28 +87,27 @@
       </ul>
     </div>
 
-<div class="menu-item">
-  <button class="menu-botao">Line-Up</button>
-    <ul class="menu-lista" id="lista-lineup">
+    <div class="menu-item">
+      <button class="menu-botao">Line-Up</button>
+        <ul class="menu-lista" id="lista-lineup">
           <li onclick="filtrarEventos('tipo', 'The Town')">The Town</li>
           <li onclick="filtrarEventos('tipo', 'Rock In Rio')">Rock In Rio</li>
           <li onclick="filtrarEventos('tipo', 'Só Track Boa')">Só Track Boa</li>
           <li onclick="filtrarEventos('tipo', 'Lollapalooza')">Lollapalooza</li>
           <li onclick="filtrarEventos ('tipo', 'Cena 2K25')">Cena 2K25</li>
-      </ul>
-</div>
+        </ul>
+    </div>
 
-<div class="menu-item">
-  <button class="menu-botao">Especiais</button>
-    <ul class="menu-lista" id="lista-especiais">
+    <div class="menu-item">
+      <button class="menu-botao">Especiais</button>
+        <ul class="menu-lista" id="lista-especiais">
           <li onclick="filtrarEventos('tipo', 'Ano Novo')">Ano Novo</li>
           <li onclick="filtrarEventos ('tipo', 'Carnaval')">Carnaval</li>
           <li onclick="filtrarEventos('tipo', 'Páscoa')">Páscoa</li>
           <li onclick="filtrarEventos('tipo', 'Festa Junina')">Festa Junina</li>  
           <li onclick="filtrarEventos('tipo', 'Natal')">Natal</li>
-          
-      </ul>
-</div>
+        </ul>
+    </div>
     <div class="search-bar">
     </div>
   </nav>
@@ -124,27 +121,26 @@
       <div class="indicadores-carrossel" id="indicadores-carrossel"></div>
     </section>
 
+    <section class="pesquisa">
+      <div class="pesquisa-busca-evento">
+        <input type="search" id="txtBusca" placeholder="Pesquise seus eventos favoritos..."/>
+        <button id="btnBusca" type="button" aria-label="Buscar evento">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+      
+      <div class="pesquisa-busca-local">
+        <input type="search" id="txtLocalizacao" placeholder="Busca por local">
+        <button id="btnBuscaLocal" type="button" aria-label="Buscar evento por local">
+          <i class="fa-solid fa-location-dot"></i>
+        </button>  
+      </div>
 
-  <section class="pesquisa">
-        <div class="pesquisa-busca-evento">
-            <input type="search" id="txtBusca" placeholder="Pesquise seus eventos favoritos..."/>
-            <button id="btnBusca" type= "button" aria-label="Buscar evento">
-            <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-        </div>
-        
-        <div class="pesquisa-busca-local">
-            <input type="search" id="txtLocalizacao" placeholder="Busca por local">
-            <button id="btnBuscaLocal" type= "button" aria-label="Buscar evento por local">
-            <i class="fa-solid fa-location-dot"></i>
-            </button>  
-        </div>
-
-        <div class="pesquisa-busca-data">
-            <input type="search" id="dateBusca" placeholder="Buscar por data">
-            <i class="fa-solid fa-calendar-days"></i>
-        </div>
-  </section>
+      <div class="pesquisa-busca-data">
+        <input type="search" id="dateBusca" placeholder="Buscar por data">
+        <i class="fa-solid fa-calendar-days"></i>
+      </div>
+    </section>
 
     <section class="conteudo-secundario">
       <div class="conteudo-secundario-destaque">
@@ -193,85 +189,85 @@
       </div>
     </section>
 
-  <footer class="rodape">
-    <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                 
-    <div class="rodape-links">
+    <footer class="rodape">
+      <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                 
+      <div class="rodape-links">
         <div class="menu-hover">
-            <div>
-                <span class="rodape-direcionamento" onclick="toggleLista('listaEventos')">Encontre Eventos</span>
-                <ul class="lista-escondida" id="listaEventos">
-                    <li>Festival A</li>
-                    <li>Festival B</li>
-                    <li>Festival C</li>
-                </ul>
-            </div>
-              
-            <div>
-                <span class="rodape-direcionamento" onclick="toggleLista('listaCidades')">Cidades</span>
-                <ul class="lista-escondida" id="listaCidades">
-                    <li>São Paulo</li>
-                    <li>Rio de Janeiro</li>
-                    <li>Belo Horizonte</li>
-                    <li>Curitiba</li>
-                </ul>
-            </div>
-              
-            <div>
-                <span class="rodape-direcionamento" onclick="toggleLista('listaCategorias')">Categorias</span>
-                <ul class="lista-escondida" id="listaCategorias">
-                    <li>Festival</li>
-                    <li>Show</li>
-                    <li>Religioso</li>
-                    <li>Carnaval</li>
-                    <li>Festa Junina</li>
-                    <li>Ano Novo</li>
-                </ul>
-            </div>
-              
-            <div>
-                <span class="rodape-direcionamento" onclick="toggleLista('listaParaPromotores')">Para Promotores</span>
-                <ul class="lista-escondida" id="listaParaPromotores">
-                    <li>Cadastrar Evento</li>
-                    <li>Contato</li>
-                </ul>
-            </div>                               
-            <a href="https://cadastro-organizador.vercel.app/faq.html" class="rodape-direcionamento">Ajuda</a>
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaEventos')">Encontre Eventos</span>
+            <ul class="lista-escondida" id="listaEventos">
+              <li>Festival A</li>
+              <li>Festival B</li>
+              <li>Festival C</li>
+            </ul>
+          </div>
+          
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaCidades')">Cidades</span>
+            <ul class="lista-escondida" id="listaCidades">
+              <li>São Paulo</li>
+              <li>Rio de Janeiro</li>
+              <li>Belo Horizonte</li>
+              <li>Curitiba</li>
+            </ul>
+          </div>
+          
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaCategorias')">Categorias</span>
+            <ul class="lista-escondida" id="listaCategorias">
+              <li>Festival</li>
+              <li>Show</li>
+              <li>Religioso</li>
+              <li>Carnaval</li>
+              <li>Festa Junina</li>
+              <li>Ano Novo</li>
+            </ul>
+          </div>
+          
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaParaPromotores')">Para Promotores</span>
+            <ul class="lista-escondida" id="listaParaPromotores">
+              <li>Cadastrar Evento</li>
+              <li>Contato</li>
+            </ul>
+          </div>                               
+          <a href="https://cadastro-organizador.vercel.app/faq.html" class="rodape-direcionamento">Ajuda</a>
         </div>
-    </div>
+      </div>
                         
-    <div class="direitos-reservados">&copy; 2025 Segue o Festival. Todos os direitos reservados.</div>            
-  </footer>
+      <div class="direitos-reservados">&copy; 2025 Segue o Festival. Todos os direitos reservados.</div>            
+    </footer>
   </main>
 
   <!-- Chatbot -->
-<div id="chatbot-toggle">
-  <span id="chatbot-balloon">Precisa de ajuda?</span>
-  <img src="src/images/menino_logo-removebg-preview.png" alt="Chatbot" />
-</div>
-
-<div id="chatbot-window">
-  <div id="chatbot-header">
-    <h1>Segue<br>O Festival</h1>
-    <span id="chatbot-name">Chat com Zeca</span>
-    <div id="button-chat">
-      <button id="minimize-chat">-</button>
-      <button id="close-chat">x</button> 
-    </div>
-  </div>    
-  <div id="chatbox"></div>
-  <div id="options"></div>
-  <div id="calendar-container"></div>
-  <div id="input-area">
-    <button id="upload-button"><i class="fa-solid fa-plus"></i></button>
-    <input type="file" id="image-input" accept="image/*" style="display: none" />
-    <textarea id="message-input" placeholder="Digite sua mensagem"></textarea>
-    <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+  <div id="chatbot-toggle">
+    <span id="chatballoon">Precisa de ajuda?</span>
+    <img src="src/images/menino_logo-removebg-preview.png" alt="Chatbot" />
   </div>
-</div>
 
-<!-- Antes do </body>, adicione: -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="src/javascript/chatbot.js"></script> 
+  <div id="chatbot-window">
+    <div id="chatbot-header">
+      <h1>Segue<br>O Festival</h1>
+      <span id="chatbot-name">Chat com Zeca</span>
+      <div id="button-chat">
+        <button id="minimize-chat">-</button>
+        <button id="close-chat">x</button> 
+      </div>
+    </div>    
+    <div id="chatbox"></div>
+    <div id="options"></div>
+    <div id="calendar-container"></div>
+    <div id="input-area">
+      <button id="upload-button"><i class="fa-solid fa-plus"></i></button>
+      <input type="file" id="image-input" accept="image/*" style="display: none" />
+      <textarea id="message-input" placeholder="Digite sua mensagem"></textarea>
+      <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- Antes do </body>, adicione: -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="src/javascript/chatbot.js"></script> 
 
   <!-- Lightbox para ampliar fotos -->
   <div id="lightbox" class="lightbox">
@@ -286,7 +282,19 @@
     let tipoSelecionado = null;
     let dataSelecionada = null;
     let termoBusca = '';
+    let localBusca = '';
 
+    // Inicializa o flatpickr para busca por data
+    document.addEventListener('DOMContentLoaded', function() {
+      flatpickr("#dateBusca", {
+        dateFormat: "d/m/Y",
+        locale: "pt",
+        onChange: function(selectedDates, dateStr, instance) {
+          dataSelecionada = dateStr;
+          exibirEventosFiltrados();
+        }
+      });
+    });
 
     async function buscarEventos() {
       try {
@@ -318,7 +326,11 @@
       estadoSelecionado = null;
       tipoSelecionado = null;
       dataSelecionada = null;
-      document.getElementById('dataInput').value = '';
+      document.getElementById('dateBusca').value = '';
+      document.getElementById('txtLocalizacao').value = '';
+      document.getElementById('txtBusca').value = '';
+      termoBusca = '';
+      localBusca = '';
       exibirEventosFiltrados();
     }
 
@@ -329,10 +341,13 @@
       const eventosFiltrados = todosEventos.filter(evento => {
         const dataEvento = evento.data ? new Date(evento.data).toLocaleDateString('pt-BR') : null;
         const nomeEvento = evento.nome?.toLowerCase() || '';
+        const localEvento = (evento.endereco + ' ' + evento.cidade + ' ' + evento.estado).toLowerCase() || '';
+        
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
                (!tipoSelecionado || evento.tipo_evento === tipoSelecionado) &&
-               (!dataSelecionada || dataEvento === dataSelecionada)&&
-               (!termoBusca || nomeEvento.includes(termoBusca));
+               (!dataSelecionada || dataEvento === new Date(dataSelecionada.split('/').reverse().join('-')).toLocaleDateString('pt-BR')) &&
+               (!termoBusca || nomeEvento.includes(termoBusca)) &&
+               (!localBusca || localEvento.includes(localBusca));
       });
 
       // Atualiza o contador de eventos
@@ -652,65 +667,54 @@
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
       // Configura a busca por nome do evento
-  const inputBusca = document.getElementById("txtBusca");
-  const iconeBusca = document.querySelector("#btnBusca");
+      const inputBusca = document.getElementById("txtBusca");
+      const iconeBusca = document.querySelector("#btnBusca");
 
-  function aplicarBusca() {
-    termoBusca = inputBusca.value.trim().toLowerCase();
-    exibirEventosFiltrados();
-  }
+      function aplicarBusca() {
+        termoBusca = inputBusca.value.trim().toLowerCase();
+        exibirEventosFiltrados();
+      }
 
-  if (iconeBusca) {
-    iconeBusca.addEventListener("click", aplicarBusca);
-  } else {
-    console.warn('Elemento com id="btnBusca" não encontrado.');
-  }
+      if (iconeBusca) {
+        iconeBusca.addEventListener("click", aplicarBusca);
+      } else {
+        console.warn('Elemento com id="btnBusca" não encontrado.');
+      }
 
-  inputBusca.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      aplicarBusca();
-    }
-  });
-
-  buscarEventos();
-  setInterval(avancar, 5000);
-    });
-///Lógica da Busca do Evento por Local    
-const inputLocalizacao = document.getElementById("txtLocalizacao");
-const botaoLocalizacao = document.querySelector("#btnBuscaLocal");
-const eventos = document.querySelectorAll(".conteudo-secundario-tem"); // Agora buscando pela classe correta
-
-function filtrarEventosPorLocal() {
-    const termoBusca = inputLocalizacao.value.trim().toLowerCase();
-
-    eventos.forEach(evento => {
-        const descricaoEvento = evento.textContent.toLowerCase(); // Pegando o texto diretamente da div
-        if (descricaoEvento.includes(termoBusca)) {
-            evento.parentElement.style.display = "block"; // Mostra o evento completo
-        } else {
-            evento.parentElement.style.display = "none"; // Esconde o evento
+      inputBusca.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+          aplicarBusca();
         }
+      });
+
+      // Configura a busca por local
+      const inputLocalizacao = document.getElementById("txtLocalizacao");
+      const botaoLocalizacao = document.querySelector("#btnBuscaLocal");
+
+      function aplicarBuscaLocal() {
+        localBusca = inputLocalizacao.value.trim().toLowerCase();
+        exibirEventosFiltrados();
+      }
+
+      if (botaoLocalizacao) {
+        botaoLocalizacao.addEventListener("click", aplicarBuscaLocal);
+      }
+
+      inputLocalizacao.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+          aplicarBuscaLocal();
+        }
+      });
+
+      buscarEventos();
+      setInterval(avancar, 5000);
     });
-}
 
-
-botaoLocalizacao.addEventListener("click", filtrarEventosPorLocal);
-
-inputLocalizacao.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        filtrarEventosPorLocal();
+    function toggleLista(id) {
+      const lista = document.getElementById(id);
+      lista.style.display = (lista.style.display === "block") ? "none" : "block";
     }
-});
-
-
-
-          function toggleLista(id) {
-    const lista = document.getElementById(id);
-    lista.style.display = (lista.style.display === "block") ? "none" : "block";
-  }
   </script>
   <script src="calendario.js"></script>
-
-
 </body>
 </html>
