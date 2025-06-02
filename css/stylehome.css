@@ -672,3 +672,62 @@ background-color: #FFF100;
   font-family: 'Poppins', sans-serif;
   margin-bottom: 10px
 }
+
+
+
+
+.pesquisa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Ocupa toda a largura do container */
+    max-width: 1300px;
+    height: 60px;
+    margin: 25px auto;
+    border: 2px solid #FFF100; /* Cor da borda */
+    padding: 10px;
+    background-color: #F5F5F5; /* Fundo leve para o container */
+    box-sizing: border-box;
+}
+
+.pesquisa-busca-evento, .pesquisa-busca-local, .pesquisa-busca-data {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+}
+
+.pesquisa-busca-evento {
+    flex: 1;
+    border-right: 1px solid #FFF100; /* Separador entre os campos */
+}
+
+.pesquisa-busca-local {
+    flex: 1;
+    border-right: 1px solid #FFF100;
+}
+
+.pesquisa-busca-data {
+    flex: 1;
+}
+
+.pesquisa input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #666; /* Cor do texto */
+    background: none; /* Remove o fundo branco */
+    width: 100%;
+    padding-left: 10px;
+}
+
+.pesquisa input::placeholder {
+    color: #AAA; /* Placeholder com cor mais suave */
+}
+
+.fa solid {
+    width: 24px; /* Tamanho do ícone */
+    height: 24px;
+    margin-left: 10px;
+    align-self: center; /* Centraliza o ícone verticalmente */
+}
