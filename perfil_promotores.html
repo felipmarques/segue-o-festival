@@ -289,92 +289,150 @@
         }
 
         // Carregar dados do perfil
-document.addEventListener("DOMContentLoaded", async () => {
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
-    if (!usuarioLogado) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    // Preencher nome do usuário na sidebar
-    const nomeUsuario = document.querySelector("#user_infos .item-description");
-    if (nomeUsuario) {
-        nomeUsuario.textContent = `Olá, ${usuarioLogado.nome_responsavel || "Usuário"}!`;
-    }
-
-    try {
-        const response = await fetch(`/api/usuario_promotor?email=${encodeURIComponent(usuarioLogado.email)}`);
-        if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
-
-        const dados = await response.json();
-
-        // Preencher formulário com os dados
-        document.getElementById("txtNome").value = dados.nome_responsavel || "";
-        document.getElementById("telCPF").value = formatarCNPJ(dados.cnpj || "");
-        document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
-        document.getElementById("emailEm").value = dados.email || "";
-
-        if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
-        if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
-        if (dados.numero) document.getElementById("telNum").value = dados.numero;
-        if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
-        if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
-        if (dados.uf) document.getElementById("uf").value = dados.uf;
-
-    } catch (error) {
-        console.error("Erro ao carregar perfil:", error);
-        alert("Erro ao carregar dados do perfil.");
-    }
-   });
-
-    // Função para alterar senha
-    async function alterarSenha() {
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    const novaSenha = document.getElementById("novaSenha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
-
-    if (!novaSenha || !confirmarSenha) {
-        alert("Por favor, preencha todos os campos");
-        return;
-    }
-
-    if (novaSenha !== confirmarSenha) {
-        alert("As senhas não coincidem");
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/alterar_senha', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: usuarioLogado.email,
-                novaSenha: novaSenha
-            })
+        document.addEventListener("DOMContentLoaded", async () => {
+          console.log("DOM totalmente carregado.");
+        
+          const usuarioLogadoRaw = localStorage.getItem("usuarioLogado");
+          if (!usuarioLogadoRaw) {
+            console.warn("Usuário não logado. Redirecionando...");
+            window.location.href = "loginPromotor.html";
+            return;
+          }
+        
+          let usuarioLogado;
+          try {
+            usuarioLogado = JSON.parse(usuarioLogadoRaw);
+            if (!usuarioLogado.email) throw new Error();
+          } catch (e) {
+            console.error("Erro ao analisar os dados do usuário logado:", e);
+            window.location.href = "loginPromotor.html";
+            return;
+          }
+        
+          const nomeUsuario = document.querySelector("#user_infos .item-description");
+          if (nomeUsuario) {
+            nomeUsuario.textContent = `Olá, ${usuarioLogado.nome_responsavel || "Usuário"}!`;
+          }
+        
+          try {
+            console.log("Buscando dados do promotor...");
+            const response = await fetch(`/api/usuario_promotor?email=${encodeURIComponent(usuarioLogado.email)}`);
+            if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
+            const dados = await response.json();
+            console.log("Dados carregados:", dados);
+        
+            document.getElementById("txtNome").value = dados.nome_responsavel || "";
+            document.getElementById("txtCNPJ").value = formatarCNPJ(dados.cnpj || "");
+            document.getElementById("telTelefone").value = formatarTelefone(dados.telefone || "");
+            document.getElementById("emailEm").value = dados.email || "";
+        
+            if (dados.endereco) document.getElementById("txtEndereço").value = dados.endereco;
+            if (dados.cep) document.getElementById("telCEP").value = formatarCEP(dados.cep);
+            if (dados.numero) document.getElementById("telNum").value = dados.numero;
+            if (dados.complemento) document.getElementById("telCom").value = dados.complemento;
+            if (dados.municipio) document.getElementById("municipio").value = dados.municipio;
+            if (dados.uf) document.getElementById("uf").value = dados.uf;
+        
+          } catch (error) {
+            console.error("Erro ao carregar dados do perfil:", error);
+            alert("Erro ao carregar dados do perfil.");
+          }
+        
+          document.getElementById("logout_btn")?.addEventListener("click", fazerLogout);
+        
+          document.querySelector('.botao-salvar')?.addEventListener('click', async () => {
+            console.log("Iniciando salvamento do perfil...");
+        
+            const senha = document.getElementById("novaSenha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+        
+            if (senha && senha !== confirmarSenha) {
+              alert("As senhas não coincidem.");
+              console.warn("Senha e confirmação divergentes.");
+              return;
+            }
+        
+            const dadosAtualizados = {
+              nome_responsavel: document.getElementById("txtNome").value,
+              cnpj: document.getElementById("txtCNPJ").value.replace(/[^\d]/g, ""),
+              telefone: document.getElementById("telTelefone").value.replace(/[^\d]/g, ""),
+              endereco: document.getElementById("txtEndereço").value,
+              cep: document.getElementById("telCEP").value.replace(/[^\d]/g, ""),
+              numero: document.getElementById("telNum").value,
+              complemento: document.getElementById("telCom").value,
+              municipio: document.getElementById("municipio").value,
+              uf: document.getElementById("uf").value
+            };
+        
+            if (senha) dadosAtualizados.senha = senha;
+        
+            try {
+              const response = await fetch(`/api/usuario_promotor?email=${encodeURIComponent(usuarioLogado.email)}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dadosAtualizados)
+              });
+        
+              if (!response.ok) {
+                const errorData = await response.json();
+                const msg = errorData.message || "Erro desconhecido.";
+                throw new Error(`Erro da API: ${msg}`);
+              }
+        
+              console.log("Dados atualizados com sucesso.");
+              exibirPopup("Perfil atualizado com sucesso!");
+        
+              usuarioLogado.nome_responsavel = dadosAtualizados.nome_responsavel;
+              localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+        
+            } catch (error) {
+              console.error("Erro ao salvar alterações:", error);
+              alert("Erro ao salvar alterações: " + error.message);
+            }
+          });
         });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(result.message || 'Erro ao alterar senha');
+        
+        function fazerLogout() {
+          console.log("Logout solicitado.");
+          localStorage.removeItem("usuarioLogado");
+          window.location.href = "loginPromotor.html";
+        }
+        
+        function formatarCNPJ(cnpj) {
+          cnpj = cnpj.replace(/\D/g, '');
+          return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+        }
+        
+        function formatarTelefone(telefone) {
+          telefone = telefone.replace(/\D/g, '');
+          return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+        }
+        
+        function formatarCEP(cep) {
+          cep = cep.replace(/\D/g, '');
+          return cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+        }
+        
+        function exibirPopup(mensagem) {
+          const popup = document.getElementById("popupSucesso");
+          if (popup) {
+            popup.textContent = mensagem;
+            popup.style.display = "block";
+            setTimeout(() => {
+              popup.style.display = "none";
+            }, 4000);
+          } else {
+            console.warn("Popup de sucesso não encontrado no DOM.");
+          }
         }
 
-        alert("Senha alterada com sucesso!");
-        document.getElementById("novaSenha").value = "";
-        document.getElementById("confirmarSenha").value = "";
-
-      } catch (error) {
-        console.error("Erro:", error);
-        alert(error.message || "Erro ao alterar senha");
-        }
-      }
-
-      // Vincular função ao botão Salvar
-      document.querySelector('.botao-salvar')?.addEventListener('click', alterarSenha);
 
     </script>
+    <div id="popupSucesso" style="display:none; position:fixed; top:20px; right:20px; background:#4caf50; color:#fff; padding:15px 25px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:1000;">
+  Perfil atualizado com sucesso!
+</div>
+
 </body>
 </html>
