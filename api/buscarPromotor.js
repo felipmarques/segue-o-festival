@@ -27,7 +27,9 @@ module.exports = async (req, res) => {
         "SELECT nome, cnpj, email FROM usuario_promotor WHERE email = $1", 
         [email]
       );
-
+    
+      console.log('Resultado da query:', resultado.rows);
+    
       if (resultado.rows.length === 0) {
         console.log('Promotor não encontrado para o e-mail:', email);
         return res.status(404).json({ 
@@ -35,15 +37,15 @@ module.exports = async (req, res) => {
           error: "Promotor não encontrado" 
         });
       }
-
+    
       const usuario_promotor = resultado.rows[0];
-      console.log('Promotor encontrado:', usuario_promotor);
-      
+      console.log('Promotor encontrado:', usuario_promotor); // Corrigido aqui
+    
       return res.status(200).json({
         success: true,
         data: {
           nome: usuario_promotor.nome,
-          cpf: usuario_promotor.cnpj,
+          cpf: usuario_promotor.cnpj, // Aqui você está retornando CNPJ como "cpf", confirmar se é intencional
           email: usuario_promotor.email
         }
       });
@@ -54,7 +56,7 @@ module.exports = async (req, res) => {
         error: "Erro interno do servidor" 
       });
     }
-  }
+
 
   // Método não permitido
   return res.status(405).json({
