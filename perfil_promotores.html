@@ -96,7 +96,7 @@
                 <div class="dados-pessoais-baixo">
                 <div class="dados-pessoais-telefone">
                     <p>CNPJ</p>
-                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CNPJ">
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="txtCNPJ" placeholder="Insira seu CNPJ">
                 </div>
                 <div class="dados-pessoais-telefone">
                     <p>Telefone</p>
@@ -374,13 +374,15 @@
                 },
                 body: JSON.stringify(dadosAtualizados)
               });
-        
-              if (!response.ok) {
-                const errorData = await response.json();
-                const msg = errorData.message || "Erro desconhecido.";
-                throw new Error(`Erro da API: ${msg}`);
-              }
-        
+            
+              if (!response.ok) throw new Error("Erro ao atualizar os dados.");
+            
+              alert("Perfil atualizado com sucesso!");
+              console.log("Perfil atualizado:", await response.json());
+            } catch (err) {
+              console.error("Erro ao salvar os dados:", err);
+              alert("Erro ao salvar os dados. Tente novamente.");
+            }
               console.log("Dados atualizados com sucesso.");
               exibirPopup("Perfil atualizado com sucesso!");
         
