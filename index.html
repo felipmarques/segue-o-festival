@@ -150,7 +150,7 @@
         </div>
       </div>
 
-      <div class="conteudo-secundario-linha" id="eventos-lista">
+      <div class="conteudo-secundario-lista" id="eventos-lista">
         <!-- Eventos serão carregados aqui -->
       </div>
     </section>
@@ -339,13 +339,22 @@
       container.innerHTML = '';
 
       const eventosFiltrados = todosEventos.filter(evento => {
-        const dataEvento = evento.data ? new Date(evento.data).toLocaleDateString('pt-BR') : null;
+        const dataEvento = evento.data ? new Date(evento.data) : null;
         const nomeEvento = evento.nome?.toLowerCase() || '';
         const localEvento = (evento.endereco + ' ' + evento.cidade + ' ' + evento.estado).toLowerCase() || '';
         
+        // CORREÇÃO: Comparação de datas ajustada
+        const dataFiltro = dataSelecionada 
+          ? new Date(dataSelecionada.split('/').reverse().join('-')) 
+          : null;
+        
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
                (!tipoSelecionado || evento.tipo_evento === tipoSelecionado) &&
-               (!dataSelecionada || dataEvento === new Date(dataSelecionada.split('/').reverse().join('-')).toLocaleDateString('pt-BR')) &&
+               (!dataSelecionada || 
+                 (dataEvento && 
+                  dataEvento.getFullYear() === dataFiltro.getFullYear() &&
+                  dataEvento.getMonth() === dataFiltro.getMonth() &&
+                  dataEvento.getDate() === dataFiltro.getDate())) &&
                (!termoBusca || nomeEvento.includes(termoBusca)) &&
                (!localBusca || localEvento.includes(localBusca));
       });
@@ -384,13 +393,17 @@
 
         const data = document.createElement('p');
         if (evento.data) {
+          // CORREÇÃO: Formatação da data ajustada para evitar problemas de timezone
           const dataEvento = new Date(evento.data);
-          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          // Ajusta para o timezone local
+          const dataAjustada = new Date(dataEvento.getTime() + dataEvento.getTimezoneOffset() * 60000);
+          
+          const dataFormatada = dataAjustada.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
           });
-          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          const diaSemana = dataAjustada.toLocaleDateString('pt-BR', {
             weekday: 'long'
           });
           data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
