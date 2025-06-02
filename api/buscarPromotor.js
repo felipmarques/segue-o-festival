@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
       }
 
       const usuario_promotor = resultado.rows[0];
-      console.log('Promotor encontrado:', usuario);
+      console.log('Promotor encontrado:', usuario_promotor);
       
       return res.status(200).json({
         success: true,
