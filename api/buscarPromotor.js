@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     try {
       console.log('Buscando promotor com e-mail:', email);
       const resultado = await pool.query(
-        "SELECT nome, cnpj, email FROM usuario_promotor WHERE email = $1", 
+        "SELECT nome_responsavel, cnpj, email FROM usuario_promotor WHERE email = $1", 
         [email]
       );
     
@@ -44,8 +44,8 @@ module.exports = async (req, res) => {
       return res.status(200).json({
         success: true,
         data: {
-          nome: usuario_promotor.nome,
-          cpf: usuario_promotor.cnpj, // Aqui você está retornando CNPJ como "cpf", confirmar se é intencional
+          nome: usuario_promotor.nome_responsavel,
+          cnpj: usuario_promotor.cnpj, // Aqui você está retornando CNPJ como "cpf", confirmar se é intencional
           email: usuario_promotor.email
         }
       });
