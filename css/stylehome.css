@@ -360,6 +360,20 @@ background-color: #FFF100;
       object-fit: cover;
       cursor: pointer;
     }
+
+    .carrossel {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      }
+      
+      .carrossel img {
+      width: 100%;
+      max-width: 1000px; /* máximo do container */
+      height: 400px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border-radius: 20px;
+      }
     
     .botao-carrossel {
       position: absolute;
