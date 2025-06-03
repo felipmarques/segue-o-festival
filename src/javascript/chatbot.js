@@ -1,3 +1,5 @@
+// CHATBOT
+
 document.addEventListener("DOMContentLoaded", function () {
   const toggleButton = document.getElementById("chatbot-toggle");
   const chatbotWindow = document.getElementById("chatbot-window");
@@ -24,13 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const optionsContainer = document.createElement("div");
     optionsContainer.className = "option-buttons";
 
-    // Adiciona botão "Voltar ao Menu" em todas as interações
-    const allButtons = [...buttons, {
-      text: "↩️ Voltar ao Menu",
-      action: startChat
-    }];
-
-    allButtons.forEach(btn => {
+    buttons.forEach(btn => {
       const button = document.createElement("button");
       button.textContent = btn.text;
       button.onclick = () => {
@@ -80,11 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showFestivalOptions(style) {
     addMessage(`Festivais de ${style} disponíveis:`, "bot");
-    // Exemplo de opções específicas + botão de voltar
-    setOptions([
-      { text: `${style} Festival A`, action: () => addMessage("Redirecionando para o festival...", "bot") },
-      { text: `${style} Festival B`, action: () => addMessage("Redirecionando para o festival...", "bot") }
-    ]);
   }
 
   function handleShow() {
@@ -100,10 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showShowOptions(style) {
     addMessage(`Shows de ${style} disponíveis:`, "bot");
-    setOptions([
-      { text: `${style} Show A`, action: () => addMessage("Redirecionando para o show...", "bot") },
-      { text: `${style} Show B`, action: () => addMessage("Redirecionando para o show...", "bot") }
-    ]);
   }
 
   function handleCultural() {
@@ -118,10 +105,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showCulturalOptions(eventName) {
     addMessage(`🎊 Eventos culturais de ${eventName}:`, "bot");
-    setOptions([
-      { text: `${eventName} Evento A`, action: () => addMessage("Redirecionando para o evento...", "bot") },
-      { text: `${eventName} Evento B`, action: () => addMessage("Redirecionando para o evento...", "bot") }
-    ]);
   }
 
   // Palestra
@@ -151,14 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         container.appendChild(select);
         chatbox.appendChild(container);
-        
-        // Adiciona botão de voltar mesmo em menus com selects
-        const backButton = document.createElement("button");
-        backButton.textContent = "↩️ Voltar ao Menu";
-        backButton.className = "back-button";
-        backButton.onclick = startChat;
-        chatbox.appendChild(backButton);
-        
         chatbox.scrollTop = chatbox.scrollHeight;
       });
   }
@@ -188,24 +163,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         container.appendChild(select);
         chatbox.appendChild(container);
-        
-        // Botão de voltar
-        const backButton = document.createElement("button");
-        backButton.textContent = "↩️ Voltar ao Menu";
-        backButton.className = "back-button";
-        backButton.onclick = startChat;
-        chatbox.appendChild(backButton);
-        
         chatbox.scrollTop = chatbox.scrollHeight;
       });
   }
 
   function showPalestrasCidade(cidade, estado) {
     addMessage(`Palestras em ${cidade} - ${estado}:`, "bot");
-    setOptions([
-      { text: "Palestra A", action: () => addMessage("Redirecionando para a palestra...", "bot") },
-      { text: "Palestra B", action: () => addMessage("Redirecionando para a palestra...", "bot") }
-    ]);
   }
 
   // Comprar ingresso com calendário
@@ -219,13 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     container.appendChild(input);
     chatbox.appendChild(container);
-
-    // Botão de voltar
-    const backButton = document.createElement("button");
-    backButton.textContent = "↩️ Voltar ao Menu";
-    backButton.className = "back-button";
-    backButton.onclick = startChat;
-    chatbox.appendChild(backButton);
 
     flatpickr(input, {
       inline: true,
@@ -262,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function selectMunicipio(ufId, ufNome) {
     addMessage(`Municípios em ${ufNome}:`, "bot");
-    const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufId}/municipios");
+    const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufId}/municipios`);
     const municipios = await res.json();
     municipios.sort((a, b) => a.nome.localeCompare(b.nome));
 
@@ -346,6 +302,5 @@ document.addEventListener("DOMContentLoaded", function () {
     balloon.style.display = "block";
   };
 
-  // Inicia o chat
   startChat();
 });
