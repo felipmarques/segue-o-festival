@@ -216,9 +216,7 @@ display: block;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  max-width: 1100px; 
-  margin: 0 0 0 0; /* Mantém a margem esquerda original */
-  width: calc(100% - 70px); /* Novo - ajusta a largura */
+
 
 }
 
