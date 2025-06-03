@@ -28,61 +28,58 @@
       });
     </script>
     
-<header>
-    <nav id="sidebar" class="open-sidebar">
-        <div id="sidebar_content">
-            <div id="user">
-    
-                <p id="user_infos">
-                    <span class="item-description">
-                        Olá, Usuário!
-                    </span>
-                </p>
+    <header>
+        <nav id="sidebar" class="open-sidebar">
+            <div id="sidebar_content">
+                <div id="user">
+                    <img src="src/images/avatar.avif" id="user_avatar" alt="Avatar">
+        
+                    <p id="user_infos">
+                        <span class="item-description">
+                        </span>
+                    </p>
+                </div>
+        
+                <ul id="side_items">
+                    <li class="side-item">
+                        <a href="https://segue-o-festival.vercel.app/home.html">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="item-description">
+                                Home
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="side-item active">
+                        <a href="#">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="item-description">
+                                Perfil
+                            </span>
+                        </a>
+                    </li>
+        
+                    <li class="side-item">
+                        <a href="eventossalvos.html">
+                            <i class="fa-solid fa-star"></i>
+                            <span class="item-description">
+                                Meus Eventos
+                            </span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-    
-            <ul id="side_items">
-                <li class="side-item">
-                       <a href="https://segue-o-festival.vercel.app/home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span class="item-description">
-                            Home
-                        </span>
-                    </a>
-                </li>
 
-                <li class="side-item active">
-                    <a href="#">
-                        <i class="fa-solid fa-user"></i>
-                        <span class="item-description">
-                            Perfil
-                        </span>
-                    </a>
-                </li>
-    
-                <li class="side-item">
-                    <a href="eventossalvos.html">
-                        <i class="fa-solid fa-star"></i>
-                        <span class="item-description">
-                            Meus Eventos
-                        </span>
-                    </a>
-                </li>
-
-            </ul>
-    
-        </div>
-
-        <div id="logout">
-            <button id="logout_btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="item-description">
-                    Logout
-                </span>
-            </button>
-        </div>
-    </nav>
-</header>
-
+            <div id="logout">
+                <button id="logout_btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="item-description">
+                        Logout
+                    </span>
+                </button>
+            </div>
+        </nav>
+    </header>
 
     <main>        
         <h1 class="cabecalho-titulo">Segue<br>O Festival</h1>
@@ -101,6 +98,10 @@
                     <p>CPF</p>
                     <input class="dados-pessoais-telefone-formulario" type="tel" id="telCPF" placeholder="Insira seu CPF">
                 </div>
+                <div class="dados-pessoais-telefone">
+                    <p>Telefone</p>
+                    <input class="dados-pessoais-telefone-formulario" type="tel" id="telTelefone" placeholder="(00) 00000-0000">
+                </div>    
     
                 <div class="dados-pessoais-datanascimento">
                     <p>Data de Nascimento</p>
@@ -217,91 +218,43 @@
             </div>
     
             
-            <div class="dados-pessoais-usuario" >
+            <div class="dados-pessoais-usuario">
                 <h2 class="subtitulo-pen">
                     Login <i class="fa-solid fa-pen"></i>
-                  </h2>
+                </h2>
                 <div class="dados-pessoais-email">
                     <p>E-mail</p>
                     <input class="dados-pessoais-email-formulario" type="email" id="emailEm" placeholder="E-mail" readonly/>
                 </div>
-    
+            
                 <div class="dados-pessoais-senha">
-                    <p>Trocar de Senha</p>
-                    <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
+                    <h3>Alterar Senha</h3>
+                    
+                    <div class="campo-senha">
+                        <p>Nova Senha:</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="novaSenha" placeholder="Digite a nova senha">
+                    </div>
+                    
+                    <div class="campo-senha">
+                        <p>Confirmar Senha:</p>
+                        <input class="dados-pessoais-senha-formulario" type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+                    </div>
                 </div>
-            </div>     
+            </div> 
 
             <div>
                 <button class="botao-salvar" onclick="salvarPerfil()">Salvar</button>
             </div>
-    
-            </section>
+        </section>
 
-          
-             
         <footer class="rodape">
             <h3 class="titulo-rodape">Segue<br>O Festival!</h3>           
-                
-                <div class="rodape-links">
-                  <div class="menu-hover">
-                    <div>
-                      <span class="rodape-direcionamento" onclick="toggleLista('listaEventos')">Encontre Eventos</span>
-                      <ul class="lista-escondida" id="listaEventos">
-                        <li>Festival A</li>
-                        <li>Festival B</li>
-                        <li>Festival C</li>
-                      </ul>
-                    </div>
-              
-                    <div>
-                      <span class="rodape-direcionamento" onclick="toggleLista('listaCidades')">Cidades</span>
-                      <ul class="lista-escondida" id="listaCidades">
-                        <li>São Paulo</li>
-                        <li>Rio de Janeiro</li>
-                        <li>Belo Horizonte</li>
-                        <li>Curitiba</li>
-                      </ul>
-                    </div>
-              
-                    <div>
-                      <span class="rodape-direcionamento" onclick="toggleLista('listaCategorias')">Categorias</span>
-                      <ul class="lista-escondida" id="listaCategorias">
-                        <li>Festival</li>
-                        <li>Show</li>
-                        <li>Religioso</li>
-                        <li>Carnaval</li>
-                        <li>Festa Junina</li>
-                        <li>Ano Novo</li>
-                      </ul>
-                    </div>
-              
-                    <div>
-                      <span class="rodape-direcionamento" onclick="toggleLista('listaParaPromotores')">Para Promotores</span>
-                      <ul class="lista-escondida" id="listaParaPromotores">
-                        <li>Cadastrar Evento</li>
-                        <li>Contato</li>
-                      </ul>
-                    </div>
-              
-                    
-                    <a href="https://cadastro-organizador.vercel.app/faq.html" class="rodape-direcionamento">
-                        Ajuda
-                      </a>
-
-                  </div>
-                </div>
-              
-
             </div>           
             <div class="direitos-reservados">
               &copy; 2025 Segue o Festival. Todos os direitos reservados.
             </div>            
-          </footer>
-          
+        </footer>
     </main>
-
-    <script src="src/javascript/paginaperfiledicao.js"></script>
 
     <script>
         // Função de Logout
@@ -362,11 +315,11 @@
             // Preencher nome do usuário na sidebar
             const nomeUsuario = document.querySelector("#user_infos .item-description");
             if (nomeUsuario) {
-                nomeUsuario.textContent = `Olá, ${usuarioLogado.nome || "Usuário"}!`;
+                nomeUsuario.textContent = Olá, ${usuarioLogado.nome || "Usuário"}!;
             }
         
             try {
-                const response = await fetch(`/api/usuario?email=${encodeURIComponent(usuarioLogado.email)}`);
+                const response = await fetch(/api/usuario?email=${encodeURIComponent(usuarioLogado.email)});
                 if (!response.ok) throw new Error("Erro ao buscar dados do usuário");
         
                 const dados = await response.json();
@@ -385,7 +338,7 @@
                     } 
                     else if (/\d{2}\/\d{2}\/\d{4}/.test(dados.data_nascimento)) {
                         const [dia, mes, ano] = dados.data_nascimento.split('/');
-                        dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                        dataFormatada = ${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')};
                     }
                     
                     if (dataFormatada) {
