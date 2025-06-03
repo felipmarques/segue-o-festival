@@ -296,13 +296,7 @@
                 document.getElementById("telCom").value = data.complemento || "";
                 if (data.municipio) document.getElementById("municipio").value = data.municipio;
         
-            } catch (error) {
-                console.error("Erro ao carregar perfil:", {
-                    message: error.message,
-                    stack: error.stack
-                });
-                alert("Erro ao carregar perfil: " + (error.message || "Erro desconhecido"));
-            }
+            } 
         
             // Configurar evento de logout
             document.getElementById("logout_btn")?.addEventListener("click", fazerLogout);
