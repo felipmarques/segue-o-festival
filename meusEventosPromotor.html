@@ -127,6 +127,22 @@
             color: white;
         }
 
+        /* Loading spinner */
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #4CAF50;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Responsividade */
         @media (max-width: 768px) {
             .cabecalho {
@@ -167,7 +183,7 @@
             </div>
     
             <div class="conteudo-secundario-primeiralinha" id="lista-eventos">
-                <!-- Eventos dinâmicos serão inseridos aqui -->
+                <div class="loading-spinner" id="loading-spinner"></div>
             </div>
         </section>
 
@@ -182,39 +198,74 @@
     <script>
         // Função para formatar a data no padrão dd/MM/yyyy
         function formatarData(dataISO) {
-            const data = new Date(dataISO);
-            const dia = String(data.getDate()).padStart(2, '0');
-            const mes = String(data.getMonth() + 1).padStart(2, '0');
-            const ano = data.getFullYear();
-            return `${dia}/${mes}/${ano}`;
+            if (!dataISO) return "Data não definida";
+            
+            try {
+                const data = new Date(dataISO);
+                if (isNaN(data.getTime())) {
+                    return "Data inválida";
+                }
+                const dia = String(data.getDate()).padStart(2, '0');
+                const mes = String(data.getMonth() + 1).padStart(2, '0');
+                const ano = data.getFullYear();
+                return `${dia}/${mes}/${ano}`;
+            } catch (error) {
+                console.error("Erro ao formatar data:", error);
+                return "Data inválida";
+            }
         }
 
         // Função de logout
         function fazerLogout() {
             localStorage.removeItem("cnpjUsuario");
+            localStorage.removeItem("usuarioLogado");
             window.location.href = "index.html";
         }
 
         // Função para carregar os eventos do promotor
         async function carregarEventos() {
+            const listaEventos = document.getElementById("lista-eventos");
+            listaEventos.innerHTML = '<div class="loading-spinner"></div>';
+            
             const cnpjUsuario = localStorage.getItem("cnpjUsuario");
+            const usuarioLogado = localStorage.getItem("usuarioLogado");
 
-            if (!cnpjUsuario) {
-                document.getElementById("lista-eventos").innerHTML = "<p>Erro: Usuário não identificado. Faça login novamente.</p>";
+            if (!cnpjUsuario || !usuarioLogado) {
+                listaEventos.innerHTML = `
+                    <div class="erro-mensagem">
+                        <p>Você precisa estar logado para acessar esta página.</p>
+                        <button class="cabecalho-botao-entrar" onclick="window.location.href='login_promotor.html'">
+                            Ir para Login
+                        </button>
+                    </div>
+                `;
                 return;
             }
 
             try {
-                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}`);
+                // Endpoint modificado para buscar eventos por promotor
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/eventos?promotor_cnpj=${cnpjUsuario}`, {
+                    headers: {
+                        'Authorization': `Bearer ${usuarioLogado}`
+                    }
+                });
                 
-                if (!resposta.ok) throw new Error("Erro ao carregar eventos.");
+                if (!resposta.ok) {
+                    throw new Error(`Erro ao carregar eventos: ${resposta.statusText}`);
+                }
                 
                 const eventos = await resposta.json();
-                const listaEventos = document.getElementById("lista-eventos");
                 listaEventos.innerHTML = "";
 
-                if (eventos.length === 0) {
-                    listaEventos.innerHTML = "<p>Nenhum evento encontrado.</p>";
+                if (!eventos || eventos.length === 0) {
+                    listaEventos.innerHTML = `
+                        <div class="sem-eventos">
+                            <p>Você ainda não cadastrou nenhum evento.</p>
+                            <button class="cabecalho-botao-entrar" onclick="location.href='inserir_eventos.html'">
+                                Cadastrar Primeiro Evento
+                            </button>
+                        </div>
+                    `;
                     return;
                 }
 
@@ -222,15 +273,15 @@
                     const eventoDiv = document.createElement("div");
                     eventoDiv.className = "evento-card";
                     eventoDiv.innerHTML = `
-                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
+                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome || 'Evento'}">
+                        <h3 class="conteudo-secundario-titulo">${evento.nome || 'Nome do Evento'}</h3>
                         <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
+                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco || 'Local não informado'}</p>
                         <div class="evento-acoes">
-                            <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
+                            <button class="botao-editar" onclick="editarEvento('${evento.id_evento}')">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
-                            <button class="botao-excluir" onclick="confirmarExclusao(${evento.id_evento})">
+                            <button class="botao-excluir" onclick="confirmarExclusao('${evento.id_evento}')">
                                 <i class="fas fa-trash"></i> Excluir
                             </button>
                         </div>
@@ -240,7 +291,15 @@
 
             } catch (error) {
                 console.error("Erro:", error);
-                document.getElementById("lista-eventos").innerHTML = "<p>Erro ao carregar eventos.</p>";
+                listaEventos.innerHTML = `
+                    <div class="erro-mensagem">
+                        <p>Erro ao carregar eventos. Por favor, tente novamente.</p>
+                        <button class="cabecalho-botao-entrar" onclick="carregarEventos()">
+                            Tentar Novamente
+                        </button>
+                        <p class="erro-detalhes">${error.message}</p>
+                    </div>
+                `;
             }
         }
 
@@ -250,7 +309,7 @@
         }
 
         function confirmarExclusao(idEvento) {
-            if (confirm("Tem certeza que deseja excluir este evento?")) {
+            if (confirm("Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.")) {
                 excluirEvento(idEvento);
             }
         }
@@ -258,19 +317,38 @@
         async function excluirEvento(idEvento) {
             try {
                 const cnpjUsuario = localStorage.getItem("cnpjUsuario");
-                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/meusEventosPromotor?cnpj=${cnpjUsuario}&id_evento=${idEvento}`, {
-                    method: 'DELETE'
+                const usuarioLogado = localStorage.getItem("usuarioLogado");
+                
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/eventos/${idEvento}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${usuarioLogado}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ promotor_cnpj: cnpjUsuario })
                 });
                 
                 if (resposta.ok) {
+                    alert("Evento excluído com sucesso!");
                     carregarEventos();
+                } else {
+                    throw new Error(await resposta.text());
                 }
             } catch (error) {
-                console.error("Erro:", error);
+                console.error("Erro ao excluir evento:", error);
+                alert(`Erro ao excluir evento: ${error.message}`);
             }
         }
 
-        document.addEventListener("DOMContentLoaded", carregarEventos);
+        // Verificar login ao carregar a página
+        document.addEventListener("DOMContentLoaded", function() {
+            const usuarioLogado = localStorage.getItem("usuarioLogado");
+            if (!usuarioLogado) {
+                window.location.href = "login_promotor.html";
+            } else {
+                carregarEventos();
+            }
+        });
     </script>
 </body>
 </html>
