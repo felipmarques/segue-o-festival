@@ -6,6 +6,8 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
+  <link rel="stylesheet" href="src/css/chatbot.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
   <style>
@@ -209,8 +211,9 @@
     .carrossel-container {
       position: relative;
       width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
       overflow: hidden;
-      margin: 20px 0;
     }
     
     .carrossel {
@@ -338,6 +341,176 @@
     .conteudo-secundario-item:nth-child(4) { animation-delay: 0.4s; }
     .conteudo-secundario-item:nth-child(5) { animation-delay: 0.5s; }
     .conteudo-secundario-item:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Estilo para o botão de logout */
+    .logout-botao {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    
+    .logout-botao:hover {
+      background-color: #c0392b;
+    }
+    
+    .logout-icone {
+      font-size: 1.2rem;
+    }
+
+    /* Estilos para a seção de pesquisa */
+    .pesquisa {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      margin: 20px auto;
+      max-width: 1200px;
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .pesquisa-busca-evento,
+    .pesquisa-busca-local,
+    .pesquisa-busca-data {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .pesquisa-busca-evento input,
+    .pesquisa-busca-local input,
+    .pesquisa-busca-data input {
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      min-width: 250px;
+    }
+    
+    .pesquisa-busca-evento button,
+    .pesquisa-busca-local button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .pesquisa-busca-evento button:hover,
+    .pesquisa-busca-local button:hover {
+      background-color: #3e8e41;
+    }
+    
+    .pesquisa-busca-data i {
+      color: #555;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .pesquisa {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .pesquisa-busca-evento,
+      .pesquisa-busca-local,
+      .pesquisa-busca-data {
+        width: 100%;
+      }
+      
+      .pesquisa-busca-evento input,
+      .pesquisa-busca-local input,
+      .pesquisa-busca-data input {
+        width: 100%;
+        min-width: auto;
+      }
+    }
+
+    /* Menu de filtros melhorado */
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      flex-wrap: wrap;
+    }
+    
+    .menu-item {
+      position: relative;
+    }
+    
+    .menu-botao {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+    }
+    
+    .menu-botao:hover {
+      background-color: #3e8e41;
+    }
+    
+    .menu-lista {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 200px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      z-index: 1;
+      border-radius: 4px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .menu-item:hover .menu-lista {
+      display: block;
+    }
+    
+    .menu-lista li {
+      color: #333;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .menu-lista li:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .scroll-limitada {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .scroll-limitada::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scroll-limitada::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -360,7 +533,32 @@
 
   <nav class="menu">
     <div class="menu-item">
-      <button class="menu-botao">📍Estado</button>
+      <button class="menu-botao">🎵 Música</button>
+      <ul class="menu-lista" id="lista-musica">
+        <li onclick="filtrarEventos('tipo', null)">Todos</li>
+        <li onclick="filtrarEventos('tipo', 'Sertanejo')">Sertanejo</li>
+        <li onclick="filtrarEventos('tipo', 'Rap')">Rap</li>
+        <li onclick="filtrarEventos('tipo', 'Funk')">Funk</li>
+        <li onclick="filtrarEventos('tipo', 'Gospel')">Gospel</li>
+        <li onclick="filtrarEventos('tipo', 'Pop')">Pop</li>
+        <li onclick="filtrarEventos('tipo', 'Rock')">Rock</li>
+      </ul>
+    </div>
+
+    <div class="menu-item">
+      <button class="menu-botao">🎭 Eventos</button>
+      <ul class="menu-lista" id="lista-tipos">
+        <li onclick="filtrarEventos('tipo', null)">Todos</li>
+        <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
+        <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
+        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
+        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+        <li onclick="filtrarEventos('tipo', 'Música')">Música</li>
+      </ul>
+    </div>
+
+    <div class="menu-item">
+      <button class="menu-botao">📍 Estado</button>
       <ul class="menu-lista scroll-limitada" id="lista-estados">
         <li onclick="filtrarEventos('estado', null)">Todos</li>
         <li onclick="filtrarEventos('estado', 'Acre')">Acre</li>
@@ -392,20 +590,54 @@
         <li onclick="filtrarEventos('estado', 'Tocantins')">Tocantins</li>
       </ul>
     </div>
+
     <div class="menu-item">
-      <button class="menu-botao">🎫Tipo de Evento</button>
-      <ul class="menu-lista" id="lista-tipos">
-        <li onclick="filtrarEventos('tipo', null)">Todos</li>
-        <li onclick="filtrarEventos('tipo', 'Festival')">Festival</li>
-        <li onclick="filtrarEventos('tipo', 'Show')">Show</li>
-        <li onclick="filtrarEventos('tipo', 'Religioso')">Religioso</li>
-        <li onclick="filtrarEventos('tipo', 'Palestra')">Palestra</li>
+      <button class="menu-botao">🎤 Line-Up</button>
+      <ul class="menu-lista" id="lista-lineup">
+        <li onclick="filtrarEventos('tipo', 'The Town')">The Town</li>
+        <li onclick="filtrarEventos('tipo', 'Rock In Rio')">Rock In Rio</li>
+        <li onclick="filtrarEventos('tipo', 'Só Track Boa')">Só Track Boa</li>
+        <li onclick="filtrarEventos('tipo', 'Lollapalooza')">Lollapalooza</li>
+        <li onclick="filtrarEventos('tipo', 'Cena 2K25')">Cena 2K25</li>
+      </ul>
+    </div>
+
+    <div class="menu-item">
+      <button class="menu-botao">🎉 Especiais</button>
+      <ul class="menu-lista" id="lista-especiais">
+        <li onclick="filtrarEventos('tipo', 'Ano Novo')">Ano Novo</li>
+        <li onclick="filtrarEventos('tipo', 'Carnaval')">Carnaval</li>
+        <li onclick="filtrarEventos('tipo', 'Páscoa')">Páscoa</li>
+        <li onclick="filtrarEventos('tipo', 'Festa Junina')">Festa Junina</li>  
+        <li onclick="filtrarEventos('tipo', 'Natal')">Natal</li>
       </ul>
     </div>
   </nav>
   
   <main class="conteudo">
-    <!-- Carrossel melhorado -->
+    <!-- Seção de pesquisa -->
+    <section class="pesquisa">
+      <div class="pesquisa-busca-evento">
+        <input type="search" id="txtBusca" placeholder="Pesquise por nome do evento..."/>
+        <button id="btnBusca" type="button" aria-label="Buscar evento">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+      
+      <div class="pesquisa-busca-local">
+        <input type="search" id="txtLocalizacao" placeholder="Buscar por local">
+        <button id="btnBuscaLocal" type="button" aria-label="Buscar evento por local">
+          <i class="fa-solid fa-location-dot"></i>
+        </button>  
+      </div>
+
+      <div class="pesquisa-busca-data">
+        <input type="search" id="dateBusca" placeholder="Buscar por data">
+        <i class="fa-solid fa-calendar-days"></i>
+      </div>
+    </section>
+
+    <!-- Carrossel melhorado e centralizado -->
     <section class="carrossel-container">
       <div class="carrossel" id="carrossel"></div>
       <button class="botao-carrossel anterior" onclick="voltar()">‹</button>
@@ -421,7 +653,7 @@
         </div>
       </div>
 
-      <div class="conteudo-secundario-linha" id="eventos-lista">
+      <div class="conteudo-secundario-lista" id="eventos-lista">
         <!-- Eventos serão carregados aqui -->
       </div>
     </section>
@@ -467,6 +699,34 @@
     <img id="lightbox-img" class="lightbox-img">
   </div>
 
+  <!-- Chatbot -->
+  <div id="chatbot-toggle">
+    <span id="chatballoon">Precisa de ajuda?</span>
+    <img src="src/images/menino_logo-removebg-preview.png" alt="Chatbot" />
+  </div>
+
+  <div id="chatbot-window">
+    <div id="chatbot-header">
+      <h1>Segue<br>O Festival</h1>
+      <span id="chatbot-name">Chat com Zeca</span>
+      <div id="button-chat">
+        <button id="minimize-chat">-</button>
+        <button id="close-chat">x</button> 
+      </div>
+    </div>    
+    <div id="chatbox"></div>
+    <div id="options"></div>
+    <div id="calendar-container"></div>
+    <div id="input-area">
+      <button id="upload-button"><i class="fa-solid fa-plus"></i></button>
+      <input type="file" id="image-input" accept="image/*" style="display: none" />
+      <textarea id="message-input" placeholder="Digite sua mensagem"></textarea>
+      <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="src/javascript/chatbot.js"></script> 
   <script>
     // Verificação de login
     if (!localStorage.getItem("usuarioLogado")) {
@@ -477,7 +737,22 @@
     let eventosFavoritos = [];
     let estadoSelecionado = null;
     let tipoSelecionado = null;
+    let dataSelecionada = null;
+    let termoBusca = '';
+    let localBusca = '';
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+
+    // Inicializa o flatpickr para busca por data
+    document.addEventListener('DOMContentLoaded', function() {
+      flatpickr("#dateBusca", {
+        dateFormat: "d/m/Y",
+        locale: "pt",
+        onChange: function(selectedDates, dateStr, instance) {
+          dataSelecionada = dateStr;
+          exibirEventosFiltrados();
+        }
+      });
+    });
 
     // Função principal para carregar eventos
     async function buscarEventos() {
@@ -495,10 +770,47 @@
         exibirEventosFiltrados();
         exibirCarrossel(todosEventos);
         carregarGaleria();
+        
+        // Configura os listeners de busca
+        configurarBuscas();
       } catch (error) {
         document.getElementById('eventos-lista').innerHTML = '<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>';
         console.error("Erro ao buscar eventos:", error);
       }
+    }
+
+    // Configura os listeners para as buscas
+    function configurarBuscas() {
+      const inputBusca = document.getElementById("txtBusca");
+      const btnBusca = document.getElementById("btnBusca");
+      const inputLocal = document.getElementById("txtLocalizacao");
+      const btnLocal = document.getElementById("btnBuscaLocal");
+
+      // Busca por nome do evento
+      btnBusca.addEventListener("click", () => {
+        termoBusca = inputBusca.value.trim().toLowerCase();
+        exibirEventosFiltrados();
+      });
+
+      inputBusca.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          termoBusca = inputBusca.value.trim().toLowerCase();
+          exibirEventosFiltrados();
+        }
+      });
+
+      // Busca por local
+      btnLocal.addEventListener("click", () => {
+        localBusca = inputLocal.value.trim().toLowerCase();
+        exibirEventosFiltrados();
+      });
+
+      inputLocal.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          localBusca = inputLocal.value.trim().toLowerCase();
+          exibirEventosFiltrados();
+        }
+      });
     }
 
     // Carrega os eventos favoritos do usuário
@@ -514,7 +826,7 @@
       }
     }
 
-    // Função para filtrar eventos por estado e tipo
+    // Função para filtrar eventos por estado, tipo, data, termo e local
     function filtrarEventos(tipo, valor) {
       if (tipo === 'estado') {
         estadoSelecionado = valor;
@@ -531,8 +843,24 @@
       container.innerHTML = '';
 
       const eventosFiltrados = todosEventos.filter(evento => {
+        const dataEvento = evento.data ? new Date(evento.data) : null;
+        const nomeEvento = evento.nome?.toLowerCase() || '';
+        const localEvento = (evento.endereco + ' ' + evento.cidade + ' ' + evento.estado).toLowerCase() || '';
+        
+        // CORREÇÃO: Comparação de datas ajustada
+        const dataFiltro = dataSelecionada 
+          ? new Date(dataSelecionada.split('/').reverse().join('-')) 
+          : null;
+        
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo === tipoSelecionado);
+               (!tipoSelecionado || evento.tipo === tipoSelecionado) &&
+               (!dataSelecionada || 
+                 (dataEvento && 
+                  dataEvento.getFullYear() === dataFiltro.getFullYear() &&
+                  dataEvento.getMonth() === dataFiltro.getMonth() &&
+                  dataEvento.getDate() === dataFiltro.getDate())) &&
+               (!termoBusca || nomeEvento.includes(termoBusca)) &&
+               (!localBusca || localEvento.includes(localBusca));
       });
 
       // Atualiza o contador de eventos
@@ -569,13 +897,17 @@
 
         const data = document.createElement('p');
         if (evento.data) {
+          // CORREÇÃO: Formatação da data ajustada para evitar problemas de timezone
           const dataEvento = new Date(evento.data);
-          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
+          // Ajusta para o timezone local
+          const dataAjustada = new Date(dataEvento.getTime() + dataEvento.getTimezoneOffset() * 60000);
+          
+          const dataFormatada = dataAjustada.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
           });
-          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
+          const diaSemana = dataAjustada.toLocaleDateString('pt-BR', {
             weekday: 'long'
           });
           data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
@@ -587,273 +919,4 @@
         local.textContent = evento.endereco || 'Local não informado';
 
         // Botão de favorito
-        const btnFavorito = document.createElement('button');
-        btnFavorito.className = 'btn-favorito';
-        btnFavorito.innerHTML = '<i class="fas fa-heart"></i>';
-        btnFavorito.title = 'Salvar evento';
-        
-        // Verifica se o evento está nos favoritos
-        const isFavorito = eventosFavoritos.some(fav => fav.id_evento == evento.id_evento);
-        if (isFavorito) {
-          btnFavorito.classList.add('ativo');
-        }
-        
-        btnFavorito.onclick = async (e) => {
-          e.stopPropagation();
-          await alternarFavorito(evento.id_evento, btnFavorito);
-        };
-
-        div.appendChild(imagem);
-        div.appendChild(titulo);
-        div.appendChild(data);
-        div.appendChild(local);
-        div.appendChild(btnFavorito);
-        container.appendChild(div);
-      });
-    }
-
-    // Alternar evento entre favoritos
-    async function alternarFavorito(eventoId, btnElement) {
-      if (!usuarioLogado?.cpf) {
-        alert('Você precisa estar logado para salvar eventos');
-        window.location.href = 'login.html';
-        return;
-      }
-
-      const isFavorito = btnElement.classList.contains('ativo');
-      btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-      btnElement.disabled = true;
-
-      try {
-        let response;
-        const url = '/api/eventos-salvos-usuario';
-        
-        if (isFavorito) {
-          // Remover dos favoritos
-          response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              usuario_cpf: usuarioLogado.cpf,
-              evento_id: parseInt(eventoId)
-            })
-          });
-        } else {
-          // Adicionar aos favoritos
-          response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              usuario_cpf: usuarioLogado.cpf,
-              evento_id: parseInt(eventoId)
-            })
-          });
-        }
-
-        if (response.ok) {
-          // Atualiza visualmente
-          btnElement.classList.toggle('ativo');
-          btnElement.innerHTML = '<i class="fas fa-heart"></i>';
-          
-          // Atualiza a lista de favoritos localmente
-          if (isFavorito) {
-            eventosFavoritos = eventosFavoritos.filter(fav => fav.id_evento != eventoId);
-          } else {
-            const evento = todosEventos.find(e => e.id_evento == eventoId);
-            if (evento) {
-              eventosFavoritos.push(evento);
-            }
-          }
-        } else {
-          throw new Error('Erro ao atualizar favoritos');
-        }
-      } catch (error) {
-        console.error('Erro ao alternar favorito:', error);
-        alert('Ocorreu um erro ao atualizar seus favoritos');
-      } finally {
-        btnElement.disabled = false;
-      }
-    }
-
-    // Função para carregar a galeria de fotos
-    async function carregarGaleria() {
-      const galeria = document.getElementById('galeria-fotos');
-      
-      try {
-        galeria.innerHTML = `
-          <p class="galeria-status galeria-carregando">
-            <i class="fas fa-spinner fa-spin"></i> Carregando fotos...
-          </p>
-        `;
-        
-        const response = await fetch('/api/galeriaEventos');
-        
-        if (!response.ok) {
-          throw new Error(`Erro ${response.status}: ${await response.text()}`);
-        }
-        
-        const { success, data: fotos, error } = await response.json();
-        
-        if (!success || !fotos) {
-          throw new Error(error || 'Dados inválidos recebidos da API');
-        }
-        
-        if (fotos.length === 0) {
-          galeria.innerHTML = `
-            <p class="galeria-status galeria-vazia">
-              <i class="far fa-images"></i> Nenhuma foto encontrada na galeria.
-            </p>
-          `;
-          return;
-        }
-        
-        let html = '';
-        fotos.forEach(foto => {
-          html += `
-            <div class="galeria-item">
-              <img src="data:image/jpeg;base64,${foto.imagem}" 
-                   alt="Foto do evento" 
-                   class="galeria-foto"
-                   loading="lazy"
-                   onclick="ampliarFoto('${foto.imagem}')">
-            </div>
-          `;
-        });
-        
-        galeria.innerHTML = html;
-        
-      } catch (error) {
-        console.error('Erro ao carregar galeria:', error);
-        galeria.innerHTML = `
-          <div class="galeria-status galeria-erro">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Erro ao carregar galeria: ${error.message}</p>
-            <button onclick="carregarGaleria()" class="botao-recarregar">
-              <i class="fas fa-sync-alt"></i> Tentar novamente
-            </button>
-          </div>
-        `;
-      }
-    }
-
-    // Funções do lightbox
-    function ampliarFoto(base64Image) {
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-      
-      lightboxImg.src = `data:image/jpeg;base64,${base64Image}`;
-      lightbox.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function fecharLightbox() {
-      const lightbox = document.getElementById('lightbox');
-      lightbox.style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-
-    // Fechar lightbox ao clicar fora da imagem
-    window.onclick = function(event) {
-      const lightbox = document.getElementById('lightbox');
-      if (event.target === lightbox) {
-        fecharLightbox();
-      }
-    }
-
-    // Funções do carrossel melhorado
-    let currentSlide = 0;
-    let slides = [];
-
-    function exibirCarrossel(eventos) {
-      const carrossel = document.getElementById("carrossel");
-      const indicadores = document.getElementById("indicadores-carrossel");
-      carrossel.innerHTML = '';
-      indicadores.innerHTML = '';
-
-      // Limita a 5 eventos no carrossel
-      slides = eventos.slice(0, 5);
-
-      slides.forEach((evento, index) => {
-        // Imagem do carrossel
-        const img = document.createElement("img");
-        img.src = evento.imagem
-          ? `data:image/jpeg;base64,${evento.imagem}`
-          : '/img/default.jpg';
-        img.alt = evento.nome;
-        img.loading = 'eager';
-        img.style.cursor = 'pointer';
-        img.onclick = () => {
-          window.location.href = `pagina_evento.html?id=${evento.id_evento}`;
-        };
-        carrossel.appendChild(img);
-
-        // Indicador
-        const indicador = document.createElement("div");
-        indicador.className = "indicador";
-        if (index === 0) indicador.classList.add("ativo");
-        indicador.onclick = () => {
-          currentSlide = index;
-          atualizarCarrossel();
-        };
-        indicadores.appendChild(indicador);
-      });
-
-      currentSlide = 0;
-      atualizarCarrossel();
-    }
-
-    function atualizarCarrossel() {
-      const carrossel = document.getElementById("carrossel");
-      const indicadores = document.querySelectorAll(".indicador");
-      
-      // Atualiza posição do carrossel
-      carrossel.style.transform = `translateX(-${currentSlide * 100}%)`;
-      
-      // Atualiza indicadores
-      indicadores.forEach((indicador, index) => {
-        if (index === currentSlide) {
-          indicador.classList.add("ativo");
-        } else {
-          indicador.classList.remove("ativo");
-        }
-      });
-    }
-
-    function avancar() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      atualizarCarrossel();
-    }
-
-    function voltar() {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      atualizarCarrossel();
-    }
-
-    // Função de logout
-    function logout() {
-      localStorage.clear();
-      window.location.href = "login.html";
-    }
-
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', () => {
-      buscarEventos();
-      
-      // Atualiza o carrossel automaticamente a cada 5 segundos
-      setInterval(avancar, 5000);
-    });
-  </script>
-  <script src="js/calendario.js"></script>
-
-  <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
-    <button class="logout-botao" onclick="logout()">
-      <span class="logout-icone">↩️</span>
-      Sair
-    </button>
-  </footer>
-</body>
-</html>
+        const btnFavorito = document.createElement
