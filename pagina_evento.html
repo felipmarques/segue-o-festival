@@ -4,223 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/pagina_evento.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <title>Detalhes do Evento</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #001f3f, #003366, #004080);
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 2rem;
-    }
-    .evento-header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      align-items: center;
-    }
-    .evento-header img {
-      max-width: 100%;
-      border-radius: 12px;
-      max-height: 400px;
-    }
-    .evento-info h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    .evento-info p {
-      margin: 0.5rem 0;
-    }
-    .descricao {
-      background: #fff;
-      color: #000;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-top: 2rem;
-    }
-    .ingresso-box a {
-      display: inline-block;
-      background: #001f3f;
-      color: #fff;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      margin-top: 1rem;
-      border: 2px solid #FFD700;
-      transition: background 0.3s ease, border 0.3s ease;
-    }
-    .ingresso-box a:hover {
-      background: #003366;
-      border-color: #FFA500;
-    }
-    #map {
-      height: 400px;
-      margin: 2rem auto;
-      border-radius: 12px;
-    }
-    .links-section {
-      margin-top: 2rem;
-      background: #fff;
-      color: #000;
-      border-radius: 12px;
-      padding: 2rem;
-    }
-    .links-section h3 {
-      margin-top: 0;
-    }
-    .links-grid {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-    .links-grid a {
-      text-align: center;
-      text-decoration: none;
-      color: #000;
-    }
-    .links-grid img {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 0.5rem;
-    }
-    .calculo-distancia {
-      background: #fff;
-      color: #000;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-top: 2rem;
-    }
-    .calculo-distancia input,
-    .calculo-distancia button {
-      padding: 0.75rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      font-size: 1rem;
-    }
-    .calculo-distancia input {
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-    .calculo-distancia button {
-      background: #001f3f;
-      color: #fff;
-      border: 2px solid #FFD700;
-      cursor: pointer;
-    }
-    .calculo-distancia button:hover {
-      background: #003366;
-      border-color: #FFA500;
-    }
-    .airbnb-link {
-      color: #FF007F;
-      font-size: 1.2rem;
-      text-decoration: none;
-    }
-    .airbnb-link:hover {
-      text-decoration: underline;
-    }
-    
-    /* Estilos para o botão de salvar evento */
-    .btn-salvar-evento {
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      margin-top: 1rem;
-      transition: background-color 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    
-    .btn-salvar-evento:hover {
-      background-color: #45a049;
-    }
-    
-    .btn-salvar-evento.salvo {
-      background-color: #f44336;
-    }
-    
-    .btn-salvar-evento.salvo:hover {
-      background-color: #d32f2f;
-    }
-    
-    .btn-salvar-evento:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-    
-    /* Spinner */
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Toast notification */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 12px 24px;
-      border-radius: 4px;
-      color: white;
-      z-index: 1000;
-      opacity: 1;
-      transition: opacity 0.5s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    
-    .toast.success {
-      background-color: #4CAF50;
-    }
-    
-    .toast.error {
-      background-color: #f44336;
-    }
-    
-    .toast.warning {
-      background-color: #ff9800;
-    }
-  </style>
+
 </head>
 <body>
+
+<header>
+  <a id="btn-voltar"><h1 class="cabecalho-titulo">Segue<br>O Festival!</h1></a>
+</header>
+
+<main>
   <div class="container">
-    <button id="btn-voltar" style="
-      margin-bottom: 1rem;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      background-color: #FFD700;
-      color: #001f3f;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-    ">
-      ← Voltar para Home
-    </button>
-    
+
     <div class="evento-header">
       <img id="imagem" alt="Imagem do evento"/>
       <div class="evento-info">
@@ -257,265 +55,75 @@
     </div>
 
     <div class="links-section">
-      <h3>Faça já a sua corrida até o evento</h3>
+      <h3>Faça já a sua corrida até o evento:</h3>
       <div class="links-grid">
         <a id="link_uber" href="#" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber">
-          <div>Uber</div>
+          <img src="imagens/uber.png" alt="Uber">
         </a>
         <a id="link_99" href="#" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/99_logo.png/600px-99_logo.png" alt="99">
-          <div>99 Táxi</div>
+          <img src="imagens/99-app-logo-0.png" alt="99">
         </a>
       </div>
 
-      <h3 style="margin-top: 2rem;">Veja acomodações próximas ao evento</h3>
+      <h3 style="margin-top: 2rem;">Veja acomodações próximas ao evento:</h3>
       <div class="links-grid">
         <a id="link_airbnb" href="#" class="airbnb-link" target="_blank">
-          Airbnb
+          <img src="imagens/airbnb.svg" alt="Airbnb">  
         </a>
       </div>
     </div>
   </div>
+  </main>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const id_evento = params.get("id");
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    const btnSalvarEvento = document.getElementById('btn-salvar-evento');
-    const btnTexto = document.getElementById('btn-text');
-    const spinner = document.getElementById('spinner');
-    let coordenadasEvento = {};
-    let eventoSalvo = false;
+        <footer class="rodape">
+      <h3 class="titulo-rodape">Segue<br>O Festival!</h3>                 
+      <div class="rodape-links">
+        <div class="menu-hover">
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaEventos')">Encontre Eventos</span>
+            <ul class="lista-escondida" id="listaEventos">
+              <li>Festival A</li>
+              <li>Festival B</li>
+              <li>Festival C</li>
+            </ul>
+          </div>
+          
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaCidades')">Cidades</span>
+            <ul class="lista-escondida" id="listaCidades">
+              <li>São Paulo</li>
+              <li>Rio de Janeiro</li>
+              <li>Belo Horizonte</li>
+              <li>Curitiba</li>
+            </ul>
+          </div>
+          
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaCategorias')">Categorias</span>
+            <ul class="lista-escondida" id="listaCategorias">
+              <li>Festival</li>
+              <li>Show</li>
+              <li>Religioso</li>
+              <li>Carnaval</li>
+              <li>Festa Junina</li>
+              <li>Ano Novo</li>
+            </ul>
+          </div>
+          
+          <div>
+            <span class="rodape-direcionamento" onclick="toggleLista('listaParaPromotores')">Para Promotores</span>
+            <ul class="lista-escondida" id="listaParaPromotores">
+              <li>Cadastrar Evento</li>
+              <li>Contato</li>
+            </ul>
+          </div>                               
+          <a href="https://cadastro-organizador.vercel.app/faq.html" class="rodape-direcionamento">Ajuda</a>
+        </div>
+      </div>
+                        
+      <div class="direitos-reservados">&copy; 2025 Segue o Festival. Todos os direitos reservados.</div>            
+    </footer>
 
-    // Funções para salvar evento - VERSÃO CORRIGIDA
-    async function verificarEventoSalvo() {
-      if (!usuarioLogado?.cpf) return false;
-      
-      try {
-        const response = await fetch(`/api/eventos-salvos-usuario?cpf=${usuarioLogado.cpf}`);
-        
-        if (!response.ok) throw new Error('Erro ao verificar evento salvo');
-        
-        const eventosSalvos = await response.json();
-        return eventosSalvos.some(evento => evento.id_evento == id_evento);
-      } catch (error) {
-        console.error('Erro ao verificar evento salvo:', error);
-        mostrarToast('Erro ao verificar evento salvo', 'error');
-        return false;
-      }
-    }
-
-    async function alternarSalvarEvento() {
-      if (!usuarioLogado?.cpf) {
-        mostrarToast('Você precisa estar logado para salvar eventos', 'warning');
-        setTimeout(() => window.location.href = 'login.html', 1500);
-        return;
-      }
-      
-      // Mostrar estado de carregamento
-      btnSalvarEvento.disabled = true;
-      spinner.style.display = 'inline-block';
-      btnTexto.textContent = eventoSalvo ? 'Removendo...' : 'Salvando...';
-      
-      try {
-        let response;
-        let url = '/api/eventos-salvos-usuario';
-        
-        if (eventoSalvo) {
-          // REMOVER evento salvo
-          response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              usuario_cpf: usuarioLogado.cpf,
-              evento_id: id_evento
-            })
-          });
-        } else {
-          // SALVAR novo evento
-          response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              usuario_cpf: usuarioLogado.cpf,
-              evento_id: id_evento
-            })
-          });
-        }
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Erro na operação');
-        }
-        
-        // Atualizar estado local
-        eventoSalvo = !eventoSalvo;
-        atualizarBotaoSalvar();
-        
-        // Feedback visual
-        mostrarToast(
-          eventoSalvo ? 'Evento salvo com sucesso!' : 'Evento removido dos salvos',
-          eventoSalvo ? 'success' : 'error'
-        );
-        
-      } catch (error) {
-        console.error('Erro ao alternar evento salvo:', error);
-        mostrarToast(error.message || 'Erro na operação', 'error');
-      } finally {
-        // Restaurar estado do botão
-        btnSalvarEvento.disabled = false;
-        spinner.style.display = 'none';
-        atualizarBotaoSalvar();
-      }
-    }
-
-    function atualizarBotaoSalvar() {
-      if (eventoSalvo) {
-        btnTexto.textContent = '✔ Evento Salvo';
-        btnSalvarEvento.classList.add('salvo');
-      } else {
-        btnTexto.textContent = 'Salvar Evento';
-        btnSalvarEvento.classList.remove('salvo');
-      }
-    }
-
-    function mostrarToast(mensagem, tipo) {
-      const toast = document.createElement('div');
-      toast.className = `toast ${tipo}`;
-      toast.textContent = mensagem;
-      document.body.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 500);
-      }, 3000);
-    }
-
-    // Carregar informações do evento
-    async function carregarPaginaEvento() {
-      // Verificar login e estado do evento
-      if (!usuarioLogado?.cpf) {
-        btnTexto.textContent = 'Login para Salvar';
-        btnSalvarEvento.onclick = () => window.location.href = 'login.html';
-      } else {
-        try {
-          eventoSalvo = await verificarEventoSalvo();
-          atualizarBotaoSalvar();
-          btnSalvarEvento.onclick = alternarSalvarEvento;
-        } catch (error) {
-          console.error('Erro ao verificar evento salvo:', error);
-          mostrarToast('Erro ao verificar eventos salvos', 'error');
-        }
-      }
-      
-      // Carregar dados do evento
-      try {
-        const response = await fetch(`/api/pagina_evento?id_evento=${id_evento}`);
-        if (!response.ok) throw new Error('Erro ao carregar evento');
-        
-        const evento = await response.json();
-        
-        document.getElementById('imagem').src = `data:image/jpeg;base64,${evento.imagem}`;
-        document.getElementById('titulo').textContent = evento.nome;
-        document.getElementById('lineup').textContent = evento.line_up;
-        document.getElementById('data').textContent = new Date(evento.data).toLocaleString('pt-BR');
-        document.getElementById('endereco').textContent = evento.endereco;
-        document.getElementById('descricao').textContent = evento.descricao;
-        document.getElementById('link_ingresso').href = evento.link_ingresso;
-
-        // Obter coordenadas do evento
-        const locationsResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(evento.endereco)}, Brasil`);
-        const locations = await locationsResponse.json();
-        
-        if (locations.length > 0) {
-          coordenadasEvento.lat = parseFloat(locations[0].lat);
-          coordenadasEvento.lon = parseFloat(locations[0].lon);
-
-          // Inicializar mapa
-          const map = L.map('map').setView([coordenadasEvento.lat, coordenadasEvento.lon], 15);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
-
-          L.marker([coordenadasEvento.lat, coordenadasEvento.lon]).addTo(map)
-            .bindPopup(evento.nome)
-            .openPopup();
-
-          // Links dinâmicos
-          document.getElementById("link_uber").href = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${coordenadasEvento.lat}&dropoff[longitude]=${coordenadasEvento.lon}`;
-          document.getElementById("link_99").href = `https://99app.com/`;
-          document.getElementById("link_airbnb").href = `https://www.airbnb.com.br/s/homes?lat=${coordenadasEvento.lat}&lng=${coordenadasEvento.lon}`;
-        }
-      } catch (error) {
-        console.error('Erro ao carregar evento:', error);
-        document.getElementById('titulo').textContent = "Evento não encontrado";
-        mostrarToast('Erro ao carregar detalhes do evento', 'error');
-      }
-    }
-
-    // Função para calcular distância
-    async function calcularDistancia() {
-      const endereco = document.getElementById("endereco_usuario").value;
-      if (!endereco) {
-        mostrarToast('Por favor, informe seu endereço', 'warning');
-        return;
-      }
-
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}, Brasil`);
-        const result = await response.json();
-        
-        if (result.length === 0) {
-          mostrarToast('Endereço não encontrado', 'error');
-          return;
-        }
-
-        const latUsuario = parseFloat(result[0].lat);
-        const lonUsuario = parseFloat(result[0].lon);
-
-        const distancia = calcularDistanciaEmKm(
-          latUsuario, lonUsuario,
-          coordenadasEvento.lat, coordenadasEvento.lon
-        );
-
-        document.getElementById("resultado_distancia").textContent = 
-          `Você está a aproximadamente ${distancia.toFixed(2)} km do evento.`;
-      } catch (err) {
-        console.error(err);
-        mostrarToast('Erro ao calcular distância', 'error');
-      }
-    }
-
-    function calcularDistanciaEmKm(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Raio da Terra em km
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-
-    // Event listeners
-    document.getElementById("calcular_distancia").addEventListener("click", calcularDistancia);
-    document.getElementById('btn-voltar').addEventListener('click', () => {
-      if (document.referrer) {
-        history.back();
-      } else {
-        window.location.href = 'index.html';
-      }
-    });
-
-    // Iniciar
-    carregarPaginaEvento();
-  </script>
+  <script src="api/pagina_evento.js"></script>
 </body>
 </html>
