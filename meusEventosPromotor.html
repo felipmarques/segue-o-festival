@@ -56,56 +56,58 @@
             background-color: #d32f2f;
         }
 
-        /* Estilos dos cards de eventos */
-        .evento-card {
+        /* Estilos dos eventos (sem card) */
+        .evento-item {
             background: white;
-            border-radius: 10px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
             width: 100%;
-            max-width: 400px;
         }
 
-        .conteudo-secundario-imagem {
+        .evento-imagem {
             width: 100%;
-            height: 180px;
+            max-width: 400px;
+            height: auto;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 1rem;
         }
 
-        .conteudo-secundario-titulo {
-            font-size: 1.3rem;
+        .evento-titulo {
+            font-size: 1.5rem;
             color: #2c3e50;
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 0.8rem 0;
             font-weight: 600;
         }
 
-        .conteudo-secundario-paragrafo {
-            font-size: 0.95rem;
+        .evento-info {
+            font-size: 1rem;
             color: #555;
-            margin: 0.3rem 0;
-            line-height: 1.4;
+            margin: 0.5rem 0;
+            line-height: 1.6;
             display: flex;
             align-items: center;
         }
 
-        .conteudo-secundario-paragrafo i {
-            margin-right: 8px;
+        .evento-info i {
+            margin-right: 10px;
             color: #4CAF50;
+            min-width: 20px;
+            text-align: center;
         }
 
         /* Botões de ação */
         .evento-acoes {
             display: flex;
-            justify-content: flex-end;
             gap: 1rem;
             margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
         }
 
         .botao-editar, .botao-excluir {
-            padding: 0.6rem 1rem;
+            padding: 0.7rem 1.2rem;
             border: none;
             border-radius: 5px;
             font-weight: 500;
@@ -113,8 +115,8 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 0.95rem;
         }
 
         .botao-editar {
@@ -122,9 +124,35 @@
             color: white;
         }
 
+        .botao-editar:hover {
+            background-color: #0b7dda;
+        }
+
         .botao-excluir {
             background-color: #f44336;
             color: white;
+        }
+
+        .botao-excluir:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Layout da lista de eventos */
+        #lista-eventos {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .conteudo-secundario-destaque h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+            font-size: 2rem;
         }
 
         /* Responsividade */
@@ -136,11 +164,22 @@
             
             .cabecalho-botoes {
                 width: 100%;
-                justify-content: space-between;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
-            .evento-card {
-                max-width: 100%;
+            .evento-item {
+                padding: 1rem;
+            }
+            
+            .evento-acoes {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .botao-editar, .botao-excluir {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -220,12 +259,12 @@
 
                 eventos.forEach(evento => {
                     const eventoDiv = document.createElement("div");
-                    eventoDiv.className = "evento-card";
+                    eventoDiv.className = "evento-item";
                     eventoDiv.innerHTML = `
-                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
-                        <h3 class="conteudo-secundario-titulo">${evento.nome}</h3>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
+                        <img class="evento-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome}">
+                        <h3 class="evento-titulo">${evento.nome}</h3>
+                        <p class="evento-info"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
+                        <p class="evento-info"><i class="fas fa-map-marker-alt"></i> ${evento.endereco}</p>
                         <div class="evento-acoes">
                             <button class="botao-editar" onclick="editarEvento(${evento.id_evento})">
                                 <i class="fas fa-edit"></i> Editar
