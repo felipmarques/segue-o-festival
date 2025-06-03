@@ -79,7 +79,7 @@ body {
 }
 
 
-/*PESQUISA*/
+/*PESQUISA???*/
 .search-bar {
 display: flex;
 align-items: center;
@@ -704,13 +704,13 @@ display: block;
 
 
 
-
+/*PESQUISA*/
 .pesquisa {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%; /* Ocupa toda a largura do container */
-    max-width: 1300px;
+    max-width: 1000px;
     height: 60px;
     margin: 25px auto;
     border: 2px solid #FFF100; /* Cor da borda */
