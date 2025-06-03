@@ -10,7 +10,37 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
-
+  <style>
+    /* Estilo adicional para o botão de logout */
+    .cabecalho-botao-sair {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .cabecalho-botao-sair:hover {
+      background-color: #ff1a1a;
+      transform: scale(1.05);
+    }
+    
+    .cabecalho-botao-sair i {
+      font-size: 14px;
+    }
+    
+    .cabecalho-botoes {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+  </style>
 </head>
 <body>
   <header class="cabecalho">
@@ -20,6 +50,9 @@
     <div class="cabecalho-botoes">
       <button class="cabecalho-botao-entrar" onclick="location.href='perfil.html'">Perfil</button>
       <button class="cabecalho-botao-entrar" onclick="location.href='eventossalvos.html'">Meus Eventos</button>
+      <button class="cabecalho-botao-sair" id="btnLogout" title="Sair da conta">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
     </div>
   </header>
 
@@ -688,11 +721,36 @@
       atualizarCarrossel();
     }
 
-    // Função de logout
-    function logout() {
+  function logout() {
+      // Adiciona feedback visual
+      const btn = document.getElementById('btnLogout');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saindo...';
+      btn.disabled = true;
+      
+      // Limpa todos os dados de autenticação
       localStorage.clear();
-      window.location.href = "login.html";
+      
+      // Redireciona após um pequeno delay para melhor UX
+      setTimeout(() => {
+        window.location.href = "login.html";
+        
+        // Impede retorno via botão voltar
+        history.pushState(null, null, "login.html");
+        window.addEventListener('popstate', function() {
+          history.pushState(null, null, "login.html");
+        });
+      }, 1000);
     }
+
+    // Adiciona o evento de logout ao botão
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('btnLogout').addEventListener('click', logout);
+      
+      // Restante da sua inicialização
+      buscarEventos();
+      setInterval(avancar, 5000);
+    });
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
