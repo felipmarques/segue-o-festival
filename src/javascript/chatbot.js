@@ -302,23 +302,6 @@ document.addEventListener("DOMContentLoaded", function () {
     balloon.style.display = "block";
   };
 
-  closeButton.onclick = () => {
-  chatbotWindow.style.display = "none";
-  balloon.style.display = "block";
-  chatbox.innerHTML = "";
-  };
-  
-  toggleButton.onclick = () => {
-  const isVisible = chatbotWindow.style.display === "flex";
-  if (isVisible) {
-    chatbotWindow.style.display = "none";
-    balloon.style.display = "block";
-  } else {
-    chatbotWindow.style.display = "flex";
-    balloon.style.display = "none";
-    startChat(); // Reinicia a conversa
-  }
-};
   startChat();
 });
 
