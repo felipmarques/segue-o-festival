@@ -372,7 +372,7 @@
             try {
                 const resposta = await fetch(`https://segue-o-festival.vercel.app/api/galeriaEventos?cnpj=${cnpjUsuario}`);
                 
-                if (!resposta.ok) throw new Error("Erro ao carregar galeria.");
+                if (!resposta.ok) throw new Error("");
                 
                 const fotos = await resposta.json();
                 galeriaGrid.innerHTML = "";
