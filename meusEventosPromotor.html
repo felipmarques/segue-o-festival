@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="css/meusEventosPromotor.css">
-    <title>Segue o Festival</title>
+    <title>Segue o Festival - Meus Eventos</title>
     <style>
         /* Estilos do cabeçalho */
         .cabecalho {
@@ -143,6 +143,32 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Mensagens */
+        .mensagem-container {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .mensagem-erro {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+
+        .mensagem-sucesso {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .mensagem-info {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            color: #1565c0;
+        }
+
         /* Responsividade */
         @media (max-width: 768px) {
             .cabecalho {
@@ -183,7 +209,7 @@
             </div>
     
             <div class="conteudo-secundario-primeiralinha" id="lista-eventos">
-                <div class="loading-spinner" id="loading-spinner"></div>
+                <div class="loading-spinner"></div>
             </div>
         </section>
 
@@ -196,15 +222,37 @@
     </main>
 
     <script>
-        // Função para formatar a data no padrão dd/MM/yyyy
+        // Funções auxiliares de autenticação
+        function getUsuarioLogado() {
+            const usuario = localStorage.getItem("usuarioLogado");
+            if (!usuario) return null;
+            
+            try {
+                return JSON.parse(usuario);
+            } catch (e) {
+                console.error("Erro ao parsear usuário:", e);
+                return null;
+            }
+        }
+
+        function usuarioEstaLogado() {
+            const usuario = getUsuarioLogado();
+            return usuario && usuario.cnpj && usuario.email;
+        }
+
+        function getCnpjUsuario() {
+            const usuario = getUsuarioLogado();
+            return usuario ? usuario.cnpj : null;
+        }
+
+        // Função para formatar a data
         function formatarData(dataISO) {
             if (!dataISO) return "Data não definida";
             
             try {
                 const data = new Date(dataISO);
-                if (isNaN(data.getTime())) {
-                    return "Data inválida";
-                }
+                if (isNaN(data.getTime())) return "Data inválida";
+                
                 const dia = String(data.getDate()).padStart(2, '0');
                 const mes = String(data.getMonth() + 1).padStart(2, '0');
                 const ano = data.getFullYear();
@@ -217,66 +265,76 @@
 
         // Função de logout
         function fazerLogout() {
-            localStorage.removeItem("cnpjUsuario");
             localStorage.removeItem("usuarioLogado");
             window.location.href = "index.html";
         }
 
-        // Função para carregar os eventos do promotor
+        // Função para exibir mensagem na lista de eventos
+        function exibirMensagem(tipo, mensagem, botao = null) {
+            const listaEventos = document.getElementById("lista-eventos");
+            let html = `<div class="mensagem-container mensagem-${tipo}">${mensagem}</div>`;
+            
+            if (botao) {
+                html += botao;
+            }
+            
+            listaEventos.innerHTML = html;
+        }
+
+        // Função principal para carregar os eventos
         async function carregarEventos() {
             const listaEventos = document.getElementById("lista-eventos");
-            listaEventos.innerHTML = '<div class="loading-spinner"></div>';
             
-            const cnpjUsuario = localStorage.getItem("cnpjUsuario");
-            const usuarioLogado = localStorage.getItem("usuarioLogado");
-
-            if (!cnpjUsuario || !usuarioLogado) {
-                listaEventos.innerHTML = `
-                    <div class="erro-mensagem">
-                        <p>Você precisa estar logado para acessar esta página.</p>
-                        <button class="cabecalho-botao-entrar" onclick="window.location.href='login_promotor.html'">
-                            Ir para Login
-                        </button>
-                    </div>
-                `;
+            // Verificar autenticação
+            if (!usuarioEstaLogado()) {
+                exibirMensagem("erro", "Você precisa estar logado para acessar esta página.", 
+                    `<button class="cabecalho-botao-entrar" onclick="window.location.href='login_promotor.html'">
+                        Ir para Login
+                    </button>`);
                 return;
             }
 
+            const cnpjUsuario = getCnpjUsuario();
+            
+            // Mostrar loading
+            listaEventos.innerHTML = '<div class="loading-spinner"></div>';
+            
             try {
-                // Endpoint modificado para buscar eventos por promotor
-                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/eventos?promotor_cnpj=${cnpjUsuario}`, {
-                    headers: {
-                        'Authorization': `Bearer ${usuarioLogado}`
-                    }
-                });
+                // Chamada à API
+                const resposta = await fetch(`https://segue-o-festival.vercel.app/api/eventos?cnpj=${cnpjUsuario}`);
                 
+                // Tratar erros HTTP
                 if (!resposta.ok) {
-                    throw new Error(`Erro ao carregar eventos: ${resposta.statusText}`);
+                    const erro = await resposta.text();
+                    throw new Error(erro || `Erro ${resposta.status}: ${resposta.statusText}`);
                 }
                 
                 const eventos = await resposta.json();
-                listaEventos.innerHTML = "";
-
+                
+                // Verificar se há eventos
                 if (!eventos || eventos.length === 0) {
-                    listaEventos.innerHTML = `
-                        <div class="sem-eventos">
-                            <p>Você ainda não cadastrou nenhum evento.</p>
-                            <button class="cabecalho-botao-entrar" onclick="location.href='inserir_eventos.html'">
-                                Cadastrar Primeiro Evento
-                            </button>
-                        </div>
-                    `;
+                    exibirMensagem("sucesso", "Você ainda não cadastrou nenhum evento.", 
+                        `<button class="cabecalho-botao-entrar" onclick="location.href='inserir_eventos.html'">
+                            Cadastrar Primeiro Evento
+                        </button>`);
                     return;
                 }
-
+                
+                // Exibir eventos
+                listaEventos.innerHTML = "";
                 eventos.forEach(evento => {
                     const eventoDiv = document.createElement("div");
                     eventoDiv.className = "evento-card";
                     eventoDiv.innerHTML = `
-                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" alt="Banner ${evento.nome || 'Evento'}">
+                        <img class="conteudo-secundario-imagem" src="${evento.imagem || 'img/placeholder-eventos.jpg'}" 
+                             alt="Banner ${evento.nome || 'Evento'}">
                         <h3 class="conteudo-secundario-titulo">${evento.nome || 'Nome do Evento'}</h3>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}</p>
-                        <p class="conteudo-secundario-paragrafo"><i class="fas fa-map-marker-alt"></i> ${evento.endereco || 'Local não informado'}</p>
+                        <p class="conteudo-secundario-paragrafo">
+                            <i class="fas fa-calendar-alt"></i> ${formatarData(evento.data)}
+                        </p>
+                        <p class="conteudo-secundario-paragrafo">
+                            <i class="fas fa-map-marker-alt"></i> ${evento.endereco || 'Local não informado'}
+                        </p>
                         <div class="evento-acoes">
                             <button class="botao-editar" onclick="editarEvento('${evento.id_evento}')">
                                 <i class="fas fa-edit"></i> Editar
@@ -288,62 +346,59 @@
                     `;
                     listaEventos.appendChild(eventoDiv);
                 });
-
+                
             } catch (error) {
-                console.error("Erro:", error);
-                listaEventos.innerHTML = `
-                    <div class="erro-mensagem">
-                        <p>Erro ao carregar eventos. Por favor, tente novamente.</p>
-                        <button class="cabecalho-botao-entrar" onclick="carregarEventos()">
-                            Tentar Novamente
-                        </button>
-                        <p class="erro-detalhes">${error.message}</p>
-                    </div>
-                `;
+                console.error("Erro ao carregar eventos:", error);
+                exibirMensagem("erro", `Erro ao carregar eventos: ${error.message}`, 
+                    `<button class="cabecalho-botao-entrar" onclick="carregarEventos()">
+                        Tentar Novamente
+                    </button>`);
             }
         }
 
-        // Funções para editar/excluir
+        // Funções para edição e exclusão
         function editarEvento(idEvento) {
             window.location.href = `editar_evento.html?id=${idEvento}`;
         }
 
         function confirmarExclusao(idEvento) {
-            if (confirm("Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.")) {
+            if (confirm("Tem certeza que deseja excluir este evento?\nEsta ação não pode ser desfeita.")) {
                 excluirEvento(idEvento);
             }
         }
 
         async function excluirEvento(idEvento) {
             try {
-                const cnpjUsuario = localStorage.getItem("cnpjUsuario");
-                const usuarioLogado = localStorage.getItem("usuarioLogado");
+                const cnpjUsuario = getCnpjUsuario();
+                if (!cnpjUsuario) {
+                    throw new Error("Usuário não autenticado");
+                }
                 
                 const resposta = await fetch(`https://segue-o-festival.vercel.app/api/eventos/${idEvento}`, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': `Bearer ${usuarioLogado}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ promotor_cnpj: cnpjUsuario })
+                    body: JSON.stringify({ cnpj: cnpjUsuario })
                 });
                 
-                if (resposta.ok) {
-                    alert("Evento excluído com sucesso!");
-                    carregarEventos();
-                } else {
-                    throw new Error(await resposta.text());
+                if (!resposta.ok) {
+                    const erro = await resposta.text();
+                    throw new Error(erro || `Erro ${resposta.status}: ${resposta.statusText}`);
                 }
+                
+                alert("Evento excluído com sucesso!");
+                carregarEventos();
+                
             } catch (error) {
                 console.error("Erro ao excluir evento:", error);
-                alert(`Erro ao excluir evento: ${error.message}`);
+                alert(`Falha ao excluir evento: ${error.message}`);
             }
         }
 
-        // Verificar login ao carregar a página
+        // Inicialização
         document.addEventListener("DOMContentLoaded", function() {
-            const usuarioLogado = localStorage.getItem("usuarioLogado");
-            if (!usuarioLogado) {
+            if (!usuarioEstaLogado()) {
                 window.location.href = "login_promotor.html";
             } else {
                 carregarEventos();
