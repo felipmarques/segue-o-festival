@@ -711,7 +711,7 @@ display: block;
     justify-content: space-between;
     width: 100%; /* Ocupa toda a largura do container */
     max-width: 1000px;
-    height: 60px;
+    height: 50px;
     margin: 25px auto;
     border: 2px solid #FFF100; /* Cor da borda */
     padding: 10px;
