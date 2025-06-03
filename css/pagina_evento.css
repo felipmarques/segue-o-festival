@@ -68,6 +68,9 @@ padding: 0;
       margin-top: 2rem;
       font-family: 'Raleway', sans-serif;
       margin-bottom: 50px;
+     width: 900px;
+    margin-left: auto;
+     margin-right: auto;
     }
 
     .descricao p {
@@ -107,7 +110,10 @@ padding: 0;
    /*MAPA*/
     #map {
       height: 400px;
-      margin: 2rem auto;
+      margin-top: 50px;
+    width: 700px;
+      margin-left: auto;
+    margin-right: auto;
       border-radius: 12px;
     }
 
