@@ -218,7 +218,7 @@ display: block;
   justify-content: flex-start; /* Mantém alinhamento à esquerda */
   max-width: 1100px; 
   margin: 0 0 0 80px; /* Muda a margem esquerda para auto empurrando para direita */
-  padding-right: 100px;
+  padding-right: 40ppx;
   width: calc(100% - 70px); /* Ajusta a largura para compensar a margem */
 }
 
