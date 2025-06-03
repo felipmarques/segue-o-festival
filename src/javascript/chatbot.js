@@ -1,324 +1,310 @@
+// CHATBOT
+
 document.addEventListener("DOMContentLoaded", function () {
-  // Elementos DOM
-  const elements = {
-    toggleButton: document.getElementById("chatbot-toggle"),
-    chatbotWindow: document.getElementById("chatbot-window"),
-    chatbox: document.getElementById("chatbox"),
-    options: document.getElementById("options"),
-    balloon: document.getElementById("chatbot-balloon"),
-    closeButton: document.getElementById("minimize-chat"),
-    sendMessageButton: document.getElementById("send-message"),
-    messageInput: document.getElementById("message-input"),
-    uploadButton: document.getElementById("upload-button"),
-    imageInput: document.getElementById("image-input")
+  const toggleButton = document.getElementById("chatbot-toggle");
+  const chatbotWindow = document.getElementById("chatbot-window");
+  const chatbox = document.getElementById("chatbox");
+  const balloon = document.getElementById("chatbot-balloon");
+  const sendMessageButton = document.getElementById("send-message");
+  const messageInput = document.getElementById("message-input");
+
+  toggleButton.onclick = () => {
+    const isVisible = chatbotWindow.style.display === "flex";
+    chatbotWindow.style.display = isVisible ? "none" : "flex";
+    balloon.style.display = isVisible ? "block" : "none";
   };
 
-  // Estado do chat
-  let chatState = {
-    pendingImage: null,
-    chatOpen: false,
-    minimized: false
-  };
+  function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.className = `msg ${sender}`;
+    msg.textContent = text;
+    chatbox.appendChild(msg);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
 
-  // Funções básicas do chat
-  const chatFunctions = {
-    toggleChat: () => {
-      const isVisible = elements.chatbotWindow.style.display === "flex";
-      elements.chatbotWindow.style.display = isVisible ? "none" : "flex";
-      elements.balloon.style.display = isVisible ? "block" : "none";
-      chatState.chatOpen = !isVisible;
-    },
-    
-    addMessage: (text, sender) => {
-      const msg = document.createElement("div");
-      msg.className = `msg ${sender}`;
-      msg.textContent = text;
-      elements.chatbox.appendChild(msg);
-      elements.chatbox.scrollTop = elements.chatbox.scrollHeight;
-    },
-    
-    setOptions: (buttons) => {
-      const optionsContainer = document.createElement("div");
-      optionsContainer.className = "option-buttons";
-    
-      buttons.forEach(btn => {
-        const button = document.createElement("button");
-        button.textContent = btn.text;
-        button.onclick = () => {
-          chatFunctions.addMessage(btn.text, "user"); 
-          btn.action(); 
-          optionsContainer.remove(); 
+  function setOptions(buttons) {
+    const optionsContainer = document.createElement("div");
+    optionsContainer.className = "option-buttons";
+
+    buttons.forEach(btn => {
+      const button = document.createElement("button");
+      button.textContent = btn.text;
+      button.onclick = () => {
+        addMessage(btn.text, "user");
+        btn.action();
+        optionsContainer.remove();
+      };
+      optionsContainer.appendChild(button);
+    });
+
+    chatbox.appendChild(optionsContainer);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  function startChat() {
+    chatbox.innerHTML = "";
+    addMessage("Olá! Bem-vindo ao Segue o Festival!", "bot");
+    setOptions([
+      { text: "Recomendação", action: showRecommendations },
+      { text: "Falar com atendente", action: () => addMessage("Direcionando ao atendente...", "bot") },
+      { text: "Comprar ingresso", action: buyTicket },
+      { text: "Evento por localidade", action: searchByLocation }
+    ]);
+  }
+
+  function showRecommendations() {
+    addMessage("O que você está buscando hoje?", "bot");
+    setOptions([
+      { text: "Festival", action: handleFestival },
+      { text: "Show", action: handleShow },
+      { text: "Palestra", action: handlePalestra },
+      { text: "Cultural", action: handleCultural }
+    ]);
+  }
+
+  // Festival, Show, Cultural Handlers
+  function handleFestival() {
+    addMessage("Qual estilo de festival você prefere?", "bot");
+    setOptions([
+      { text: "Eletrônica", action: () => showFestivalOptions("Eletrônica") },
+      { text: "Sertanejo", action: () => showFestivalOptions("Sertanejo") },
+      { text: "Rock", action: () => showFestivalOptions("Rock") },
+      { text: "Rap", action: () => showFestivalOptions("Rap") },
+      { text: "Funk", action: () => showFestivalOptions("Funk") }
+    ]);
+  }
+
+  function showFestivalOptions(style) {
+    addMessage(`Festivais de ${style} disponíveis:`, "bot");
+  }
+
+  function handleShow() {
+    addMessage("Qual estilo de show você procura?", "bot");
+    setOptions([
+      { text: "Eletrônica", action: () => showShowOptions("Eletrônica") },
+      { text: "Sertanejo", action: () => showShowOptions("Sertanejo") },
+      { text: "Rock", action: () => showShowOptions("Rock") },
+      { text: "Rap", action: () => showShowOptions("Rap") },
+      { text: "Funk", action: () => showShowOptions("Funk") }
+    ]);
+  }
+
+  function showShowOptions(style) {
+    addMessage(`Shows de ${style} disponíveis:`, "bot");
+  }
+
+  function handleCultural() {
+    addMessage("Escolha uma festa ou tradição cultural:", "bot");
+    setOptions([
+      { text: "Ano Novo", action: () => showCulturalOptions("Ano Novo") },
+      { text: "Carnaval", action: () => showCulturalOptions("Carnaval") },
+      { text: "Festa Junina", action: () => showCulturalOptions("Festa Junina") },
+      { text: "Natal", action: () => showCulturalOptions("Natal") },
+    ]);
+  }
+
+  function showCulturalOptions(eventName) {
+    addMessage(`🎊 Eventos culturais de ${eventName}:`, "bot");
+  }
+
+  // Palestra
+  function handlePalestra() {
+    addMessage("Escolha o estado", "bot");
+    const container = document.createElement("div");
+    const select = document.createElement("select");
+    select.className = "chat-select";
+    select.innerHTML = `<option disabled selected>Selecione um estado</option>`;
+
+    fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
+      .then(res => res.json())
+      .then(estados => {
+        estados.sort((a, b) => a.nome.localeCompare(b.nome)).forEach(estado => {
+          const option = document.createElement("option");
+          option.value = estado.id;
+          option.textContent = estado.nome;
+          select.appendChild(option);
+        });
+
+        select.onchange = () => {
+          const estadoId = select.value;
+          const estadoNome = select.options[select.selectedIndex].text;
+          container.remove();
+          selectCidadeDropdown(estadoId, estadoNome);
         };
-        optionsContainer.appendChild(button);
+
+        container.appendChild(select);
+        chatbox.appendChild(container);
+        chatbox.scrollTop = chatbox.scrollHeight;
       });
-    
-      elements.chatbox.appendChild(optionsContainer);
-      elements.chatbox.scrollTop = elements.chatbox.scrollHeight;
-    },
-    
-    handleImageUpload: () => {
-      const file = elements.imageInput.files[0];
-      if (file) {
-        const maxSizeMB = 10;
-        const sizeMB = file.size / (1024 * 1024);
-        
-        if (sizeMB > maxSizeMB) {
-          alert('Imagem muito grande. O limite é 10MB.');
-          elements.imageInput.value = '';
-        } else {
-          chatState.pendingImage = file;
+  }
+
+  function selectCidadeDropdown(estadoId, estadoNome) {
+    addMessage("Escolha a cidade", "bot");
+    const container = document.createElement("div");
+    const select = document.createElement("select");
+    select.className = "chat-select";
+    select.innerHTML = `<option disabled selected>Selecione uma cidade</option>`;
+
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoId}/municipios`)
+      .then(res => res.json())
+      .then(cidades => {
+        cidades.forEach(cidade => {
+          const option = document.createElement("option");
+          option.value = cidade.nome;
+          option.textContent = cidade.nome;
+          select.appendChild(option);
+        });
+
+        select.onchange = () => {
+          const cidade = select.value;
+          container.remove();
+          showPalestrasCidade(cidade, estadoNome);
+        };
+
+        container.appendChild(select);
+        chatbox.appendChild(container);
+        chatbox.scrollTop = chatbox.scrollHeight;
+      });
+  }
+
+  function showPalestrasCidade(cidade, estado) {
+    addMessage(`Palestras em ${cidade} - ${estado}:`, "bot");
+  }
+
+  // Comprar ingresso com calendário
+  function buyTicket() {
+    addMessage("Escolha uma data:", "bot");
+    const container = document.createElement("div");
+    const input = document.createElement("input");
+    input.type = "text";
+    input.style.opacity = "0";
+    input.style.position = "absolute";
+
+    container.appendChild(input);
+    chatbox.appendChild(container);
+
+    flatpickr(input, {
+      inline: true,
+      minDate: "2025-08-01",
+      maxDate: "2025-08-31",
+      dateFormat: "d/m",
+      onChange: function (_, dateStr) {
+        if (dateStr) {
+          addMessage(`Eventos disponíveis em ${dateStr}:`, "bot");
+          container.remove();
+          setOptions([
+            { text: "Festival de Música", action: () => addMessage("Redirecionando para a página do evento!", "bot") },
+            { text: "Feira Literária", action: () => addMessage("Redirecionando para a página do evento!", "bot") }
+          ]);
         }
       }
-    },
-    
-    sendMessage: () => {
-      const message = elements.messageInput.value.trim();
-      if (message) {
-        chatFunctions.addMessage(message, "user");
-        elements.messageInput.value = '';
-      }
-      
-      if (chatState.pendingImage) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.className = 'chat-image';
-          elements.chatbox.appendChild(img);
-        };
-        reader.readAsDataURL(chatState.pendingImage);
-        chatState.pendingImage = null;
-        elements.imageInput.value = '';
-      }
-      
-      elements.chatbox.scrollTop = elements.chatbox.scrollHeight;
+    });
+  }
+
+  // Evento por localidade
+  async function searchByLocation() {
+    addMessage("Selecione o estado:", "bot");
+    const res = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
+    const estados = await res.json();
+    estados.sort((a, b) => a.nome.localeCompare(b.nome));
+
+    const options = estados.map(estado => ({
+      text: estado.sigla,
+      action: () => selectMunicipio(estado.id, estado.nome)
+    }));
+
+    setOptions(options);
+  }
+
+  async function selectMunicipio(ufId, ufNome) {
+    addMessage(`Municípios em ${ufNome}:`, "bot");
+    const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufId}/municipios`);
+    const municipios = await res.json();
+    municipios.sort((a, b) => a.nome.localeCompare(b.nome));
+
+    const options = municipios.slice(0, 10).map(m => ({
+      text: m.nome,
+      action: () => showLocalEvents(m.nome)
+    }));
+
+    options.push({
+      text: "🔍 Ver todos",
+      action: () => showAllMunicipios(municipios)
+    });
+
+    setOptions(options);
+  }
+
+  function showAllMunicipios(municipios) {
+    const options = municipios.map(m => ({
+      text: m.nome,
+      action: () => showLocalEvents(m.nome)
+    }));
+    setOptions(options);
+  }
+
+  function showLocalEvents(city) {
+    addMessage(`Eventos em ${city}:`, "bot");
+    setOptions([
+      { text: "Evento A", action: () => addMessage("Redirecionando para o Evento A...", "bot") },
+      { text: "Evento B", action: () => addMessage("Redirecionando para o Evento B...", "bot") }
+    ]);
+  }
+
+  // Entrada de mensagens de texto e imagem
+  sendMessageButton.onclick = () => {
+    const msg = messageInput.value.trim();
+    if (msg) {
+      addMessage(msg, "user");
+      messageInput.value = "";
+    }
+    if (pendingImage) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "chat-image";
+        chatbox.appendChild(img);
+        chatbox.scrollTop = chatbox.scrollHeight;
+      };
+      reader.readAsDataURL(pendingImage);
+      pendingImage = null;
+      document.getElementById('image-input').value = '';
     }
   };
 
-  // Fluxos de conversa
-  const conversationFlows = {
-    startChat: () => {
-      elements.chatbox.innerHTML = "";
-      chatFunctions.addMessage("Olá! Bem-vindo ao Segue o Festival!", "bot");
-      chatFunctions.setOptions([
-        { text: "Recomendação", action: conversationFlows.showRecommendations },
-        { text: "Falar com atendente", action: () => chatFunctions.addMessage("Direcionando ao atendente...", "bot") },
-        { text: "Comprar ingresso", action: conversationFlows.buyTicket },
-        { text: "Evento por localidade", action: conversationFlows.searchByLocation }
-      ]);
-    },
-    
-    showRecommendations: () => {
-      chatFunctions.addMessage("O que você está buscando hoje?", "bot");
-      chatFunctions.setOptions([
-        { text: "Festival", action: conversationFlows.handleFestival },
-        { text: "Show", action: conversationFlows.handleShow },
-        { text: "Palestra", action: conversationFlows.handlePalestra },
-        { text: "Cultural", action: conversationFlows.handleCultural }
-      ]);
-    },
-    
-    handleFestival: () => {
-      chatFunctions.addMessage("Qual estilo de festival você prefere?", "bot");
-      chatFunctions.setOptions([
-        { text: "Eletrônica", action: () => conversationFlows.showOptions("Festival", "Eletrônica") },
-        { text: "Sertanejo", action: () => conversationFlows.showOptions("Festival", "Pop") },
-        { text: "Rock", action: () => conversationFlows.showOptions("Festival", "Rock") },
-        { text: "Rap", action: () => conversationFlows.showOptions("Festival", "Rap") },
-        { text: "Funk", action: () => conversationFlows.showOptions("Festival", "Funk") }
-      ]);
-    },
-    
-    handleShow: () => {
-      chatFunctions.addMessage("Qual estilo de show você procura?", "bot");
-      chatFunctions.setOptions([
-        { text: "Eletrônica", action: () => conversationFlows.showOptions("Show", "Eletrônica") },
-        { text: "Sertanejo", action: () => conversationFlows.showOptions("Show", "Pop") },
-        { text: "Rock", action: () => conversationFlows.showOptions("Show", "Rock") },
-        { text: "Rap", action: () => conversationFlows.showOptions("Show", "Rap") },
-        { text: "Funk", action: () => conversationFlows.showOptions("Show", "Funk") }
-      ]);
-    },
-    
-    showOptions: (type, style) => {
-      chatFunctions.addMessage(`${type}s de ${style} disponíveis:`, "bot");
-      // Aqui você pode adicionar a lógica para buscar os eventos específicos
-    },
-    
-    handlePalestra: () => {
-      chatFunctions.addMessage("Escolha o estado", "bot");
-    
-      const selectContainer = document.createElement("div");
-      selectContainer.className = "select-container";
-    
-      const select = document.createElement("select");
-      select.className = "chat-select";
-      select.innerHTML = `<option disabled selected>Selecione um estado</option>`;
-    
-      fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
-        .then(res => res.json())
-        .then(estados => {
-          estados
-            .sort((a, b) => a.nome.localeCompare(b.nome))
-            .forEach(estado => {
-              const option = document.createElement("option");
-              option.value = estado.id;
-              option.textContent = estado.nome;
-              select.appendChild(option);
-            });
-    
-          select.onchange = () => {
-            const estadoId = select.value;
-            const estadoNome = select.options[select.selectedIndex].text;
-            conversationFlows.selectCidadeDropdown(estadoId, estadoNome);
-            selectContainer.remove();
-          };
-    
-          selectContainer.appendChild(select);
-          elements.chatbox.appendChild(selectContainer);
-          elements.chatbox.scrollTop = elements.chatbox.scrollHeight;
-        });
-    },
-    
-    selectCidadeDropdown: (estadoId, estadoNome) => {
-      chatFunctions.addMessage("Escolha a cidade", "bot");
-    
-      const selectContainer = document.createElement("div");
-      selectContainer.className = "select-container";
-    
-      const select = document.createElement("select");
-      select.className = "chat-select";
-      select.innerHTML = `<option disabled selected>Selecione uma cidade</option>`;
-    
-      fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoId}/municipios`)
-        .then(res => res.json())
-        .then(cidades => {
-          cidades.forEach(cidade => {
-            const option = document.createElement("option");
-            option.value = cidade.nome;
-            option.textContent = cidade.nome;
-            select.appendChild(option);
-          });
-    
-          select.onchange = () => {
-            const cidade = select.value;
-            selectContainer.remove();
-            chatFunctions.addMessage(`Palestras em ${cidade} - ${estadoNome}:`, "bot");
-          };
-    
-          selectContainer.appendChild(select);
-          elements.chatbox.appendChild(selectContainer);
-          elements.chatbox.scrollTop = elements.chatbox.scrollHeight;
-        });
-    },
-    
-    handleCultural: () => {
-      chatFunctions.addMessage("Escolha uma festa ou tradição cultural:", "bot");
-      chatFunctions.setOptions([
-        { text: "Ano Novo", action: () => conversationFlows.showOptions("Cultural", "Ano Novo") },
-        { text: "Carnaval", action: () => conversationFlows.showOptions("Cultural", "Carnaval") },
-        { text: "Festa Junina", action: () => conversationFlows.showOptions("Cultural", "Festa Junina") },
-        { text: "Natal", action: () => conversationFlows.showOptions("Cultural", "Natal") },
-      ]);
-    },
-    
-    buyTicket: () => {
-      chatFunctions.addMessage("Escolha uma data:", "bot");
-    
-      const dateContainer = document.createElement("div");
-      dateContainer.className = "calendar-container";
-    
-      const hiddenInput = document.createElement("input");
-      hiddenInput.type = "text";
-      hiddenInput.style.opacity = "0";
-      hiddenInput.style.height = "0";
-      hiddenInput.style.position = "absolute";
-      hiddenInput.style.pointerEvents = "none";
-    
-      dateContainer.appendChild(hiddenInput);
-      elements.chatbox.appendChild(dateContainer);
-      elements.chatbox.scrollTop = elements.chatbox.scrollHeight;
-    
-      flatpickr(hiddenInput, {
-        inline: true,
-        minDate: "2025-08-01",
-        maxDate: "2025-08-31",
-        dateFormat: "d/m",
-        onChange: function (selectedDates, dateStr) {
-          if (dateStr) {
-            chatFunctions.addMessage(`Eventos disponíveis em ${dateStr}:`, "bot");
-            conversationFlows.selectEvent(dateStr);
-            dateContainer.remove();
-          }
-        }
-      });
-    },
-    
-    selectEvent: (date) => {
-      chatFunctions.setOptions([
-        { text: "Festival de Música", action: () => chatFunctions.addMessage("Redirecionando para a página do evento!", "bot") },
-        { text: "Feira Literária", action: () => chatFunctions.addMessage("Redirecionando para a página do evento!", "bot") }
-      ]);
-    },
-    
-    searchByLocation: async () => {
-      chatFunctions.addMessage("Selecione o estado:", "bot");
-    
-      const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
-      const estados = await response.json();
-      estados.sort((a, b) => a.nome.localeCompare(b.nome));
-    
-      const options = estados.map(estado => ({
-        text: estado.sigla,
-        action: () => conversationFlows.selectMunicipio(estado.id, estado.nome)
-      }));
-    
-      chatFunctions.setOptions(options);
-    },
-    
-    selectMunicipio: async (ufId, ufNome) => {
-      chatFunctions.addMessage(`Municípios em ${ufNome}:`, "bot");
-    
-      const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufId}/municipios`);
-      const municipios = await response.json();
-      municipios.sort((a, b) => a.nome.localeCompare(b.nome));
-    
-      const options = municipios.slice(0, 10).map(m => ({
-        text: m.nome,
-        action: () => chatFunctions.addMessage(`Eventos em ${m.nome}:`, "bot")
-      }));
-    
-      options.push({
-        text: "🔍 Ver todos",
-        action: () => {
-          const allOptions = municipios.map(m => ({
-            text: m.nome,
-            action: () => chatFunctions.addMessage(`Eventos em ${m.nome}:`, "bot")
-          }));
-          chatFunctions.setOptions(allOptions);
-        }
-      });
-    
-      chatFunctions.setOptions(options);
-    }
-  };
+  messageInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") sendMessageButton.click();
+  });
 
-  // Event listeners
-  elements.toggleButton.onclick = chatFunctions.toggleChat;
-  elements.closeButton.onclick = chatFunctions.toggleChat;
-  elements.sendMessageButton.onclick = chatFunctions.sendMessage;
-  elements.messageInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      chatFunctions.sendMessage();
+  // Upload de imagem
+  let pendingImage = null;
+  document.getElementById('upload-button').addEventListener('click', () => {
+    document.getElementById('image-input').click();
+  });
+
+  document.getElementById('image-input').addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > 10) {
+        alert('Imagem muito grande. O limite é 10MB.');
+        this.value = '';
+      } else {
+        pendingImage = file;
+      }
     }
   });
-  elements.uploadButton.onclick = () => elements.imageInput.click();
-  elements.imageInput.addEventListener("change", chatFunctions.handleImageUpload);
 
-  // Iniciar chat
-  conversationFlows.startChat();
+  // Botões de minimizar/fechar
+  document.getElementById("minimize-chat").onclick = () => {
+    chatbotWindow.style.display = "none";
+    balloon.style.display = "block";
+  };
+
+  startChat();
 });
+
 
 
  
