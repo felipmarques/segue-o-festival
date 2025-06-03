@@ -709,15 +709,13 @@ display: block;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%; /* Ocupa toda a largura do container */
+    width: 100%;
     max-width: 1000px;
     height: 50px;
-    margin-top: 35px;
-    margin-bottom: 20px;
-    margin: 25px auto;
-    border: 2px solid #FFF100; /* Cor da borda */
+    margin: 35px auto 20px; /* top | horizontal | bottom */
+    border: 2px solid #FFF100;
     padding: 10px;
-    background-color: #F5F5F5; /* Fundo leve para o container */
+    background-color: #F5F5F5;
     box-sizing: border-box;
 }
 
