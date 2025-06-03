@@ -216,10 +216,8 @@ display: block;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  max-width: 1100px; 
-  margin: 0 0 0 70px;
-  padding-right: 20px;
-  left: 100px;
+  padding-left: 70px;          
+  gap: 20px;
 }
 
 /* Estilo dos cards de eventos (editado para 4 por linha) */
