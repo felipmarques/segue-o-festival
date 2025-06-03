@@ -9,8 +9,8 @@ module.exports = async (req, res) => {
 
   console.log(`[${new Date().toISOString()}] ${method} ${url}`);
 
-  // Rota: buscar nome e CPF do usuário por e-mail
-  if (method === "GET" && url.includes("/api/buscarUsuario")) {
+  // Rota: buscar dados do usuário por e-mail
+  if (method === "GET" && url.includes("/api/usuario")) {
     const { email } = query;
 
     if (!email) {
@@ -24,7 +24,20 @@ module.exports = async (req, res) => {
     try {
       console.log('Buscando usuário com e-mail:', email);
       const resultado = await pool.query(
-        "SELECT nome, cpf, email_usuario FROM usuario WHERE email_usuario = $1", 
+        `SELECT 
+          nome, 
+          cpf, 
+          email_usuario as email,
+          telefone,
+          data_nascimento,
+          sexo,
+          endereco,
+          cep,
+          numero,
+          complemento,
+          municipio,
+          uf
+         FROM usuario WHERE email_usuario = $1`, 
         [email]
       );
 
@@ -41,11 +54,7 @@ module.exports = async (req, res) => {
       
       return res.status(200).json({
         success: true,
-        data: {
-          nome: usuario.nome,
-          cpf: usuario.cpf,
-          email: usuario.email_usuario
-        }
+        data: usuario
       });
     } catch (error) {
       console.error("Erro ao buscar usuário:", error);
