@@ -138,11 +138,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem("usuarioLogado", JSON.stringify({
-                    email: data.usuario.email,
-                    nome_responsavel: data.usuario.nome_responsavel,
-                    cnpj: data.usuario.cnpj
-                }));
+                    localStorage.setItem("cnpjUsuario", data.usuario.cnpj);
+                    console.log("CNPJ salvo no localStorage:", localStorage.getItem("cnpjUsuario"));
+
                     window.location.href = "meusEventosPromotor.html";
                 } else {
                     // Se as credenciais forem inválidas
