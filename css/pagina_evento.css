@@ -43,6 +43,7 @@ padding: 0;
       flex-wrap: wrap;
       gap: 2rem;
       align-items: center;
+      margin-top: 100px;
     }
     .evento-header img {
       max-width: 100%;
