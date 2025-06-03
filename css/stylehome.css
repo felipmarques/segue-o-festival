@@ -217,14 +217,15 @@ display: block;
   flex-wrap: wrap;
   justify-content: flex-start;
   max-width: 1100px; 
-  margin: 0 0 0 70px;
-  padding-right: 20px;
+  margin: 0 0 0 auto; /* Modificado - empurra o container para direita */
+  width: calc(100% - 70px); /* Novo - ajusta a largura */
+
 }
 
 /* Estilo dos cards de eventos (editado para 4 por linha) */
 .conteudo-secundario-item {
   flex: 0 0 calc(25% - 20px); /* 25% de largura - margens */
-  margin: 10px;
+  margin: 25px auto; /* Modificado - remove o margin-left específico */
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 10px;
