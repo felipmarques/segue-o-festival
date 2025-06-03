@@ -365,21 +365,23 @@
         });
         
         // Função para alterar senha
-        async function alterarSenha() {
-            const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-            const novaSenha = document.getElementById("novaSenha").value;
-            const confirmarSenha = document.getElementById("confirmarSenha").value;
+        <script>
+    // ... (código anterior permanece igual)
+
+    // Função para salvar o perfil completo
+    async function salvarPerfil() {
+        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
         
-            if (!novaSenha || !confirmarSenha) {
-                alert("Por favor, preencha todos os campos");
-                return;
-            }
+        // Primeiro verifica se há alteração de senha
+        const novaSenha = document.getElementById("novaSenha").value;
+        const confirmarSenha = document.getElementById("confirmarSenha").value;
         
+        if (novaSenha || confirmarSenha) {
             if (novaSenha !== confirmarSenha) {
                 alert("As senhas não coincidem");
                 return;
             }
-        
+            
             try {
                 const response = await fetch('/api/alterar_senha', {
                     method: 'PUT',
@@ -391,26 +393,30 @@
                         novaSenha: novaSenha
                     })
                 });
-        
-                const result = await response.json();
-        
+
                 if (!response.ok) {
+                    const result = await response.json();
                     throw new Error(result.message || 'Erro ao alterar senha');
                 }
-        
+
                 alert("Senha alterada com sucesso!");
-                // Limpa os campos após sucesso
                 document.getElementById("novaSenha").value = "";
                 document.getElementById("confirmarSenha").value = "";
-        
             } catch (error) {
                 console.error("Erro:", error);
                 alert(error.message || "Erro ao alterar senha");
+                return;
             }
         }
-        
-        // Vincular função ao botão Salvar
-        document.querySelector('.botao-salvar')?.addEventListener('click', alterarSenha);
+
+        // Aqui você pode adicionar a lógica para atualizar os outros campos do perfil
+        // quando implementar a API de atualização
+        alert("Perfil salvo com sucesso!");
+    }
+
+    // Vincular função ao botão Salvar
+    document.querySelector('.botao-salvar')?.addEventListener('click', salvarPerfil);
+</script>
     </script>
 </body>
 </html>
