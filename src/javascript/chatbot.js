@@ -425,4 +425,339 @@ document.getElementById('send-message').addEventListener('click', () => {
 });
 
 
+// Variáveis globais
+    let chatOpen = false;
+    let minimized = false;
+    let eventos = [];
+    let estadosBrasileiros = [
+      'Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 
+      'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 
+      'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 
+      'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 
+      'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 
+      'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins'
+    ];
+
+    // Elementos do DOM
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    const chatbotWindow = document.getElementById('chatbot-window');
+    const chatbox = document.getElementById('chatbox');
+    const optionsContainer = document.getElementById('options');
+    const messageInput = document.getElementById('message-input');
+    const sendMessageBtn = document.getElementById('send-message');
+    const minimizeBtn = document.getElementById('minimize-chat');
+    const closeBtn = document.getElementById('close-chat');
+    const uploadButton = document.getElementById('upload-button');
+    const imageInput = document.getElementById('image-input');
+    const chatbotHeader = document.getElementById('chatbot-header');
+
+    // Event Listeners
+    chatbotToggle.addEventListener('click', toggleChat);
+    minimizeBtn.addEventListener('click', toggleMinimize);
+    closeBtn.addEventListener('click', closeChat);
+    sendMessageBtn.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    uploadButton.addEventListener('click', () => imageInput.click());
+    imageInput.addEventListener('change', handleImageUpload);
+    chatbotHeader.addEventListener('click', () => {
+      if (minimized) {
+        toggleMinimize();
+      }
+    });
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      // Buscar eventos quando o chatbot é carregado
+      fetchEventos();
+      // Mostrar mensagem inicial
+      setTimeout(() => {
+        addBotMessage('Oiá! Bem-vindo ao Segue o Festival!');
+        showMainOptions();
+      }, 500);
+    });
+
+    // Funções do Chatbot
+    function toggleChat() {
+      chatOpen = !chatOpen;
+      if (chatOpen) {
+        chatbotWindow.style.display = 'flex';
+        minimized = false;
+        updateWindowState();
+        scrollToBottom();
+      } else {
+        chatbotWindow.style.display = 'none';
+      }
+    }
+
+    function toggleMinimize() {
+      minimized = !minimized;
+      updateWindowState();
+      if (!minimized) {
+        scrollToBottom();
+      }
+    }
+
+    function updateWindowState() {
+      if (minimized) {
+        chatbotWindow.classList.add('minimized');
+      } else {
+        chatbotWindow.classList.remove('minimized');
+      }
+    }
+
+    function closeChat() {
+      chatOpen = false;
+      chatbotWindow.style.display = 'none';
+    }
+
+    function scrollToBottom() {
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function addBotMessage(text) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message bot-message';
+      messageDiv.innerHTML = `<p>${text}</p>`;
+      chatbox.appendChild(messageDiv);
+      scrollToBottom();
+    }
+
+    function addUserMessage(text) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message user-message';
+      messageDiv.innerHTML = `<p>${text}</p>`;
+      chatbox.appendChild(messageDiv);
+      scrollToBottom();
+    }
+
+    function sendMessage() {
+      const message = messageInput.value.trim();
+      if (message) {
+        addUserMessage(message);
+        messageInput.value = '';
+        handleUserMessage(message);
+      }
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.maxWidth = '200px';
+          img.style.maxHeight = '200px';
+          img.style.borderRadius = '8px';
+          
+          const messageDiv = document.createElement('div');
+          messageDiv.className = 'message user-message';
+          messageDiv.appendChild(img);
+          chatbox.appendChild(messageDiv);
+          scrollToBottom();
+          
+          addBotMessage('Obrigado pela imagem! Como posso te ajudar com ela?');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function showMainOptions() {
+      optionsContainer.innerHTML = '';
+      
+      const options = [
+        { text: 'Recomendação', action: showRecommendationOptions },
+        { text: 'Comprar ingresso', action: showAllEvents },
+        { text: 'Falar com atendente', action: redirectToFAQ },
+        { text: 'Evento por localidade', action: showStateOptions }
+      ];
+      
+      options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option.text;
+        button.className = 'chat-option';
+        button.addEventListener('click', option.action);
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function showRecommendationOptions() {
+      addUserMessage('Recomendação');
+      optionsContainer.innerHTML = '';
+      
+      const categories = ['Religioso', 'Música', 'Festival', 'Concerto'];
+      
+      categories.forEach(category => {
+        const button = document.createElement('button');
+        button.textContent = category;
+        button.className = 'chat-option';
+        button.addEventListener('click', () => filterEventsByType(category));
+        optionsContainer.appendChild(button);
+      });
+      
+      const backButton = document.createElement('button');
+      backButton.textContent = 'Voltar';
+      backButton.className = 'chat-option back-option';
+      backButton.addEventListener('click', showMainOptions);
+      optionsContainer.appendChild(backButton);
+    }
+
+    function showStateOptions() {
+      addUserMessage('Evento por localidade');
+      optionsContainer.innerHTML = '';
+      
+      estadosBrasileiros.forEach(state => {
+        const button = document.createElement('button');
+        button.textContent = state;
+        button.className = 'chat-option';
+        button.addEventListener('click', () => filterEventsByState(state));
+        optionsContainer.appendChild(button);
+      });
+      
+      const backButton = document.createElement('button');
+      backButton.textContent = 'Voltar';
+      backButton.className = 'chat-option back-option';
+      backButton.addEventListener('click', showMainOptions);
+      optionsContainer.appendChild(backButton);
+    }
+
+    function showAllEvents() {
+      addUserMessage('Comprar ingresso');
+      displayEvents(eventos);
+    }
+
+    function filterEventsByType(type) {
+      addUserMessage(type);
+      const filteredEvents = eventos.filter(evento => 
+        evento.tipo_evento.toLowerCase().includes(type.toLowerCase())
+      );
+      displayEvents(filteredEvents);
+    }
+
+    function filterEventsByState(state) {
+      addUserMessage(state);
+      const filteredEvents = eventos.filter(evento => 
+        evento.estado === state
+      );
+      displayEvents(filteredEvents);
+    }
+
+    function displayEvents(events) {
+      optionsContainer.innerHTML = '';
+      
+      if (events.length === 0) {
+        addBotMessage('Nenhum evento encontrado com esses critérios.');
+        showMainOptions();
+        return;
+      }
+      
+      events.forEach(evento => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event-item';
+        
+        const eventName = document.createElement('p');
+        eventName.textContent = evento.nome;
+        eventName.className = 'event-name';
+        
+        const eventLink = document.createElement('a');
+        eventLink.textContent = 'Ver detalhes';
+        eventLink.href = `pagina_evento.html?id=${evento.id_evento}`;
+        eventLink.className = 'event-link';
+        eventLink.target = '_blank';
+        
+        eventDiv.appendChild(eventName);
+        eventDiv.appendChild(eventLink);
+        optionsContainer.appendChild(eventDiv);
+      });
+      
+      const backButton = document.createElement('button');
+      backButton.textContent = 'Voltar';
+      backButton.className = 'chat-option back-option';
+      backButton.addEventListener('click', showMainOptions);
+      optionsContainer.appendChild(backButton);
+    }
+
+    function redirectToFAQ() {
+      addUserMessage('Falar com atendente');
+      addBotMessage('Redirecionando você para nossa página de FAQ...');
+      setTimeout(() => {
+        window.open('faq.html', '_blank');
+        showMainOptions();
+      }, 1500);
+    }
+
+    function handleUserMessage(message) {
+      const lowerMsg = message.toLowerCase();
+      
+      if (lowerMsg.includes('olá') || lowerMsg.includes('oi') || lowerMsg.includes('ola')) {
+        setTimeout(() => {
+          addBotMessage('Oiá! Como posso te ajudar hoje?');
+          showMainOptions();
+        }, 1000);
+      } else if (lowerMsg.includes('obrigado') || lowerMsg.includes('obrigada')) {
+        setTimeout(() => {
+          addBotMessage('De nada! Estou aqui para ajudar. Precisa de mais alguma coisa?');
+          showMainOptions();
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          addBotMessage('Desculpe, não entendi. Poderia escolher uma das opções abaixo?');
+          showMainOptions();
+        }, 1000);
+      }
+    }
+
+    async function fetchEventos() {
+      try {
+        // Simulando uma chamada à API - substitua pelo seu endpoint real
+        const response = await fetch('/api/buscaeventos');
+        if (!response.ok) throw new Error('Erro ao buscar eventos');
+        
+        eventos = await response.json();
+      } catch (error) {
+        console.error('Erro ao buscar eventos:', error);
+        // Caso a API não esteja disponível, use dados mockados para demonstração
+        eventos = [
+          {
+            id_evento: 1,
+            nome: 'Festival de Música Gospel',
+            tipo_evento: 'Religioso',
+            estado: 'São Paulo',
+            data: '2023-12-25',
+            imagem: ''
+          },
+          {
+            id_evento: 2,
+            nome: 'Rock in Rio',
+            tipo_evento: 'Festival',
+            estado: 'Rio de Janeiro',
+            data: '2023-09-02',
+            imagem: ''
+          },
+          {
+            id_evento: 3,
+            nome: 'Show de Sertanejo',
+            tipo_evento: 'Música',
+            estado: 'Minas Gerais',
+            data: '2023-11-15',
+            imagem: ''
+          },
+          {
+            id_evento: 4,
+            nome: 'Concerto Clássico',
+            tipo_evento: 'Concerto',
+            estado: 'Santa Catarina',
+            data: '2023-10-10',
+            imagem: ''
+          }
+        ];
+      }
+    }
+
+
  
