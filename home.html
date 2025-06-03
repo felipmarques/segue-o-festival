@@ -6,7 +6,6 @@
   <title>Segue o Festival!</title>
   <link rel="stylesheet" type="text/css" href="css/stylehome.css">
   <link rel="stylesheet" type="text/css" href="css/calendario.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/png">
   <style>
@@ -210,9 +209,8 @@
     .carrossel-container {
       position: relative;
       width: 100%;
-      max-width: 1200px;
-      margin: 20px auto;
       overflow: hidden;
+      margin: 20px 0;
     }
     
     .carrossel {
@@ -340,101 +338,6 @@
     .conteudo-secundario-item:nth-child(4) { animation-delay: 0.4s; }
     .conteudo-secundario-item:nth-child(5) { animation-delay: 0.5s; }
     .conteudo-secundario-item:nth-child(6) { animation-delay: 0.6s; }
-
-    /* Estilo para o botão de logout */
-    .logout-botao {
-      background-color: #e74c3c;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1rem;
-      transition: background-color 0.3s;
-    }
-    
-    .logout-botao:hover {
-      background-color: #c0392b;
-    }
-    
-    .logout-icone {
-      font-size: 1.2rem;
-    }
-
-    /* Estilos para a seção de pesquisa */
-    .pesquisa {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-      background-color: #f8f9fa;
-      margin: 20px auto;
-      max-width: 1200px;
-      border-radius: 8px;
-      flex-wrap: wrap;
-    }
-    
-    .pesquisa-busca-evento,
-    .pesquisa-busca-local,
-    .pesquisa-busca-data {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .pesquisa-busca-evento input,
-    .pesquisa-busca-local input,
-    .pesquisa-busca-data input {
-      padding: 10px 15px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 1rem;
-      min-width: 250px;
-    }
-    
-    .pesquisa-busca-evento button,
-    .pesquisa-busca-local button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    
-    .pesquisa-busca-evento button:hover,
-    .pesquisa-busca-local button:hover {
-      background-color: #3e8e41;
-    }
-    
-    .pesquisa-busca-data i {
-      color: #555;
-      font-size: 1.2rem;
-    }
-
-    @media (max-width: 768px) {
-      .pesquisa {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      .pesquisa-busca-evento,
-      .pesquisa-busca-local,
-      .pesquisa-busca-data {
-        width: 100%;
-      }
-      
-      .pesquisa-busca-evento input,
-      .pesquisa-busca-local input,
-      .pesquisa-busca-data input {
-        width: 100%;
-        min-width: auto;
-      }
-    }
   </style>
 </head>
 <body>
@@ -502,29 +405,7 @@
   </nav>
   
   <main class="conteudo">
-    <!-- Seção de pesquisa -->
-    <section class="pesquisa">
-      <div class="pesquisa-busca-evento">
-        <input type="search" id="txtBusca" placeholder="Pesquise por nome do evento..."/>
-        <button id="btnBusca" type="button" aria-label="Buscar evento">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
-      
-      <div class="pesquisa-busca-local">
-        <input type="search" id="txtLocalizacao" placeholder="Buscar por local">
-        <button id="btnBuscaLocal" type="button" aria-label="Buscar evento por local">
-          <i class="fa-solid fa-location-dot"></i>
-        </button>  
-      </div>
-
-      <div class="pesquisa-busca-data">
-        <input type="search" id="dateBusca" placeholder="Buscar por data">
-        <i class="fa-solid fa-calendar-days"></i>
-      </div>
-    </section>
-
-    <!-- Carrossel melhorado e centralizado -->
+    <!-- Carrossel melhorado -->
     <section class="carrossel-container">
       <div class="carrossel" id="carrossel"></div>
       <button class="botao-carrossel anterior" onclick="voltar()">‹</button>
@@ -586,7 +467,6 @@
     <img id="lightbox-img" class="lightbox-img">
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     // Verificação de login
     if (!localStorage.getItem("usuarioLogado")) {
@@ -597,22 +477,7 @@
     let eventosFavoritos = [];
     let estadoSelecionado = null;
     let tipoSelecionado = null;
-    let dataSelecionada = null;
-    let termoBusca = '';
-    let localBusca = '';
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
-    // Inicializa o flatpickr para busca por data
-    document.addEventListener('DOMContentLoaded', function() {
-      flatpickr("#dateBusca", {
-        dateFormat: "d/m/Y",
-        locale: "pt",
-        onChange: function(selectedDates, dateStr, instance) {
-          dataSelecionada = dateStr;
-          exibirEventosFiltrados();
-        }
-      });
-    });
 
     // Função principal para carregar eventos
     async function buscarEventos() {
@@ -630,47 +495,10 @@
         exibirEventosFiltrados();
         exibirCarrossel(todosEventos);
         carregarGaleria();
-        
-        // Configura os listeners de busca
-        configurarBuscas();
       } catch (error) {
         document.getElementById('eventos-lista').innerHTML = '<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>';
         console.error("Erro ao buscar eventos:", error);
       }
-    }
-
-    // Configura os listeners para as buscas
-    function configurarBuscas() {
-      const inputBusca = document.getElementById("txtBusca");
-      const btnBusca = document.getElementById("btnBusca");
-      const inputLocal = document.getElementById("txtLocalizacao");
-      const btnLocal = document.getElementById("btnBuscaLocal");
-
-      // Busca por nome do evento
-      btnBusca.addEventListener("click", () => {
-        termoBusca = inputBusca.value.trim().toLowerCase();
-        exibirEventosFiltrados();
-      });
-
-      inputBusca.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          termoBusca = inputBusca.value.trim().toLowerCase();
-          exibirEventosFiltrados();
-        }
-      });
-
-      // Busca por local
-      btnLocal.addEventListener("click", () => {
-        localBusca = inputLocal.value.trim().toLowerCase();
-        exibirEventosFiltrados();
-      });
-
-      inputLocal.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          localBusca = inputLocal.value.trim().toLowerCase();
-          exibirEventosFiltrados();
-        }
-      });
     }
 
     // Carrega os eventos favoritos do usuário
@@ -686,7 +514,7 @@
       }
     }
 
-    // Função para filtrar eventos por estado, tipo, data, termo e local
+    // Função para filtrar eventos por estado e tipo
     function filtrarEventos(tipo, valor) {
       if (tipo === 'estado') {
         estadoSelecionado = valor;
@@ -703,24 +531,8 @@
       container.innerHTML = '';
 
       const eventosFiltrados = todosEventos.filter(evento => {
-        const dataEvento = evento.data ? new Date(evento.data) : null;
-        const nomeEvento = evento.nome?.toLowerCase() || '';
-        const localEvento = (evento.endereco + ' ' + evento.cidade + ' ' + evento.estado).toLowerCase() || '';
-        
-        // CORREÇÃO: Comparação de datas ajustada
-        const dataFiltro = dataSelecionada 
-          ? new Date(dataSelecionada.split('/').reverse().join('-')) 
-          : null;
-        
         return (!estadoSelecionado || evento.estado === estadoSelecionado) &&
-               (!tipoSelecionado || evento.tipo === tipoSelecionado) &&
-               (!dataSelecionada || 
-                 (dataEvento && 
-                  dataEvento.getFullYear() === dataFiltro.getFullYear() &&
-                  dataEvento.getMonth() === dataFiltro.getMonth() &&
-                  dataEvento.getDate() === dataFiltro.getDate())) &&
-               (!termoBusca || nomeEvento.includes(termoBusca)) &&
-               (!localBusca || localEvento.includes(localBusca));
+               (!tipoSelecionado || evento.tipo === tipoSelecionado);
       });
 
       // Atualiza o contador de eventos
@@ -757,17 +569,13 @@
 
         const data = document.createElement('p');
         if (evento.data) {
-          // CORREÇÃO: Formatação da data ajustada para evitar problemas de timezone
           const dataEvento = new Date(evento.data);
-          // Ajusta para o timezone local
-          const dataAjustada = new Date(dataEvento.getTime() + dataEvento.getTimezoneOffset() * 60000);
-          
-          const dataFormatada = dataAjustada.toLocaleDateString('pt-BR', {
+          const dataFormatada = dataEvento.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
           });
-          const diaSemana = dataAjustada.toLocaleDateString('pt-BR', {
+          const diaSemana = dataEvento.toLocaleDateString('pt-BR', {
             weekday: 'long'
           });
           data.textContent = `${dataFormatada} - ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}`;
@@ -1043,7 +851,7 @@
 
   <footer style="display: flex; justify-content: flex-end; padding: 1rem;">
     <button class="logout-botao" onclick="logout()">
-      <span class="logout-icone"></span>
+      <span class="logout-icone">↩️</span>
       Sair
     </button>
   </footer>
